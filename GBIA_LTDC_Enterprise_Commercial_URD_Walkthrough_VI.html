@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng quan URD Enterprise &amp; Commercial | GBIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#1E3A5F;--navy-dark:#152A45;--navy-light:#2D4A6F;--orange:#F47920;--gold:#9A7B4F;--white:#FFF;--off-white:#F8F6F3;--gray-100:#F5F5F5;--gray-200:#E8E8E8;--gray-500:#707070;--text:#1A1A1A;--text-sec:#505050;--text-muted:#707070;--border:#E8E8E8;--card:#FFF;--bg:#FFF;--bg-sec:#F8F6F3;--commercial:#0D7C66;--enterprise:#6C3483;--data:#1565C0;--security:#C62828;--integration:#E65100;--workforce:#00838F;--digital:#7B1FA2;--platform:#37474F}
+        [data-theme="dark"]{--bg:#0D1117;--bg-sec:#161B22;--text:#E6EDF3;--text-sec:#B1BAC4;--text-muted:#8B949E;--border:#30363D;--card:#161B22;--white:#E6EDF3;--off-white:#161B22;--gray-100:#21262D;--gray-200:#30363D}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;line-height:1.6;background:var(--off-white);color:var(--text);transition:all .3s}
+        h1,h2,h3,h4{font-weight:700;line-height:1.2;color:var(--navy)}
+        [data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3,[data-theme="dark"] h4{color:var(--text)}
+        h1{font-size:clamp(1.8rem,4vw,2.8rem)}h2{font-size:clamp(1.5rem,3vw,2rem)}h3{font-size:clamp(1.1rem,2vw,1.4rem)}
+        .nav-toggle{position:fixed;top:1rem;left:1rem;z-index:1001;width:44px;height:44px;border:none;border-radius:50%;background:var(--navy);color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+        .nav-toggle:hover{background:var(--navy-light)}
+        .nav-toggle svg{width:20px;height:20px}
+        .nav-panel{position:fixed;top:0;left:0;width:280px;height:100vh;background:linear-gradient(180deg,var(--navy-dark),var(--navy));z-index:1000;transform:translateX(-100%);transition:transform .3s;overflow-y:auto;padding:4rem 1.2rem 1.2rem}
+        .nav-panel.open{transform:translateX(0);box-shadow:0 0 30px rgba(0,0,0,.3)}
+        .nav-section{margin-bottom:1.2rem}
+        .nav-section-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:.4rem;padding-left:.4rem}
+        .nav-item{display:block;padding:.4rem .6rem;color:rgba(255,255,255,.7);text-decoration:none;font-size:.8rem;border-radius:6px;transition:all .2s;margin-bottom:2px;cursor:pointer}
+        .nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
+        .nav-item.active{background:var(--orange);color:#fff;font-weight:600}
+        .logo-bar{position:fixed;top:0;left:0;right:0;height:60px;background:var(--card);border-bottom:1px solid var(--border);z-index:998;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem 0 4rem;transition:all .3s}
+        .logo-center{text-align:center}
+        .logo-center .project-name{font-size:1rem;font-weight:700;color:var(--navy)}
+        [data-theme="dark"] .logo-center .project-name{color:var(--text)}
+        .logo-center .workshop-type{font-size:.6rem;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+        .theme-toggle{position:fixed;top:70px;right:15px;z-index:1000;background:var(--card);border:2px solid var(--border);border-radius:50px;padding:5px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:var(--text);transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .theme-toggle:hover{border-color:var(--orange)}
+        [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+        [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+        .theme-toggle .icon-sun{display:none}
+        .theme-toggle .icon-moon{display:inline}
+        .slide-controls{position:fixed;bottom:1.2rem;right:1.2rem;z-index:999;display:flex;gap:.4rem}
+        .slide-btn{width:44px;height:44px;border:2px solid var(--navy);border-radius:50%;background:var(--card);color:var(--navy);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        [data-theme="dark"] .slide-btn{border-color:var(--orange);color:var(--orange)}
+        .slide-btn:hover{background:var(--navy);color:#fff}
+        [data-theme="dark"] .slide-btn:hover{background:var(--orange);color:#1a2744}
+        .slide-btn:disabled{opacity:.3;cursor:not-allowed}
+        .slide-btn svg{width:18px;height:18px}
+        .slide-counter{position:fixed;bottom:1.2rem;right:120px;z-index:999;font-family:monospace;font-size:.8rem;color:var(--text-muted);background:var(--card);padding:.3rem .6rem;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .section{min-height:100vh;display:none;opacity:0;transition:opacity .3s;background:var(--bg)}
+        .section.active{display:block;opacity:1}
+        .section-inner{max-width:1200px;margin:0 auto;padding:5rem 1.5rem 3rem;padding-top:90px}
+        .section-header{margin-bottom:1.5rem}
+        .section-label{display:inline-block;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);background:rgba(244,121,32,.1);padding:.2rem .6rem;border-radius:50px;margin-bottom:.6rem}
+        [data-theme="dark"] .section-label{background:rgba(244,121,32,.2)}
+        .section-subtitle{font-size:1rem;color:var(--text-sec);max-width:750px;line-height:1.6;margin-top:.6rem}
+        .landing-page{background:var(--bg-sec)}
+        [data-theme="dark"] .landing-page{background:var(--bg)}
+        .landing-hero{text-align:center;padding-top:1rem;margin-bottom:2rem}
+        .landing-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--card);border:1px solid var(--border);padding:.3rem .8rem;border-radius:50px;font-size:.75rem;font-weight:600;color:var(--text-sec);margin-bottom:1.2rem}
+        .badge-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .landing-title{font-size:2.5rem;font-weight:800;margin-bottom:.6rem}
+        .gradient-text{background:linear-gradient(135deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .landing-subtitle{font-size:1.2rem;font-weight:600;color:var(--orange);margin-bottom:.8rem}
+        .landing-description{font-size:1rem;color:var(--text-sec);max-width:650px;margin:0 auto}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
+        @media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+        .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;transition:all .3s}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        .stat-card.highlight{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-color:var(--navy)}
+        .stat-card.highlight .stat-value,.stat-card.highlight .stat-label{color:#fff}
+        .stat-value{font-size:1.6rem;font-weight:800;color:var(--orange);margin-bottom:.2rem}
+        .stat-label{font-size:.8rem;color:var(--text-muted);font-weight:500}
+        .agenda-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
+        @media(max-width:900px){.agenda-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:500px){.agenda-grid{grid-template-columns:1fr}}
+        .agenda-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;position:relative;transition:all .3s}
+        .agenda-card:hover{border-color:var(--orange)}
+        .agenda-time{position:absolute;top:.6rem;right:.6rem;font-size:.6rem;font-weight:700;color:var(--orange);background:rgba(244,121,32,.1);padding:2px 6px;border-radius:50px}
+        [data-theme="dark"] .agenda-time{background:rgba(244,121,32,.2)}
+        .agenda-icon{font-size:1.6rem;margin-bottom:.4rem}
+        .agenda-title{font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem}
+        .agenda-desc{font-size:.75rem;color:var(--text-muted);line-height:1.4}
+        .landing-footer{text-align:center;padding-top:1.2rem;border-top:1px solid var(--border)}
+        .partner-logos{display:flex;justify-content:center;align-items:center;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap}
+        .partner-name{font-size:.95rem;font-weight:700;color:var(--text-sec)}
+        .partner-divider{color:var(--text-muted)}
+        .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;border-radius:8px;font-size:.95rem;font-weight:600;text-decoration:none;cursor:pointer;border:none;transition:all .2s}
+        .btn-primary{background:var(--navy);color:#fff}
+        .btn-primary:hover{background:var(--navy-light);transform:translateY(-2px)}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+        .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+        .four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+        .five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem}
+        @media(max-width:800px){.two-col,.three-col{grid-template-columns:1fr}}
+        @media(max-width:900px){.four-col,.five-col{grid-template-columns:repeat(2,1fr)}}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;transition:all .3s}
+        .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        .card-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+        .card-icon{font-size:1.6rem}
+        .card-title{font-weight:700;font-size:.95rem;color:var(--text)}
+        .card-content{font-size:.85rem;color:var(--text-sec);line-height:1.5}
+        .callout{background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:12px;padding:1.5rem;color:#fff;margin:1.5rem 0}
+        .callout h4{color:#fff;margin-bottom:.6rem}
+        .callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:.8rem}
+        @media(max-width:700px){.callout-grid{grid-template-columns:1fr}}
+        .callout-item{background:rgba(255,255,255,.1);border-radius:8px;padding:.8rem}
+        .callout-item h5{color:var(--orange);font-size:.8rem;margin-bottom:.2rem}
+        .callout-item p{font-size:.75rem;opacity:.9;margin:0}
+        .pillar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+        .pillar-card .pillar-icon{font-size:2rem;margin-bottom:.4rem}
+        .pillar-card .pillar-title{font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.3rem}
+        [data-theme="dark"] .pillar-card .pillar-title{color:var(--text)}
+        .pillar-card .pillar-desc{font-size:.75rem;color:var(--text-muted);line-height:1.4}
+        .domain-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem;text-align:center;transition:all .3s;font-size:.75rem}
+        .domain-card:hover{border-color:var(--orange);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+        .domain-card .domain-icon{font-size:1.4rem;margin-bottom:.2rem}
+        .domain-card .domain-name{font-weight:700;font-size:.75rem;color:var(--text);margin-bottom:.1rem}
+        .domain-card .domain-count{font-size:.65rem;color:var(--orange);font-weight:600}
+        .insight-box{background:linear-gradient(135deg,rgba(244,121,32,.1),rgba(154,123,79,.1));border-left:4px solid var(--orange);border-radius:0 8px 8px 0;padding:.8rem;margin:1.2rem 0}
+        [data-theme="dark"] .insight-box{background:linear-gradient(135deg,rgba(244,121,32,.15),rgba(154,123,79,.15))}
+        .insight-box p{margin:0;font-size:.85rem}
+        .final-cta{background:linear-gradient(135deg,var(--orange),#D66A1A);border-radius:12px;padding:2rem;text-align:center;color:#fff;margin:1.5rem 0}
+        .final-cta h2{color:#fff;margin-bottom:.6rem}
+        .final-cta p{opacity:.95;max-width:500px;margin:0 auto 1.2rem}
+        .final-logos{display:flex;justify-content:center;align-items:center;gap:.8rem;flex-wrap:wrap}
+        .logo-text{font-size:1.1rem;font-weight:700;letter-spacing:.5px}
+        .logo-divider-text{opacity:.7}
+        .flow-container{background:var(--gray-100);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+        [data-theme="dark"] .flow-container{background:var(--bg-sec)}
+        .hub-center{background:linear-gradient(135deg,var(--orange),#D66A1A);border-radius:12px;padding:1.2rem;text-align:center;color:#fff;margin:1rem 0}
+        .hub-center h4{color:#fff;margin-bottom:.3rem}
+        .hub-center p{font-size:.8rem;opacity:.9;margin:0}
+        .spoke-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+        @media(max-width:800px){.spoke-grid{grid-template-columns:1fr}}
+        .spoke-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center;font-size:.8rem}
+        .spoke-card h5{font-size:.75rem;font-weight:700;margin-bottom:.3rem}
+        .spoke-card p{font-size:.7rem;color:var(--text-muted);margin:0}
+        .subdomain-header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;border-radius:10px;margin-bottom:1rem}
+        .subdomain-header h3{margin:0;color:#fff;font-size:1.1rem}
+        .subdomain-header .sub-stats{font-size:.75rem;color:rgba(255,255,255,.8)}
+        .subdomain-commercial{background:linear-gradient(135deg,#0D7C66,#0A6B58)}
+        .subdomain-customer{background:linear-gradient(135deg,#7B1FA2,#6A1B9A)}
+        .subdomain-workforce{background:linear-gradient(135deg,#00838F,#006064)}
+        .subdomain-data{background:linear-gradient(135deg,#1565C0,#0D47A1)}
+        .subdomain-integration{background:linear-gradient(135deg,#E65100,#BF360C)}
+        .subdomain-security{background:linear-gradient(135deg,#C62828,#B71C1C)}
+        .subdomain-platform{background:linear-gradient(135deg,#37474F,#263238)}
+        .subdomain-identity{background:linear-gradient(135deg,#AD1457,#880E4F)}
+        .req-bar{height:18px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:.6rem;font-weight:700;color:#fff;min-width:30px}
+    </style>
+</head>
+<body>
+    <button class="nav-toggle" id="navToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <nav class="nav-panel" id="navPanel">
+        <div class="nav-section"><div class="nav-section-title">Tổng quan</div><a class="nav-item active" data-section="landing">Tổng quan URD</a><a class="nav-item" data-section="scope">Phạm vi &amp; Cấu trúc</a></div>
+        <div class="nav-section"><div class="nav-section-title">Mảng Thương mại</div><a class="nav-item" data-section="commercial">Vận hành Doanh thu</a><a class="nav-item" data-section="customer">Khách hàng &amp; Đối tác</a><a class="nav-item" data-section="digital">Trải nghiệm Số</a></div>
+        <div class="nav-section"><div class="nav-section-title">Mảng Doanh nghiệp</div><a class="nav-item" data-section="identity">Định danh &amp; Kiểm soát Truy cập</a><a class="nav-item" data-section="workforce">Nhân sự &amp; HR</a><a class="nav-item" data-section="dataai">Dữ liệu &amp; AI</a><a class="nav-item" data-section="integration">Trục Tích hợp</a><a class="nav-item" data-section="security">An ninh mạng</a><a class="nav-item" data-section="platform">Nền tảng &amp; Hạ tầng</a></div>
+        <div class="nav-section"><div class="nav-section-title">Tổng hợp</div><a class="nav-item" data-section="crosscut">Tích hợp Liên hệ thống</a><a class="nav-item" data-section="summary">Tóm tắt &amp; Bước tiếp theo</a></div>
+    </nav>
+    <header class="logo-bar">
+        <div></div>
+        <div class="logo-center"><div class="workshop-type">Tổng quan URD</div><div class="project-name">GBIA - Mảng Enterprise &amp; Commercial</div></div>
+        <div class="logo-partners"><span style="font-size:.75rem;font-weight:700;color:var(--text-muted)">ICT-0341 Rev 1.0</span></div>
+    </header>
+    <button class="theme-toggle" id="themeToggle"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9788;</span><span>Giao diện</span></button>
+    <div class="slide-controls">
+        <button class="slide-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="slide-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+    <div class="slide-counter" id="slideCounter">1 / 12</div>
+
+    <!-- SLIDE 1: LANDING -->
+    <section class="section landing-page active" id="landing">
+        <div class="section-inner">
+            <div class="landing-hero">
+                <div class="landing-badge"><div class="badge-dot"></div><span>GBIA-AAC-LTDC-GEN-SPE-ICT-0341 Rev 1.0</span></div>
+                <h1 class="landing-title"><span class="gradient-text">Enterprise &amp; Commercial</span><br>Tổng quan URD</h1>
+                <div class="landing-subtitle">61 Hệ thống | 8 Miền phụ | Một Sân bay Số Tích hợp</div>
+                <p class="landing-description">Xác định yêu cầu người dùng cho toàn bộ hệ thống thương mại, nhân sự, dữ liệu, tích hợp, bảo mật và nền tảng vận hành hệ sinh thái công nghệ doanh nghiệp của GBIA.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card highlight"><div class="stat-value">61</div><div class="stat-label">Sub-Specification</div></div>
+                <div class="stat-card"><div class="stat-value">5,910</div><div class="stat-label">Tổng Yêu cầu</div></div>
+                <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Miền phụ</div></div>
+                <div class="stat-card"><div class="stat-value">165K</div><div class="stat-label">Dòng Đặc tả</div></div>
+            </div>
+            <div class="agenda-grid">
+                <div class="agenda-card"><div class="agenda-time">Part 1</div><div class="agenda-icon">&#128176;</div><div class="agenda-title">Mảng Thương mại</div><div class="agenda-desc">Revenue ops, customer &amp; partners, digital experience</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 2</div><div class="agenda-icon">&#9881;</div><div class="agenda-title">Mảng Doanh nghiệp</div><div class="agenda-desc">Identity, workforce, data &amp; AI, integration</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 3</div><div class="agenda-icon">&#128274;</div><div class="agenda-title">Bảo mật &amp; Nền tảng</div><div class="agenda-desc">An ninh mạng, cloud, DevOps, observability</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 4</div><div class="agenda-icon">&#128202;</div><div class="agenda-title">Tổng hợp</div><div class="agenda-desc">Cross-system integration &amp; next steps</div></div>
+            </div>
+            <div class="landing-footer">
+                <div class="partner-logos"><span class="partner-name">Masterise</span><span class="partner-divider">&times;</span><span class="partner-name">AAC</span><span class="partner-divider">&times;</span><span class="partner-name">Gradion</span></div>
+                <button class="btn btn-primary" onclick="navigateToSection('scope')">Bắt đầu &rarr;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: SCOPE & STRUCTURE -->
+    <section class="section" id="scope">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Tổng quan</span><h2>61 Hệ thống trong 8 Miền phụ</h2><p class="section-subtitle">URD Mảng Enterprise (ICT-0341) là URD đơn lẻ lớn nhất trong chương trình GBIA, bao phủ toàn bộ hệ thống ngoài aviation và OT. Nguồn: các sub-specification tái tạo (extracted-urds).</p></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.5rem">
+                <div class="domain-card" style="border-top:4px solid var(--commercial)"><div class="domain-icon">&#128176;</div><div class="domain-name">Thương mại &amp; Doanh thu</div><div class="domain-count">14 systems &middot; 1,196 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--digital)"><div class="domain-icon">&#128241;</div><div class="domain-name">Trải nghiệm Số</div><div class="domain-count">10 systems &middot; 954 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--workforce)"><div class="domain-icon">&#128101;</div><div class="domain-name">Nhân sự &amp; HR</div><div class="domain-count">7 systems &middot; 774 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--data)"><div class="domain-icon">&#129504;</div><div class="domain-name">Data &amp; AI</div><div class="domain-count">7 systems &middot; 655 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--integration)"><div class="domain-icon">&#128260;</div><div class="domain-name">Integration</div><div class="domain-count">4 systems &middot; 424 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--security)"><div class="domain-icon">&#128737;</div><div class="domain-name">Cybersecurity</div><div class="domain-count">4 systems &middot; 243 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--platform)"><div class="domain-icon">&#9729;</div><div class="domain-name">Platform &amp; Infra</div><div class="domain-count">9 systems &middot; 820 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--identity)"><div class="domain-icon">&#128272;</div><div class="domain-name">Định danh &amp; Truy cập</div><div class="domain-count">5 systems &middot; 597 reqs</div></div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; Cấu trúc URD: Mỗi Sub-Spec đều tuân theo Template thống nhất</h4>
+                <div class="callout-grid" style="grid-template-columns:repeat(4,1fr)">
+                    <div class="callout-item"><h5>1. Giới thiệu &amp; Phạm vi</h5><p>Mục đích, bối cảnh vận hành, nguyên tắc thiết kế, quan hệ hệ thống, lộ trình phát triển năng lực</p></div>
+                    <div class="callout-item"><h5>2. Yêu cầu</h5><p>Functional, non-functional (hiệu năng, bảo mật, backup), phần cứng, tích hợp, tuân thủ tiêu chuẩn</p></div>
+                    <div class="callout-item"><h5>3. Triển khai</h5><p>Mô hình deployment, kiểm thử (FAT/SAT/SIT/UAT), tài liệu, đào tạo, bảo hành &amp; hỗ trợ</p></div>
+                    <div class="callout-item"><h5>4. Phụ lục</h5><p>Thuật ngữ, quyền sở hữu dữ liệu, danh mục interface, mô hình availability, ranh giới tuân thủ, đánh giá rủi ro</p></div>
+                </div>
+            </div>
+            <div class="insight-box"><p><strong>Nguyên tắc Thiết kế Chủ đạo:</strong> Mỗi sub-specification đều bắt buộc lưu trữ dữ liệu tại Việt Nam (Nghị định 53/2022), phân loại bảo mật IEC 62443, tích hợp qua ESB/API Gateway, tuân thủ quyền riêng tư PDPL 91/2025, và lộ trình phát triển năng lực từ Ngày 1 đến Công suất Tối đa 50 MPPA.</p></div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: COMMERCIAL REVENUE OPERATIONS -->
+    <section class="section" id="commercial">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Thương mại</span><h2>Vận hành Doanh thu <span style="opacity:.4">|</span> 14 Hệ thống</h2><p class="section-subtitle">Động cơ tài chính của sân bay: billing, bán lẻ, bãi đỗ xe, truyền thông, và phân tích doanh thu. Hướng tới mục tiêu chiến lược chia đều 50/50 doanh thu hàng không và phi hàng không.</p></div>
+            <div class="subdomain-header subdomain-commercial"><h3>&#128176; Commercial &amp; Revenue Operations</h3><div class="sub-stats">14 sub-specs &middot; 1,196 requirements</div></div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128202;</div><div class="card-title">Phân tích Doanh thu</div></div>
+                    <div class="card-content">
+                        <p><strong>Revenue Dashboard</strong> (ICT-0287, 120 reqs)<br>Tổng hợp real-time toàn bộ doanh thu hàng không &amp; phi hàng không. Phân tích chênh lệch so với ngân sách. Cập nhật dữ liệu &lt;60 giây. Thay thế báo cáo bảng tính thủ công.</p>
+                        <p style="margin-top:.4rem"><strong>Concession Performance</strong> (ICT-0288, 105 reqs)<br>Theo dõi doanh số tenant, KPIs, MAGs, tuân thủ hợp đồng thuê. Tỷ lệ chuyển đổi lượt khách-doanh số. Cảnh báo sớm cho các đơn vị kém hiệu quả. Giám sát 200-500+ cửa hàng.</p>
+                        <p style="margin-top:.4rem"><strong>Passenger Analytics</strong> (ICT-0289)<br>Phân tích nhân khẩu học theo phân khúc, thời gian lưu lại, mẫu chi tiêu. Mặc định ẩn danh hóa. Phân khúc kết hợp (rules + ML). Cung cấp dữ liệu cho CRM và kế hoạch thương mại.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128179;</div><div class="card-title">Thanh toán &amp; Billing</div></div>
+                    <div class="card-content">
+                        <p><strong>Aeronautical Billing</strong> (ICT-0292, 113 reqs)<br>Phí hạ cánh, đậu, hành khách. Tuân thủ IATA AHM. Tính phí theo biểu giá. Tách rời ERP: ABS quản lý phí, ERP quản lý hóa đơn.</p>
+                        <p style="margin-top:.4rem"><strong>Non-Aero Billing Engine</strong> (ICT-0304, 136 reqs)<br>Tiền thuê nhượng quyền, chia sẻ doanh thu, thu hồi tiện ích, doanh thu truyền thông, phí loyalty. CMS là nguồn quản lý hợp đồng. Tuân thủ IFRS 15/16.</p>
+                        <p style="margin-top:.4rem"><strong>Repeat Payments</strong> (ICT-0296, 128 reqs)<br>Xử lý thanh toán định kỳ, quản lý subscription, tích hợp ghi nợ trực tiếp.</p>
+                        <p style="margin-top:.4rem"><strong>POS Retail</strong> (ICT-0297, 137 reqs)<br>Middleware kết nối toàn bộ POS terminal của tenant. Chuẩn hóa dữ liệu bán hàng cấp SKU. 50K-150K giao dịch/ngày. GBIA sở hữu toàn bộ dữ liệu giao dịch thương mại.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128663;</div><div class="card-title">Bãi đỗ xe &amp; Truyền thông</div></div>
+                    <div class="card-content">
+                        <p><strong>Car Park Management</strong> (ICT-0293, 149 reqs)<br>Vào cổng không barrier dựa trên ANPR, giá linh hoạt, hiển thị chỗ trống real-time (theo vùng &amp; ô đỗ), đặt trước qua Passenger App. 5.000-8.500 chỗ đỗ.</p>
+                        <p style="margin-top:.4rem"><strong>Valet Parking</strong> (ICT-0294, 7 reqs)<br>Quản lý chìa khóa, theo dõi xe, điều phối trả/nhận xe, tích hợp hạng premium.</p>
+                        <p style="margin-top:.4rem"><strong>DOOH Advertising</strong> (ICT-0290, 72 reqs)<br>Quảng cáo số tự động qua các màn hình sân bay. Đo lường đối tượng real-time và nội dung động.</p>
+                        <p style="margin-top:.4rem"><strong>Digital Signage CMS</strong> (ICT-0300, 57 reqs &middot; SL-1)<br>Quản lý nội dung tập trung cho toàn bộ màn hình số (ngoài FIDS) trong terminal và AeroCity.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128722;</div><div class="card-title">Thương mại &amp; Hoàn tất Đơn hàng</div></div>
+                    <div class="card-content">
+                        <p><strong>Commercial Management</strong> (ICT-0291, 84 reqs)<br>"AODB thương mại": vòng đời tenant, quản trị hợp đồng thuê, quy tắc tiền thuê, tuân thủ. Hồ sơ thương mại duy nhất.</p>
+                        <p><strong>Ecommerce Platform</strong> (ICT-0295)<br>Đặt trước duty-free, F&amp;B, dịch vụ tối đa 30 ngày trước chuyến bay. Sáu phương thức fulfilment. Mô hình marketplace.</p>
+                        <p><strong>Pre-Order Integrations</strong> (ICT-0298, 146 reqs)<br>Kết nối fulfilment đặt trước duty-free và bán lẻ</p>
+                        <p><strong>Pre-Reservation</strong> (ICT-0299, 78 reqs)<br>Kết nối đặt trước lounge, fast-track, và dịch vụ</p>
+                    </div>
+                </div>
+                <div class="callout" style="margin:0">
+                    <h4>&#127919; Mục tiêu Doanh thu Chiến lược</h4>
+                    <div class="callout-grid">
+                        <div class="callout-item"><h5>Chia đều Doanh thu 50/50</h5><p>Mục tiêu cân bằng doanh thu hàng không &amp; phi hàng không. Mọi hệ thống thương mại đều là công cụ hỗ trợ</p></div>
+                        <div class="callout-item"><h5>Doanh thu/Hành khách</h5><p>Tối đa hóa doanh thu thương mại trên mỗi hành khách thông qua ưu đãi data-driven &amp; bán lẻ omnichannel</p></div>
+                        <div class="callout-item"><h5>Hệ sinh thái AeroCity</h5><p>Phạm vi thương mại mở rộng ngoài terminal vào khu vực rộng hơn: 500+ cửa hàng</p></div>
+                        <div class="callout-item"><h5>Phương trình Trải nghiệm</h5><p>Ma sát Thấp + Trải nghiệm Tối đa + Doanh thu Tối đa với Chi phí Thấp nhất</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: CUSTOMER & PARTNER PLATFORMS -->
+    <section class="section" id="customer">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Thương mại</span><h2>Nền tảng Khách hàng &amp; Đối tác <span style="opacity:.4">|</span> 5 Hệ thống</h2><p class="section-subtitle">Tầng quan hệ: hồ sơ hành khách 360 độ, đồng tiền loyalty, quản lý đối tác thương mại, và hệ sinh thái self-service cho merchant.</p></div>
+            <div class="subdomain-header subdomain-customer"><h3>&#128101; Customer &amp; Partner Management</h3><div class="sub-stats">5 sub-specs &middot; 510 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1.2rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128100;</div><div class="card-title">CRM Platform (ICT-0301)</div></div>
+                    <div class="card-content">
+                        <p><strong>121 requirements</strong><br>Hệ thống thuộc sở hữu sân bay quản lý hồ sơ khách hàng, điều phối campaign, phân tích giao dịch cấp SKU, cá nhân hóa dựa trên consent qua tất cả touchpoint AeroCity.</p>
+                        <p style="margin-top:.4rem">Tương tác "bình tĩnh, không hung hăng": AI xác định thời điểm/kênh tối ưu, tối đa 3 ưu đãi thương mại/giờ/hành khách. Mục tiêu: 40%+ hành khách đăng ký app với hồ sơ phong phú trong 12 tháng.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127873;</div><div class="card-title">Loyalty Programme (ICT-0336)</div></div>
+                    <div class="card-content">
+                        <p><strong>145 requirements</strong><br>Đồng tiền loyalty thuộc sở hữu sân bay: tích/tiêu điểm qua tất cả touchpoint thương mại, quản lý hạng, thanh toán đối tác, quyền lợi dịch vụ sân bay, fulfilment phần thưởng.</p>
+                        <p style="margin-top:.4rem">Hoạt động như nguồn doanh thu: bên tham gia thanh toán khi điểm được phát hành, nhận tiền khi quy đổi. Sổ cái giao dịch bất biến. Tích điểm real-time trong 60 giây sau giao dịch POS. Mục tiêu: 40%+ đăng ký trong 12 tháng.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="three-col">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128190;</div><div class="card-title">Merchant Portal (ICT-0302)</div></div>
+                    <div class="card-content"><p><strong>152 reqs</strong><br>Self-service cho tenant: báo cáo doanh số, tuân thủ hợp đồng thuê, thông báo vận hành, gửi marketing, yêu cầu thẻ nhân viên. Giảm tải quản trị cho GBIA.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#129309;</div><div class="card-title">Partner Lifecycle (ICT-0303)</div></div>
+                    <div class="card-content"><p><strong>82 reqs</strong><br>Onboarding đối tác end-to-end, quản lý hợp đồng, theo dõi hiệu suất, giám sát tuân thủ cho tất cả đối tác thương mại.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127915;</div><div class="card-title">Digital Voucher Engine (ICT-0305)</div></div>
+                    <div class="card-content"><p><strong>110 reqs</strong><br>Tạo, phân phối, đổi voucher số. Bồi thường gián đoạn, chiến dịch khuyến mãi, phần thưởng loyalty. Chống gian lận và đảm bảo sử dụng một lần.</p></div>
+                </div>
+            </div>
+            <div class="insight-box"><p><strong>Mô hình Tích hợp:</strong> CRM + Loyalty + Voucher Engine tạo thành bộ ba liên kết chặt chẽ. CRM cung cấp ngữ cảnh khách hàng, Loyalty cung cấp quy tắc tích/tiêu điểm, Voucher Engine cung cấp cơ chế fulfilment. Tất cả trao đổi dữ liệu qua Commercial Event Streaming platform (ICT-0322). CRM và Loyalty là hệ thống đồng hành với interface hai chiều nhưng sở hữu domain độc lập.</p></div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: DIGITAL EXPERIENCE -->
+    <section class="section" id="digital">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Thương mại</span><h2>Trải nghiệm Số <span style="opacity:.4">|</span> 10 Hệ thống</h2><p class="section-subtitle">Các touchpoint số hướng hành khách: ứng dụng di động, website, trợ lý AI, và các kênh thương mại omnichannel mang đến hành trình siêu cá nhân hóa.</p></div>
+            <div class="subdomain-header subdomain-customer"><h3>&#128241; Digital Experience Channels</h3><div class="sub-stats">10 sub-specs &middot; 954 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128241;</div><div class="card-title">Passenger App (ICT-0307)</div></div>
+                    <div class="card-content">
+                        <p><strong>81 requirements</strong><br>Touchpoint số chính cho hành khách. Native iOS/Android. Thông tin chuyến bay, dẫn đường trong nhà, thông báo cổng, mobile boarding pass, đặt trước F&amp;B, đặt lounge, ví loyalty, thời gian xếp hàng real-time, đặt lại vé khi gián đoạn.</p>
+                        <p style="margin-top:.4rem">Mục tiêu 100% check-in số. Đăng ký biometric biến kiểm soát biên giới thành "không sự kiện". Mục tiêu: 80%+ hành khách khởi hành. Tuân theo Phương trình Trải nghiệm.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#129302;</div><div class="card-title">AI Concierge (ICT-0309)</div></div>
+                    <div class="card-content">
+                        <p><strong>63 requirements</strong><br>AI hội thoại qua App, website, và kiosk. NLU + knowledge graph + nhận thức ngữ cảnh. Truy vấn chuyến bay, dẫn đường, gợi ý nhà hàng, tìm kiếm duty-free, tình trạng lounge.</p>
+                        <p style="margin-top:.4rem">Chủ động theo ngữ cảnh: gợi ý lounge khi chuyến bay bị trễ, nhà hàng dựa trên thời gian chờ. "Tương tác bình tĩnh": tối đa 2 tin nhắn không yêu cầu/30 phút. AI inference on-premise theo Nghị định 53/2022. Chuyển tiếp nhân viên trong 2 lượt tương tác. 5K-10K hội thoại đồng thời.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="four-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127760;</div><div class="card-title">Website (ICT-0308)</div></div>
+                    <div class="card-content"><p><strong>122 reqs</strong><br>Website công khai, cổng đặt chỗ, trạng thái chuyến bay, đặt bãi đỗ, danh bạ AeroCity. Đa ngôn ngữ, tối ưu SEO.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127881;</div><div class="card-title">Offer Management (ICT-0310)</div></div>
+                    <div class="card-content"><p><strong>212 reqs</strong><br>Công cụ ưu đãi thương mại thống nhất. Không phụ thuộc tenant: xếp hạng theo mức phù hợp với hành khách, không theo thỏa thuận thương mại. Rules engine, trigger real-time, dựa trên consent. Mục tiêu: 30%+ đặt hàng trong 12 tháng.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128715;</div><div class="card-title">Lounge Navigator (ICT-0311)</div></div>
+                    <div class="card-content"><p><strong>20 reqs</strong><br>Sức chứa lounge real-time, quy tắc truy cập theo hãng bay/hạng, quản lý đặt trước và walk-in.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128230;</div><div class="card-title">Last-Mile Delivery (ICT-0306)</div></div>
+                    <div class="card-content"><p><strong>16 reqs</strong><br>Giao duty-free đến cổng, khách sạn, hoặc nhà. Theo dõi đơn hàng, chuỗi kiểm soát nhiệt độ.</p></div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128246;</div><div class="card-title">Public Wi-Fi (ICT-0312)</div></div>
+                    <div class="card-content"><p><strong>110 reqs</strong><br>Gói miễn phí và premium. Captive portal tích hợp CRM, phát hiện hạng loyalty để tự động nâng cấp, lọc nội dung, ghi log phiên tuân thủ PDPL. Tương thích WiFi 7.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128273;</div><div class="card-title">Customer IAM (ICT-0337)</div></div>
+                    <div class="card-content"><p><strong>71 reqs &middot; 99.99%</strong><br>SSO hành khách qua App, Web, Wi-Fi, Loyalty. Đăng nhập xã hội (Google, Apple, Zalo), xác thực không mật khẩu, làm giàu hồ sơ dần dần. 50K phiên đồng thời mở rộng đến 150K. Tách biệt với enterprise DIAM.</p></div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#127919; Hành trình Siêu Cá nhân hóa</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Trước Chuyến bay</h5><p>Website &rarr; Đặt trước duty-free (30 ngày) &rarr; Đặt lounge &rarr; Đặt bãi đỗ xe &rarr; Đăng ký loyalty</p></div>
+                    <div class="callout-item"><h5>Tại Sân bay</h5><p>Dẫn đường qua App &rarr; Cảnh báo thời gian xếp hàng &rarr; Thông báo cổng &rarr; Ưu đãi cá nhân hóa &rarr; AI Concierge &rarr; Thanh toán khuôn mặt</p></div>
+                    <div class="callout-item"><h5>Quá cảnh</h5><p>Lounge Navigator &rarr; Wi-Fi tự kết nối (theo hạng) &rarr; Tích điểm Loyalty &rarr; Giao hàng đến cổng</p></div>
+                    <div class="callout-item"><h5>Sau Chuyến bay</h5><p>Cập nhật hạng Loyalty &rarr; Phần thưởng voucher &rarr; CRM tái tương tác (bình tĩnh, không hung hăng) &rarr; Ưu đãi lần tới</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: IDENTITY & ACCESS -->
+    <section class="section" id="identity">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>Kiểm soát Định danh &amp; Truy cập <span style="opacity:.4">|</span> 5 Hệ thống</h2><p class="section-subtitle">Quản lý định danh và truy cập zero-trust cho nhân viên, hành khách và đối tác. Ưu tiên biometric, cấp credential qua app, tuân thủ ICAO Annex 17 và PDPL 91/2025.</p></div>
+            <div class="subdomain-header subdomain-identity"><h3>&#128272; Identity &amp; Access Management</h3><div class="sub-stats">5 sub-specs &middot; 597 requirements &middot; SL-3 Critical</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128274;</div><div class="card-title">Physical Access Control (ICT-0277)</div></div>
+                    <div class="card-content">
+                        <p><strong>99 reqs &middot; SL-3 &middot; 99.99% availability</strong></p>
+                        <p>2.500+ điểm kiểm soát truy cập (cửa, cổng xoay, mantrap). NFC qua Staff App là credential chính, nhận diện khuôn mặt là biometric dự phòng (ISO 30107-3 PAD), thẻ không tiếp xúc cho khách. Thực thi anti-passback toàn bộ khu vực.</p>
+                        <p style="margin-top:.4rem">Chính sách truy cập theo chuyến bay qua tích hợp AODB: nhân viên mặt đất chỉ truy cập khu vực cổng trong thời gian turnaround được phân bổ. Fail-safe/fail-secure theo khu vực theo ICAO Annex 17.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128100;</div><div class="card-title">Physical Identity Mgmt (ICT-0278)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs</strong></p>
+                        <p>Quản lý vòng đời toàn bộ quyền truy cập vật lý: cấp phát, sửa đổi, tạm ngưng, thu hồi. Kiểm soát truy cập theo thuộc tính (ABAC) kết hợp vai trò + thời gian + vị trí + trạng thái đào tạo + ngữ cảnh hành vi.</p>
+                        <p style="margin-top:.4rem">Kích hoạt truy cập theo đào tạo: quyền được mở dần khi hoàn thành chứng chỉ trong LMS. Tự động tạm ngưng khi hết hạn.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="three-col">
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128187;</div><div class="card-title">Digital IAM (ICT-0279)</div></div>
+                    <div class="card-content"><p><strong>150 reqs</strong><br>SSO, MFA, truy cập dựa trên vai trò cho tất cả ứng dụng doanh nghiệp. Privileged Access Management (PAM). Tự động hóa quy trình nhận/chuyển/nghỉ việc liên kết với vòng đời HR.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128273;</div><div class="card-title">Customer IAM (ICT-0337)</div></div>
+                    <div class="card-content"><p><strong>71 reqs &middot; 99.99%</strong><br>Định danh B2C: SSO hành khách, đăng nhập xã hội, xác thực không mật khẩu, consent chi tiết theo PDPL. Tách biệt với enterprise DIAM. 50M+ tài khoản.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128272;</div><div class="card-title">Consent &amp; Privacy (ICT-0327)</div></div>
+                    <div class="card-content"><p><strong>146 reqs</strong><br>Hệ thống tuân thủ PDPL 91/2025. API xác minh consent nằm trong đường dẫn quan trọng của xử lý biometric. Mặc định từ chối nếu không thể xác minh consent. 5M+ bản ghi consent đang hoạt động. 200K-500K xác minh/ngày.</p></div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128737; Mô hình Bảo mật Zero-Trust</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Ưu tiên Biometric</h5><p>NFC qua Staff App là credential chính; nhận diện khuôn mặt (ISO 30107-3 PAD) là dự phòng; thẻ chỉ cho khách/dự phòng</p></div>
+                    <div class="callout-item"><h5>Truy cập Gắn với Đào tạo</h5><p>Quyền truy cập mở dần khi nhân viên hoàn thành chứng chỉ LMS; tự động tạm ngưng khi hết hạn</p></div>
+                    <div class="callout-item"><h5>Chính sách Liên kết AODB</h5><p>Truy cập động gắn với lịch bay: nhân viên mặt đất chỉ vào khu vực cổng trong thời gian turnaround được phân bổ</p></div>
+                    <div class="callout-item"><h5>Consent Trước Xử lý</h5><p>Không xử lý dữ liệu biometric khi chưa xác minh consent. Mặc định từ chối. Nền tảng Consent &amp; Privacy nằm trên đường dẫn quan trọng</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: WORKFORCE & HR -->
+    <section class="section" id="workforce">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>Nhân sự &amp; HR <span style="opacity:.4">|</span> 7 Hệ thống</h2><p class="section-subtitle">Động cơ nhân lực: quản lý 10.000-50.000 nhân viên qua nhiều đơn vị sử dụng lao động, với "quan hệ trực tiếp nhân viên-sân bay" qua Staff App.</p></div>
+            <div class="subdomain-header subdomain-workforce"><h3>&#128101; Workforce &amp; Human Resources</h3><div class="sub-stats">7 sub-specs &middot; 774 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128188;</div><div class="card-title">Core HCM (ICT-0280)</div></div>
+                    <div class="card-content">
+                        <p><strong>18 reqs</strong><br>Hồ sơ nhân viên có thẩm quyền: nguồn thông tin duy nhất cho định danh nhân viên, trạng thái việc làm, vị trí tổ chức, và điều khoản hợp đồng. Tích hợp sẵn luật lao động Việt Nam.</p>
+                        <p style="margin-top:.4rem">Đa đơn vị: nhà khai thác sân bay, dịch vụ mặt đất, nhượng quyền, nhà thầu, biệt phái chính phủ. 10K-50K hồ sơ.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128241;</div><div class="card-title">Staff App (ICT-0285)</div></div>
+                    <div class="card-content">
+                        <p><strong>159 reqs</strong><br>Hợp nhất 31 module hệ thống nhân viên vào một nền tảng: định danh số/SSO, ví credential NFC, phân công công việc, phân phối eSOP, quản lý ca, lịch nghỉ giải lao, yêu cầu nghỉ phép, báo cáo sự cố, liên lạc nội bộ.</p>
+                        <p style="margin-top:.4rem">100% số hóa từ Ngày 1: không giấy tờ, không chấm công thủ công. Ghi nhận ca làm dựa trên geofence với tự động clock-in/out. Mục tiêu: 90%+ sử dụng. Phân phối credential chính cho PACS. Hoạt động offline cho khu vực airside/tầng hầm.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="five-col">
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128197;</div><div class="card-title">Workforce Mgmt</div></div>
+                    <div class="card-content"><p><strong>ICT-0282 &middot; 131 reqs</strong><br>Dự báo nhu cầu theo chuyến bay AODB, lên lịch ca, chấm công, quy tắc mệt mỏi, ràng buộc cứng Bộ luật Lao động 2019. Mục tiêu: tăng 30-40% năng suất.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#127891;</div><div class="card-title">LMS</div></div>
+                    <div class="card-content"><p><strong>ICT-0283 &middot; 99 reqs</strong><br>Khóa đào tạo, chứng chỉ, theo dõi tuân thủ. Cung cấp dữ liệu cho PIAM để kích hoạt truy cập gắn với đào tạo</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#129657;</div><div class="card-title">Occupational Health</div></div>
+                    <div class="card-content"><p><strong>ICT-0284 &middot; 106 reqs</strong><br>Đánh giá y tế, năng lực làm việc, theo dõi sức khỏe sự cố, báo cáo pháp quy</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128221;</div><div class="card-title">Digital SOP</div></div>
+                    <div class="card-content"><p><strong>ICT-0286 &middot; 104 reqs</strong><br>Quy trình số hóa, checklist chất lượng, quản lý phiên bản, nhật ký kiểm toán, hoạt động offline</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128172;</div><div class="card-title">HR Service</div></div>
+                    <div class="card-content"><p><strong>ICT-0281 &middot; 157 reqs</strong><br>Helpdesk HR, quản lý case, yêu cầu nhân viên, cơ sở tri thức, theo dõi SLA</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: DATA & AI -->
+    <section class="section" id="dataai">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>Dữ liệu &amp; AI <span style="opacity:.4">|</span> 7 Hệ thống</h2><p class="section-subtitle">Xương sống dữ liệu "Sân bay Tư duy": kiến trúc lakehouse, streaming real-time, BI, governance, và MLOps vận hành trí tuệ dự đoán qua tất cả các domain.</p></div>
+            <div class="subdomain-header subdomain-data"><h3>&#129504; Data &amp; Artificial Intelligence</h3><div class="sub-stats">7 sub-specs &middot; 655 requirements</div></div>
+            <div class="flow-container">
+                <h4 style="text-align:center;margin-bottom:1rem">Luồng Kiến trúc Dữ liệu</h4>
+                <div class="three-col">
+                    <div class="spoke-card" style="border-top:3px solid #1565C0">
+                        <h5>Thu thập &amp; Lưu trữ</h5>
+                        <p><strong>Data Lakehouse</strong> (ICT-0313, 118 reqs)<br>Kiến trúc medallion Bronze/Silver/Gold. Batch ETL + streaming. ACID transactions. Open table formats (Iceberg/Delta/Hudi). 5-100 TB/ngày. "GBIA sở hữu toàn bộ dữ liệu."</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #E65100">
+                        <h5>Quản trị &amp; Catalogue</h5>
+                        <p><strong>Data Governance</strong> (ICT-0316, 165 reqs)<br>Chất lượng dữ liệu, lineage, catalogue, stewardship. Tích hợp contract-first. Tuân thủ PDPL. Sở hữu phân tán với tiêu chuẩn tập trung. 40+ hệ thống nguồn.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #2E7D32">
+                        <h5>Phân tích &amp; Phục vụ</h5>
+                        <p><strong>BI Platform</strong> (ICT-0315, 96 reqs)<br>Dashboard doanh nghiệp, phân tích self-service, báo cáo định kỳ. Truy cập dữ liệu theo vai trò. Bảng điểm KPI lãnh đạo.</p>
+                    </div>
+                </div>
+                <div style="text-align:center;font-size:1.5rem;color:var(--navy);margin:.6rem 0">&#8595; &#8595; &#8595;</div>
+                <div class="three-col">
+                    <div class="spoke-card" style="border-top:3px solid #C62828">
+                        <h5>Streaming &amp; Phản ứng</h5>
+                        <p><strong>Real-Time Analytics</strong> (ICT-0314, 97 reqs)<br>Phân tích streaming cho insight kinh doanh real-time. Xử lý sự kiện dưới 1 giây. Vận hành dashboard hoạt động và cảnh báo.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #7B1FA2">
+                        <h5>Huấn luyện &amp; Triển khai</h5>
+                        <p><strong>MLOps Platform</strong> (ICT-0319, 95 reqs)<br>20-500 model production. Theo dõi thí nghiệm, model registry, A/B testing, phát hiện drift. Chính sách không Black Box. Tuân thủ Luật AI Việt Nam 134/2025. GPU compute.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #00838F">
+                        <h5>Dự đoán &amp; Tối ưu</h5>
+                        <p><strong>Predictive Operations</strong> (ICT-0318, 83 reqs)<br>Dựa trên rules Ngày 1, ML 6-12 tháng sau khai trương (ràng buộc cold-start). Trễ chuyến bay, tắc nghẽn, hỏng thiết bị, nhu cầu tài nguyên. Dự báo 15 phút-4 giờ. Output hướng hành động.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128300; Ngăn xếp Trí tuệ "Sân bay Tư duy"</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Feature Store (ICT-0317)</h5><p>ML feature tập trung: tính toán chia sẻ, tính chính xác theo thời điểm, phục vụ online+offline cho tất cả model</p></div>
+                    <div class="callout-item"><h5>Quyền Sở hữu Dữ liệu Sân bay</h5><p>"GBIA sở hữu toàn bộ dữ liệu được tạo bởi hoặc đi qua hệ thống sân bay". Thực thi ở tầng lakehouse qua contract-first ingestion</p></div>
+                    <div class="callout-item"><h5>4 Ứng dụng AI</h5><p>Predictive Ops, Prognostic Maintenance, Computer Vision, AI Concierge. Tất cả model được quản lý bởi MLOps</p></div>
+                    <div class="callout-item"><h5>Lưu trữ Dữ liệu tại Việt Nam</h5><p>Toàn bộ dữ liệu lưu trữ vật lý trong nước theo Nghị định 53/2022. Hạ tầng huấn luyện on-premise. AI inference on-premise theo Luật AI 134/2025</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: INTEGRATION BACKBONE -->
+    <section class="section" id="integration">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>Trục Tích hợp <span style="opacity:.4">|</span> 4 Hệ thống</h2><p class="section-subtitle">Hệ thần kinh kết nối toàn bộ 61 hệ thống doanh nghiệp. Tích hợp point-to-point bị cấm; mọi trao đổi dữ liệu phải đi qua tầng tích hợp tập trung này.</p></div>
+            <div class="subdomain-header subdomain-integration"><h3>&#128260; Integration &amp; Middleware</h3><div class="sub-stats">4 sub-specs &middot; 424 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1.2rem">
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#128232;</div><div class="card-title">Enterprise Service Bus (ICT-0320)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs &middot; SL-3 &middot; 99.99%</strong></p>
+                        <p>Middleware hướng tin nhắn: pub/sub, request-reply, đảm bảo giao nhận, routing dựa trên nội dung, trung gian giao thức (AMQP, REST, SOAP, JMS, MQTT, OPC UA qua IT/OT Bridge). Tích hợp contract-first.</p>
+                        <p style="margin-top:.4rem">50K-500K+ tin nhắn/giờ vào giờ cao điểm. 40+ hệ thống kết nối Ngày 1. Tách biệt với OT ESB (ICT-0220).</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#128295;</div><div class="card-title">API Gateway (ICT-0321)</div></div>
+                    <div class="card-content">
+                        <p><strong>123 reqs &middot; 99.99%</strong></p>
+                        <p>Điểm vào duy nhất cho mọi truy cập lập trình. Xác thực OAuth 2.0/OIDC (qua DIAM), rate limiting, API versioning, developer portal, phân tích sử dụng. Cấm truy cập backend trực tiếp.</p>
+                        <p style="margin-top:.4rem">10K-1M+ API call/giờ. Người dùng: hãng hàng không, dịch vụ mặt đất, Passenger App, Staff App, lập trình viên bên thứ ba.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#9889;</div><div class="card-title">Commercial Event Streaming (ICT-0322)</div></div>
+                    <div class="card-content">
+                        <p><strong>98 reqs</strong><br>Enterprise event bus (dựa trên Kafka) cho business event real-time: giao dịch, loyalty event, CRM trigger, kích hoạt ưu đãi, xác nhận đặt chỗ. Tách rời producer khỏi consumer.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#9729;</div><div class="card-title">iPaaS (ICT-0323)</div></div>
+                    <div class="card-content">
+                        <p><strong>72 reqs</strong><br>Tích hợp trên cloud cho luồng SaaS-to-SaaS và SaaS-to-on-prem. Connector có sẵn (Salesforce, SAP, Workday). Điều phối workflow low-code. Cloud API federation qua API Gateway.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-container">
+                <h4 style="text-align:center;margin-bottom:.8rem">Kiến trúc Tích hợp: Bốn Trụ cột</h4>
+                <div class="spoke-grid">
+                    <div class="spoke-card"><h5>Domain Hàng không</h5><p>AODB, A-CDM, BHS, CUPPS &rarr; qua OT ESB &amp; IT/OT Bridge</p></div>
+                    <div class="hub-center"><h4>ESB + API Gateway + Event Streaming + iPaaS</h4><p>Cấm point-to-point. Toàn bộ 149 hệ thống tích hợp qua bốn trụ cột này</p></div>
+                    <div class="spoke-card"><h5>Domain OT</h5><p>BMS, VMS, PACS, FAS &rarr; qua OT ESB &amp; data diode</p></div>
+                    <div class="spoke-card"><h5>Hệ thống Thương mại</h5><p>CRM, Loyalty, POS, Billing &rarr; Event Streaming + ESB</p></div>
+                    <div class="spoke-card"><h5>Đối tác Bên ngoài</h5><p>Hãng hàng không, gọi xe, GDS &rarr; API Gateway + iPaaS</p></div>
+                    <div class="spoke-card"><h5>Nền tảng Dữ liệu</h5><p>Lakehouse, BI, ML &rarr; Event Streaming + batch ETL</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 10: CYBERSECURITY -->
+    <section class="section" id="security">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>An ninh mạng <span style="opacity:.4">|</span> 4 Hệ thống</h2><p class="section-subtitle">Bảo vệ 25.000+ endpoint trên IT và OT. Mô hình zone IEC 62443, SOC hợp nhất, bảo vệ endpoint zero-trust, và vault quản lý bí mật tập trung.</p></div>
+            <div class="subdomain-header subdomain-security"><h3>&#128737; Cybersecurity &amp; Threat Defence</h3><div class="sub-stats">4 sub-specs &middot; 243 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128065;</div><div class="card-title">Enterprise SOC (ICT-0325)</div></div>
+                    <div class="card-content">
+                        <p><strong>95 reqs &middot; SL-3 &middot; 99.99% &middot; 24/7/365</strong></p>
+                        <p>SIEM cho tổng hợp và tương quan log (50K+ EPS liên tục, 150K+ EPS cao điểm). SOAR cho phản ứng sự cố theo playbook. Threat Intelligence Platform (TIP). Giao diện quản lý thống nhất cho tất cả zone IEC 62443 (Level 0-5).</p>
+                        <p style="margin-top:.4rem">Nhân sự: phân tích viên Tier 1/2/3, SOC manager, CISO. 25K+ endpoint được giám sát. Lưu log 12 tháng hot/warm, 24 tháng tổng. Theo chuẩn NIST CSF 2.0.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128165;</div><div class="card-title">Network Security (ICT-0324)</div></div>
+                    <div class="card-content">
+                        <p><strong>15 reqs &middot; SL-3</strong></p>
+                        <p>Firewall thế hệ mới, IDS/IPS, phân đoạn mạng, bảo vệ DDoS. Triển khai mô hình zone/conduit IEC 62443 với data diode phần cứng cho luồng dữ liệu một chiều OT-sang-IT. Micro-segmentation ở tầng ứng dụng. TLS 1.3 tối thiểu.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128270;</div><div class="card-title">Extended Detection &amp; Response (ICT-0326)</div></div>
+                    <div class="card-content">
+                        <p><strong>55 reqs</strong><br>Bảo vệ endpoint, threat hunting nâng cao, phân tích hành vi, ngăn chặn tự động. Bao phủ server, workstation, mobile, container. Cung cấp dữ liệu cho SOC SIEM để phát hiện tương quan.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128272;</div><div class="card-title">Secrets Management (ICT-0338)</div></div>
+                    <div class="card-content">
+                        <p><strong>78 reqs &middot; 99.99%</strong><br>Vault dựa trên HSM (FIPS 140-2 Level 3). Secret tĩnh với luân chuyển bắt buộc, credential động ngắn hạn, vòng đời PKI/X.509, SSH key, encryption-as-a-service. Zero standing credential. 10K-50K+ secret. Multi-tenancy theo namespace.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128737; Phòng thủ Chiều sâu: Ngăn xếp Bảo mật Doanh nghiệp</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Phòng ngừa</h5><p>NSS firewall &amp; micro-segmentation &rarr; XDR bảo vệ endpoint &rarr; Secrets Management (zero standing secret) &rarr; IAM kiểm soát truy cập</p></div>
+                    <div class="callout-item"><h5>Phát hiện</h5><p>SOC SIEM tương quan (50K+ EPS) &rarr; XDR phân tích hành vi &rarr; Phát hiện bất thường mạng &rarr; Giám sát bảo mật OT</p></div>
+                    <div class="callout-item"><h5>Phản ứng</h5><p>SOAR playbook tự động &rarr; Chuyển tiếp phân tích viên theo cấp (T1/T2/T3) &rarr; Ngăn chặn tự động &rarr; Bảo toàn bằng chứng pháp y</p></div>
+                    <div class="callout-item"><h5>Tuân thủ</h5><p>Luật An ninh mạng Việt Nam &rarr; IEC 62443 &rarr; Nghị định 53/2022 &rarr; Lưu log 24 tháng &rarr; NIST CSF 2.0</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 11: PLATFORM & INFRASTRUCTURE -->
+    <section class="section" id="platform">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Mảng Doanh nghiệp</span><h2>Nền tảng &amp; Hạ tầng <span style="opacity:.4">|</span> 9 Hệ thống</h2><p class="section-subtitle">Tầng dịch vụ nền tảng: hybrid cloud, DevOps, observability, digital platform, tương tác liên hệ thống, và công cụ vận hành làm nền cho mọi ứng dụng doanh nghiệp.</p></div>
+            <div class="subdomain-header subdomain-platform"><h3>&#9729; Platform, DevOps &amp; Infrastructure</h3><div class="sub-stats">9 sub-specs &middot; 820 requirements</div></div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#9729;</div><div class="card-title">Hybrid Cloud (ICT-0330)</div></div>
+                    <div class="card-content">
+                        <p><strong>122 reqs &middot; 99.99%</strong><br>Kiến trúc "Việt Nam Trước tiên": data centre on-prem Tier III (mặc định) + cloud chọn lọc cho dev/test, analytics, SaaS. Kubernetes container orchestration. Thực thi chính sách đặt workload theo Nghị định 53/2022. 200-1.000+ service container hóa.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128295;</div><div class="card-title">Digital Platform (ICT-0329)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs &middot; 99.99%</strong><br>Nền tảng công nghệ cốt lõi: 6 loại dịch vụ dùng chung (runtime, auth, integration, data, AI, observability). Loại bỏ trùng lặp giữa các hệ thống silo. Kiến trúc software-defined. Chứa 40+ ứng dụng. OCI container, OpenTelemetry, OAuth 2.0.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128736;</div><div class="card-title">Enterprise DevOps (ICT-0331)</div></div>
+                    <div class="card-content">
+                        <p><strong>59 reqs</strong><br>CI/CD pipeline, Infrastructure-as-Code, GitOps, kiểm thử tự động, artifact registry. Tách biệt với OT DevOps (ICT-0234).</p></div>
+                </div>
+            </div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128200;</div><div class="card-title">Observability (ICT-0332)</div></div>
+                    <div class="card-content"><p><strong>55 reqs</strong><br>APM, distributed tracing, tổng hợp log, custom metric, giám sát SLO. Khả năng hiển thị trạng thái cho tất cả ứng dụng doanh nghiệp.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128257;</div><div class="card-title">Interoperability (ICT-0328)</div></div>
+                    <div class="card-content"><p><strong>90 reqs</strong><br>Tuân thủ tiêu chuẩn và trao đổi dữ liệu với CAAV, hải quan, xuất nhập cảnh, IATA, ICAO. Giao diện chính phủ dựa trên EDI, EDIFACT, và API.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128218;</div><div class="card-title">CMDB (ICT-0339)</div></div>
+                    <div class="card-content"><p><strong>76 reqs &middot; SL-3</strong><br>Kho tài sản IT/OT và mối quan hệ. Tự động khám phá, ánh xạ phụ thuộc, theo dõi thay đổi. Cung cấp dữ liệu cho quản lý sự cố và phân tích tác động.</p></div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128269;</div><div class="card-title">Expert Finder (ICT-0333)</div></div>
+                    <div class="card-content"><p><strong>118 reqs</strong><br>Tìm kiếm chuyên gia theo lĩnh vực và tri thức tổ chức. Phân loại kỹ năng, ánh xạ chuyên môn, bài viết tri thức, nền tảng Q&amp;A. Đẩy nhanh giải quyết vấn đề.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128202;</div><div class="card-title">Non-Aero Billing (ICT-0304)</div></div>
+                    <div class="card-content"><p><strong>136 reqs</strong><br>Hệ thống xuất hóa đơn cho toàn bộ doanh thu phi hàng không. CMS là nguồn quản lý hợp đồng: tính toán theo rule, không cần thay đổi code khi cập nhật mô hình billing. Đối soát đa nguồn. Tuân thủ IFRS 15/16, VAS, Nghị định 123/2020.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 12: CROSS-SYSTEM INTEGRATION -->
+    <section class="section" id="crosscut">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Tổng hợp</span><h2>Các Mô hình Tích hợp Liên Hệ thống</h2><p class="section-subtitle">Năm mô hình kiến trúc liên kết 61 hệ thống doanh nghiệp thành một hệ sinh thái gắn kết.</p></div>
+            <div class="three-col" style="margin-bottom:1.5rem">
+                <div class="pillar-card" style="border-top:4px solid var(--orange)">
+                    <div class="pillar-icon">&#128176;</div>
+                    <div class="pillar-title">Vòng Doanh thu Thương mại</div>
+                    <div class="pillar-desc">POS &rarr; Event Streaming &rarr; Revenue Dashboard &rarr; CRM &rarr; Offer Management &rarr; Passenger App &rarr; POS</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--data)">
+                    <div class="pillar-icon">&#128202;</div>
+                    <div class="pillar-title">Pipeline Trí tuệ Dữ liệu</div>
+                    <div class="pillar-desc">Tất cả Hệ thống &rarr; Event Streaming &rarr; Lakehouse &rarr; Feature Store &rarr; MLOps &rarr; Predictive Ops &rarr; Hành động APOC</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--identity)">
+                    <div class="pillar-icon">&#128100;</div>
+                    <div class="pillar-title">Chuỗi Vòng đời Định danh</div>
+                    <div class="pillar-desc">HCM (tuyển dụng) &rarr; LMS (đào tạo) &rarr; PIAM (credential) &rarr; PACS (truy cập) &rarr; WFM (lịch trình) &rarr; Staff App (phân phối)</div>
+                </div>
+            </div>
+            <div class="two-col" style="margin-bottom:1.5rem">
+                <div class="pillar-card" style="border-top:4px solid var(--security)">
+                    <div class="pillar-icon">&#128737;</div>
+                    <div class="pillar-title">Luồng Telemetry Bảo mật</div>
+                    <div class="pillar-desc">Tất cả Hệ thống &rarr; XDR agent &rarr; SOC SIEM (50K+ EPS) &rarr; SOAR playbook &rarr; Ngăn chặn tự động &rarr; Phản ứng sự cố</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--digital)">
+                    <div class="pillar-icon">&#128241;</div>
+                    <div class="pillar-title">Điều phối Hành trình Hành khách</div>
+                    <div class="pillar-desc">CIAM (định danh) &rarr; CRM (hồ sơ) &rarr; Loyalty (hạng) &rarr; App (kênh) &rarr; AI Concierge &rarr; Ưu đãi &rarr; Fulfilment</div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; Phân bổ Yêu cầu theo Domain</h4>
+                <div style="margin-top:.8rem">
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Thương mại</span><div class="req-bar" style="width:200px;background:var(--commercial)">1,196</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Trải nghiệm Số</span><div class="req-bar" style="width:160px;background:var(--digital)">954</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Nền tảng</span><div class="req-bar" style="width:137px;background:var(--platform)">820</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Nhân sự</span><div class="req-bar" style="width:130px;background:var(--workforce)">774</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Dữ liệu &amp; AI</span><div class="req-bar" style="width:110px;background:var(--data)">655</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Định danh</span><div class="req-bar" style="width:100px;background:var(--identity)">597</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Tích hợp</span><div class="req-bar" style="width:71px;background:var(--integration)">424</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">An ninh mạng</span><div class="req-bar" style="width:41px;background:var(--security)">243</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 13: SUMMARY & NEXT STEPS -->
+    <section class="section" id="summary">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Tóm tắt</span><h2>Điểm chính &amp; Bước tiếp theo</h2><p class="section-subtitle">URD Mảng Enterprise cung cấp đặc tả toàn diện, tích hợp cho mọi hệ thống ngoài aviation và OT tại GBIA.</p></div>
+            <div class="three-col" style="margin-bottom:1.5rem">
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#127919;</div><div class="card-title">Khác biệt Thương mại</div></div>
+                    <div class="card-content">
+                        <p><strong>29 hệ thống thương mại + số</strong> tạo thành marketplace số hoàn chỉnh: từ billing hàng không qua bán lẻ omnichannel dựa trên loyalty đến tương tác hành khách bằng AI.</p>
+                        <p style="margin-top:.4rem">Sân bay hoạt động như <strong>nền kinh doanh platform</strong>. GBIA là bên hỗ trợ, không phải merchant of record. Tương tác "bình tĩnh, không hung hăng".</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#129504;</div><div class="card-title">Vận hành Dựa trên Dữ liệu</div></div>
+                    <div class="card-content">
+                        <p><strong>7 hệ thống dữ liệu &amp; AI</strong> biến dữ liệu thô thành trí tuệ dự đoán. Kiến trúc lakehouse với tích hợp contract-first cung cấp bản sao sự thật duy nhất.</p>
+                        <p style="margin-top:.4rem"><strong>165 yêu cầu data governance</strong>, số lượng cao nhất trong một sub-spec, phản ánh tầm quan trọng của chất lượng dữ liệu ở quy mô lớn. Tuân thủ Luật AI Việt Nam 134/2025.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#128737;</div><div class="card-title">Bảo mật theo Thiết kế</div></div>
+                    <div class="card-content">
+                        <p><strong>9 hệ thống định danh + bảo mật</strong> triển khai phòng thủ chiều sâu từ truy cập vật lý đến phát hiện mối đe dọa mạng. Mô hình truy cập zero-trust, ưu tiên biometric, gắn với đào tạo.</p>
+                        <p style="margin-top:.4rem">Tuân thủ quy định Việt Nam được nhúng trong mọi sub-spec: PDPL 91/2025, Luật An ninh mạng, Nghị định 53/2022, Luật AI 134/2025.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; Nguyên tắc Thiết kế Xuyên suốt</h4>
+                <div class="callout-grid" style="grid-template-columns:repeat(3,1fr)">
+                    <div class="callout-item"><h5>Lưu trữ Dữ liệu tại Việt Nam</h5><p>Toàn bộ dữ liệu cá nhân và vận hành lưu trong nước. Thực thi ở tầng lakehouse, cloud, và ứng dụng theo Nghị định 53/2022</p></div>
+                    <div class="callout-item"><h5>Phân loại IEC 62443</h5><p>Mỗi hệ thống được gán cấp bảo mật (SL-1 đến SL-3). Phân đoạn theo zone. Data diode phần cứng cho ranh giới OT</p></div>
+                    <div class="callout-item"><h5>Không Point-to-Point</h5><p>Tất cả hệ thống tích hợp qua ESB, API Gateway, Event Streaming, hoặc iPaaS. Tích hợp contract-first với data contract được công bố</p></div>
+                    <div class="callout-item"><h5>Tiến hóa Năng lực</h5><p>Mỗi sub-spec bao gồm lộ trình từ baseline Ngày 1 qua Giai đoạn 1, Giai đoạn 2, và Công suất Tối đa 50 MPPA</p></div>
+                    <div class="callout-item"><h5>Quan hệ Trực tiếp</h5><p>Nhân viên: trực tiếp qua Staff App (90%+ sử dụng, 100% số hóa). Hành khách: trực tiếp qua GBIA App (50%+ sử dụng)</p></div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+                <div>
+                    <h3 style="margin-bottom:.8rem">Bước Tiếp theo</h3>
+                    <div class="card"><div class="card-content"><ul style="list-style:none;padding:0;font-size:.85rem">
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>1.</strong> Khách hàng xem xét và phê duyệt ICT-0341 Rev 1.0</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>2.</strong> Xác thực đối chiếu với Enterprise Architecture (ICT-0343 Rev 3)</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>3.</strong> Kiểm tra tính nhất quán với Aviation URD (ICT-0340) và OT URD (ICT-0335) tại các điểm tích hợp</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>4.</strong> Chuẩn bị gói thầu MSI với tất cả 61 sub-specification</li>
+                        <li style="padding:.4rem 0"><strong>5.</strong> Architecture Review Board ký duyệt và khởi động Stage Gate 1 (HLD)</li>
+                    </ul></div></div>
+                </div>
+                <div>
+                    <h3 style="margin-bottom:.8rem">Tài liệu Tham chiếu</h3>
+                    <div class="card"><div class="card-content"><ul style="list-style:none;padding:0;font-size:.85rem">
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0341</strong>: URD Mảng Enterprise (tài liệu này)</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0343</strong>: Enterprise Architecture Rev 3</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0340</strong>: URD Mảng Aviation</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0335</strong>: URD Mảng OT</li>
+                        <li style="padding:.4rem 0"><strong>KPIs v4</strong>: Tiêu chuẩn Kỹ thuật &amp; KPIs</li>
+                    </ul></div></div>
+                </div>
+            </div>
+            <div class="final-cta">
+                <h2>URD Mảng Enterprise &amp; Commercial</h2>
+                <p>61 hệ thống. 5.910 yêu cầu. 8 miền phụ. Một nền tảng doanh nghiệp tích hợp vận hành Sân bay Tư duy.</p>
+                <div class="final-logos"><span class="logo-text">Masterise</span><span class="logo-divider-text">&times;</span><span class="logo-text">AAC</span><span class="logo-divider-text">&times;</span><span class="logo-text">Gradion</span></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const sections=['landing','scope','commercial','customer','digital','identity','workforce','dataai','integration','security','platform','crosscut','summary'];
+        let currentSection=0;
+        const navToggle=document.getElementById('navToggle'),navPanel=document.getElementById('navPanel'),themeToggle=document.getElementById('themeToggle'),prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),slideCounter=document.getElementById('slideCounter'),navItems=document.querySelectorAll('.nav-item');
+        navToggle.addEventListener('click',()=>navPanel.classList.toggle('open'));
+        themeToggle.addEventListener('click',()=>{const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme-urd',t)});
+        const savedTheme=localStorage.getItem('theme-urd')||'light';document.documentElement.setAttribute('data-theme',savedTheme);
+        function navigateToSection(id){const i=sections.indexOf(id);if(i!==-1)showSection(i)}
+        function showSection(i){if(i<0||i>=sections.length)return;document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const t=document.getElementById(sections[i]);if(t){t.classList.add('active');currentSection=i;updateUI();window.scrollTo(0,0)}}
+        function updateUI(){slideCounter.textContent=`${currentSection+1} / ${sections.length}`;navItems.forEach(item=>{item.classList.remove('active');if(item.getAttribute('data-section')===sections[currentSection])item.classList.add('active')});prevBtn.disabled=currentSection===0;nextBtn.disabled=currentSection===sections.length-1}
+        prevBtn.addEventListener('click',()=>showSection(currentSection-1));
+        nextBtn.addEventListener('click',()=>showSection(currentSection+1));
+        navItems.forEach(item=>item.addEventListener('click',()=>{navigateToSection(item.getAttribute('data-section'));navPanel.classList.remove('open')}));
+        document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')showSection(currentSection+1);else if(e.key==='ArrowLeft'||e.key==='ArrowUp')showSection(currentSection-1);else if(e.key==='Escape')navPanel.classList.remove('open')});
+        document.addEventListener('click',e=>{if(!navPanel.contains(e.target)&&!navToggle.contains(e.target))navPanel.classList.remove('open')});
+        updateUI();
+    </script>
+</body>
+</html>

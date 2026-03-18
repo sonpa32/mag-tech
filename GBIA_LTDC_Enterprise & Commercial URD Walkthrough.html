@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise &amp; Commercial URD Walkthrough | GBIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#1E3A5F;--navy-dark:#152A45;--navy-light:#2D4A6F;--orange:#F47920;--gold:#9A7B4F;--white:#FFF;--off-white:#F8F6F3;--gray-100:#F5F5F5;--gray-200:#E8E8E8;--gray-500:#707070;--text:#1A1A1A;--text-sec:#505050;--text-muted:#707070;--border:#E8E8E8;--card:#FFF;--bg:#FFF;--bg-sec:#F8F6F3;--commercial:#0D7C66;--enterprise:#6C3483;--data:#1565C0;--security:#C62828;--integration:#E65100;--workforce:#00838F;--digital:#7B1FA2;--platform:#37474F}
+        [data-theme="dark"]{--bg:#0D1117;--bg-sec:#161B22;--text:#E6EDF3;--text-sec:#B1BAC4;--text-muted:#8B949E;--border:#30363D;--card:#161B22;--white:#E6EDF3;--off-white:#161B22;--gray-100:#21262D;--gray-200:#30363D}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;line-height:1.6;background:var(--off-white);color:var(--text);transition:all .3s}
+        h1,h2,h3,h4{font-weight:700;line-height:1.2;color:var(--navy)}
+        [data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3,[data-theme="dark"] h4{color:var(--text)}
+        h1{font-size:clamp(1.8rem,4vw,2.8rem)}h2{font-size:clamp(1.5rem,3vw,2rem)}h3{font-size:clamp(1.1rem,2vw,1.4rem)}
+        .nav-toggle{position:fixed;top:1rem;left:1rem;z-index:1001;width:44px;height:44px;border:none;border-radius:50%;background:var(--navy);color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+        .nav-toggle:hover{background:var(--navy-light)}
+        .nav-toggle svg{width:20px;height:20px}
+        .nav-panel{position:fixed;top:0;left:0;width:280px;height:100vh;background:linear-gradient(180deg,var(--navy-dark),var(--navy));z-index:1000;transform:translateX(-100%);transition:transform .3s;overflow-y:auto;padding:4rem 1.2rem 1.2rem}
+        .nav-panel.open{transform:translateX(0);box-shadow:0 0 30px rgba(0,0,0,.3)}
+        .nav-section{margin-bottom:1.2rem}
+        .nav-section-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:.4rem;padding-left:.4rem}
+        .nav-item{display:block;padding:.4rem .6rem;color:rgba(255,255,255,.7);text-decoration:none;font-size:.8rem;border-radius:6px;transition:all .2s;margin-bottom:2px;cursor:pointer}
+        .nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
+        .nav-item.active{background:var(--orange);color:#fff;font-weight:600}
+        .logo-bar{position:fixed;top:0;left:0;right:0;height:60px;background:var(--card);border-bottom:1px solid var(--border);z-index:998;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem 0 4rem;transition:all .3s}
+        .logo-center{text-align:center}
+        .logo-center .project-name{font-size:1rem;font-weight:700;color:var(--navy)}
+        [data-theme="dark"] .logo-center .project-name{color:var(--text)}
+        .logo-center .workshop-type{font-size:.6rem;color:var(--orange);font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+        .theme-toggle{position:fixed;top:70px;right:15px;z-index:1000;background:var(--card);border:2px solid var(--border);border-radius:50px;padding:5px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:var(--text);transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .theme-toggle:hover{border-color:var(--orange)}
+        [data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+        [data-theme="dark"] .theme-toggle .icon-moon{display:none}
+        .theme-toggle .icon-sun{display:none}
+        .theme-toggle .icon-moon{display:inline}
+        .slide-controls{position:fixed;bottom:1.2rem;right:1.2rem;z-index:999;display:flex;gap:.4rem}
+        .slide-btn{width:44px;height:44px;border:2px solid var(--navy);border-radius:50%;background:var(--card);color:var(--navy);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        [data-theme="dark"] .slide-btn{border-color:var(--orange);color:var(--orange)}
+        .slide-btn:hover{background:var(--navy);color:#fff}
+        [data-theme="dark"] .slide-btn:hover{background:var(--orange);color:#1a2744}
+        .slide-btn:disabled{opacity:.3;cursor:not-allowed}
+        .slide-btn svg{width:18px;height:18px}
+        .slide-counter{position:fixed;bottom:1.2rem;right:120px;z-index:999;font-family:monospace;font-size:.8rem;color:var(--text-muted);background:var(--card);padding:.3rem .6rem;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .section{min-height:100vh;display:none;opacity:0;transition:opacity .3s;background:var(--bg)}
+        .section.active{display:block;opacity:1}
+        .section-inner{max-width:1200px;margin:0 auto;padding:5rem 1.5rem 3rem;padding-top:90px}
+        .section-header{margin-bottom:1.5rem}
+        .section-label{display:inline-block;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);background:rgba(244,121,32,.1);padding:.2rem .6rem;border-radius:50px;margin-bottom:.6rem}
+        [data-theme="dark"] .section-label{background:rgba(244,121,32,.2)}
+        .section-subtitle{font-size:1rem;color:var(--text-sec);max-width:750px;line-height:1.6;margin-top:.6rem}
+        .landing-page{background:var(--bg-sec)}
+        [data-theme="dark"] .landing-page{background:var(--bg)}
+        .landing-hero{text-align:center;padding-top:1rem;margin-bottom:2rem}
+        .landing-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--card);border:1px solid var(--border);padding:.3rem .8rem;border-radius:50px;font-size:.75rem;font-weight:600;color:var(--text-sec);margin-bottom:1.2rem}
+        .badge-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .landing-title{font-size:2.5rem;font-weight:800;margin-bottom:.6rem}
+        .gradient-text{background:linear-gradient(135deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .landing-subtitle{font-size:1.2rem;font-weight:600;color:var(--orange);margin-bottom:.8rem}
+        .landing-description{font-size:1rem;color:var(--text-sec);max-width:650px;margin:0 auto}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
+        @media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+        .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;transition:all .3s}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        .stat-card.highlight{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-color:var(--navy)}
+        .stat-card.highlight .stat-value,.stat-card.highlight .stat-label{color:#fff}
+        .stat-value{font-size:1.6rem;font-weight:800;color:var(--orange);margin-bottom:.2rem}
+        .stat-label{font-size:.8rem;color:var(--text-muted);font-weight:500}
+        .agenda-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:2rem}
+        @media(max-width:900px){.agenda-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:500px){.agenda-grid{grid-template-columns:1fr}}
+        .agenda-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;position:relative;transition:all .3s}
+        .agenda-card:hover{border-color:var(--orange)}
+        .agenda-time{position:absolute;top:.6rem;right:.6rem;font-size:.6rem;font-weight:700;color:var(--orange);background:rgba(244,121,32,.1);padding:2px 6px;border-radius:50px}
+        [data-theme="dark"] .agenda-time{background:rgba(244,121,32,.2)}
+        .agenda-icon{font-size:1.6rem;margin-bottom:.4rem}
+        .agenda-title{font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem}
+        .agenda-desc{font-size:.75rem;color:var(--text-muted);line-height:1.4}
+        .landing-footer{text-align:center;padding-top:1.2rem;border-top:1px solid var(--border)}
+        .partner-logos{display:flex;justify-content:center;align-items:center;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap}
+        .partner-name{font-size:.95rem;font-weight:700;color:var(--text-sec)}
+        .partner-divider{color:var(--text-muted)}
+        .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;border-radius:8px;font-size:.95rem;font-weight:600;text-decoration:none;cursor:pointer;border:none;transition:all .2s}
+        .btn-primary{background:var(--navy);color:#fff}
+        .btn-primary:hover{background:var(--navy-light);transform:translateY(-2px)}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+        .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+        .four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+        .five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem}
+        @media(max-width:800px){.two-col,.three-col{grid-template-columns:1fr}}
+        @media(max-width:900px){.four-col,.five-col{grid-template-columns:repeat(2,1fr)}}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;transition:all .3s}
+        .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+        .card-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+        .card-icon{font-size:1.6rem}
+        .card-title{font-weight:700;font-size:.95rem;color:var(--text)}
+        .card-content{font-size:.85rem;color:var(--text-sec);line-height:1.5}
+        .callout{background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:12px;padding:1.5rem;color:#fff;margin:1.5rem 0}
+        .callout h4{color:#fff;margin-bottom:.6rem}
+        .callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin-top:.8rem}
+        @media(max-width:700px){.callout-grid{grid-template-columns:1fr}}
+        .callout-item{background:rgba(255,255,255,.1);border-radius:8px;padding:.8rem}
+        .callout-item h5{color:var(--orange);font-size:.8rem;margin-bottom:.2rem}
+        .callout-item p{font-size:.75rem;opacity:.9;margin:0}
+        .pillar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+        .pillar-card .pillar-icon{font-size:2rem;margin-bottom:.4rem}
+        .pillar-card .pillar-title{font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.3rem}
+        [data-theme="dark"] .pillar-card .pillar-title{color:var(--text)}
+        .pillar-card .pillar-desc{font-size:.75rem;color:var(--text-muted);line-height:1.4}
+        .domain-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem;text-align:center;transition:all .3s;font-size:.75rem}
+        .domain-card:hover{border-color:var(--orange);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+        .domain-card .domain-icon{font-size:1.4rem;margin-bottom:.2rem}
+        .domain-card .domain-name{font-weight:700;font-size:.75rem;color:var(--text);margin-bottom:.1rem}
+        .domain-card .domain-count{font-size:.65rem;color:var(--orange);font-weight:600}
+        .insight-box{background:linear-gradient(135deg,rgba(244,121,32,.1),rgba(154,123,79,.1));border-left:4px solid var(--orange);border-radius:0 8px 8px 0;padding:.8rem;margin:1.2rem 0}
+        [data-theme="dark"] .insight-box{background:linear-gradient(135deg,rgba(244,121,32,.15),rgba(154,123,79,.15))}
+        .insight-box p{margin:0;font-size:.85rem}
+        .final-cta{background:linear-gradient(135deg,var(--orange),#D66A1A);border-radius:12px;padding:2rem;text-align:center;color:#fff;margin:1.5rem 0}
+        .final-cta h2{color:#fff;margin-bottom:.6rem}
+        .final-cta p{opacity:.95;max-width:500px;margin:0 auto 1.2rem}
+        .final-logos{display:flex;justify-content:center;align-items:center;gap:.8rem;flex-wrap:wrap}
+        .logo-text{font-size:1.1rem;font-weight:700;letter-spacing:.5px}
+        .logo-divider-text{opacity:.7}
+        .flow-container{background:var(--gray-100);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+        [data-theme="dark"] .flow-container{background:var(--bg-sec)}
+        .hub-center{background:linear-gradient(135deg,var(--orange),#D66A1A);border-radius:12px;padding:1.2rem;text-align:center;color:#fff;margin:1rem 0}
+        .hub-center h4{color:#fff;margin-bottom:.3rem}
+        .hub-center p{font-size:.8rem;opacity:.9;margin:0}
+        .spoke-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+        @media(max-width:800px){.spoke-grid{grid-template-columns:1fr}}
+        .spoke-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center;font-size:.8rem}
+        .spoke-card h5{font-size:.75rem;font-weight:700;margin-bottom:.3rem}
+        .spoke-card p{font-size:.7rem;color:var(--text-muted);margin:0}
+        .subdomain-header{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;border-radius:10px;margin-bottom:1rem}
+        .subdomain-header h3{margin:0;color:#fff;font-size:1.1rem}
+        .subdomain-header .sub-stats{font-size:.75rem;color:rgba(255,255,255,.8)}
+        .subdomain-commercial{background:linear-gradient(135deg,#0D7C66,#0A6B58)}
+        .subdomain-customer{background:linear-gradient(135deg,#7B1FA2,#6A1B9A)}
+        .subdomain-workforce{background:linear-gradient(135deg,#00838F,#006064)}
+        .subdomain-data{background:linear-gradient(135deg,#1565C0,#0D47A1)}
+        .subdomain-integration{background:linear-gradient(135deg,#E65100,#BF360C)}
+        .subdomain-security{background:linear-gradient(135deg,#C62828,#B71C1C)}
+        .subdomain-platform{background:linear-gradient(135deg,#37474F,#263238)}
+        .subdomain-identity{background:linear-gradient(135deg,#AD1457,#880E4F)}
+        .req-bar{height:18px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:.6rem;font-weight:700;color:#fff;min-width:30px}
+    </style>
+</head>
+<body>
+    <button class="nav-toggle" id="navToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <nav class="nav-panel" id="navPanel">
+        <div class="nav-section"><div class="nav-section-title">Overview</div><a class="nav-item active" data-section="landing">URD Overview</a><a class="nav-item" data-section="scope">Scope &amp; Structure</a></div>
+        <div class="nav-section"><div class="nav-section-title">Commercial Domain</div><a class="nav-item" data-section="commercial">Revenue Operations</a><a class="nav-item" data-section="customer">Customer &amp; Partners</a><a class="nav-item" data-section="digital">Digital Experience</a></div>
+        <div class="nav-section"><div class="nav-section-title">Enterprise Domain</div><a class="nav-item" data-section="identity">Identity &amp; Access</a><a class="nav-item" data-section="workforce">Workforce &amp; HR</a><a class="nav-item" data-section="dataai">Data &amp; AI</a><a class="nav-item" data-section="integration">Integration Backbone</a><a class="nav-item" data-section="security">Cybersecurity</a><a class="nav-item" data-section="platform">Platform &amp; Infra</a></div>
+        <div class="nav-section"><div class="nav-section-title">Synthesis</div><a class="nav-item" data-section="crosscut">Cross-System Integration</a><a class="nav-item" data-section="summary">Summary &amp; Next Steps</a></div>
+    </nav>
+    <header class="logo-bar">
+        <div></div>
+        <div class="logo-center"><div class="workshop-type">URD Walkthrough</div><div class="project-name">GBIA Enterprise &amp; Commercial Division</div></div>
+        <div class="logo-partners"><span style="font-size:.75rem;font-weight:700;color:var(--text-muted)">ICT-0341 Rev 1.0</span></div>
+    </header>
+    <button class="theme-toggle" id="themeToggle"><span class="icon-moon">&#9789;</span><span class="icon-sun">&#9788;</span><span>Theme</span></button>
+    <div class="slide-controls">
+        <button class="slide-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="slide-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+    <div class="slide-counter" id="slideCounter">1 / 12</div>
+
+    <!-- SLIDE 1: LANDING -->
+    <section class="section landing-page active" id="landing">
+        <div class="section-inner">
+            <div class="landing-hero">
+                <div class="landing-badge"><div class="badge-dot"></div><span>GBIA-AAC-LTDC-GEN-SPE-ICT-0341 Rev 1.0</span></div>
+                <h1 class="landing-title"><span class="gradient-text">Enterprise &amp; Commercial</span><br>URD Walkthrough</h1>
+                <div class="landing-subtitle">61 Systems | 8 Sub-Domains | One Integrated Digital Airport</div>
+                <p class="landing-description">Defining the user requirements for all commercial, workforce, data, integration, security, and platform systems that power GBIA's enterprise technology ecosystem.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card highlight"><div class="stat-value">61</div><div class="stat-label">Sub-Specifications</div></div>
+                <div class="stat-card"><div class="stat-value">5,910</div><div class="stat-label">Total Requirements</div></div>
+                <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Sub-Domains</div></div>
+                <div class="stat-card"><div class="stat-value">165K</div><div class="stat-label">Lines of Specification</div></div>
+            </div>
+            <div class="agenda-grid">
+                <div class="agenda-card"><div class="agenda-time">Part 1</div><div class="agenda-icon">&#128176;</div><div class="agenda-title">Commercial Domain</div><div class="agenda-desc">Revenue ops, customer &amp; partners, digital experience</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 2</div><div class="agenda-icon">&#9881;</div><div class="agenda-title">Enterprise Domain</div><div class="agenda-desc">Identity, workforce, data &amp; AI, integration</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 3</div><div class="agenda-icon">&#128274;</div><div class="agenda-title">Security &amp; Platform</div><div class="agenda-desc">Cybersecurity, cloud, DevOps, observability</div></div>
+                <div class="agenda-card"><div class="agenda-time">Part 4</div><div class="agenda-icon">&#128202;</div><div class="agenda-title">Synthesis</div><div class="agenda-desc">Cross-system integration &amp; next steps</div></div>
+            </div>
+            <div class="landing-footer">
+                <div class="partner-logos"><span class="partner-name">Masterise</span><span class="partner-divider">&times;</span><span class="partner-name">AAC</span><span class="partner-divider">&times;</span><span class="partner-name">Gradion</span></div>
+                <button class="btn btn-primary" onclick="navigateToSection('scope')">Begin Walkthrough &rarr;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: SCOPE & STRUCTURE -->
+    <section class="section" id="scope">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Overview</span><h2>61 Systems Across 8 Sub-Domains</h2><p class="section-subtitle">The Enterprise Division URD (ICT-0341) is the largest single URD in the GBIA programme, covering all non-aviation and non-OT systems. Source: regenerated sub-specifications (extracted-urds).</p></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.5rem">
+                <div class="domain-card" style="border-top:4px solid var(--commercial)"><div class="domain-icon">&#128176;</div><div class="domain-name">Commercial &amp; Revenue</div><div class="domain-count">14 systems &middot; 1,196 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--digital)"><div class="domain-icon">&#128241;</div><div class="domain-name">Digital Experience</div><div class="domain-count">10 systems &middot; 954 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--workforce)"><div class="domain-icon">&#128101;</div><div class="domain-name">Workforce &amp; HR</div><div class="domain-count">7 systems &middot; 774 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--data)"><div class="domain-icon">&#129504;</div><div class="domain-name">Data &amp; AI</div><div class="domain-count">7 systems &middot; 655 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--integration)"><div class="domain-icon">&#128260;</div><div class="domain-name">Integration</div><div class="domain-count">4 systems &middot; 424 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--security)"><div class="domain-icon">&#128737;</div><div class="domain-name">Cybersecurity</div><div class="domain-count">4 systems &middot; 243 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--platform)"><div class="domain-icon">&#9729;</div><div class="domain-name">Platform &amp; Infra</div><div class="domain-count">9 systems &middot; 820 reqs</div></div>
+                <div class="domain-card" style="border-top:4px solid var(--identity)"><div class="domain-icon">&#128272;</div><div class="domain-name">Identity &amp; Access</div><div class="domain-count">5 systems &middot; 597 reqs</div></div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; URD Structure: Every Sub-Spec Follows a Consistent Template</h4>
+                <div class="callout-grid" style="grid-template-columns:repeat(4,1fr)">
+                    <div class="callout-item"><h5>1. Introduction &amp; Scope</h5><p>Purpose, operational context, design principles, system relationships, capability evolution profile</p></div>
+                    <div class="callout-item"><h5>2. Requirements</h5><p>Functional, non-functional (performance, security, backup), hardware, integration, standards compliance</p></div>
+                    <div class="callout-item"><h5>3. Delivery</h5><p>Deployment model, testing (FAT/SAT/SIT/UAT), documentation, training, warranty &amp; support</p></div>
+                    <div class="callout-item"><h5>4. Appendices</h5><p>Glossary, data ownership, interface catalogue, availability model, compliance boundary, risk assessment</p></div>
+                </div>
+            </div>
+            <div class="insight-box"><p><strong>Key Design Principle:</strong> Every sub-specification mandates Vietnam data residency (Decree 53/2022), IEC 62443 security classification, integration via ESB/API Gateway, PDPL 91/2025 privacy compliance, and a capability evolution roadmap from Day 1 through to Ultimate Capacity at 50 MPPA.</p></div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: COMMERCIAL REVENUE OPERATIONS -->
+    <section class="section" id="commercial">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Commercial Domain</span><h2>Revenue Operations <span style="opacity:.4">|</span> 14 Systems</h2><p class="section-subtitle">The financial engine of the airport: billing, retail, parking, media, and revenue intelligence. Drives the strategic target of 50/50 aeronautical-to-non-aeronautical revenue.</p></div>
+            <div class="subdomain-header subdomain-commercial"><h3>&#128176; Commercial &amp; Revenue Operations</h3><div class="sub-stats">14 sub-specs &middot; 1,196 requirements</div></div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128202;</div><div class="card-title">Revenue Intelligence</div></div>
+                    <div class="card-content">
+                        <p><strong>Revenue Dashboard</strong> (ICT-0287, 120 reqs)<br>Real-time consolidated view of all aero &amp; non-aero revenue. Variance analysis against budget. &lt;60s data refresh. Replaces manual spreadsheet reporting.</p>
+                        <p style="margin-top:.4rem"><strong>Concession Performance</strong> (ICT-0288, 105 reqs)<br>Tracks tenant sales, KPIs, MAGs, lease compliance. Footfall-to-sales conversion. Early warning for underperformers. Monitors 200-500+ outlets.</p>
+                        <p style="margin-top:.4rem"><strong>Passenger Analytics</strong> (ICT-0289)<br>Segment-level demographics, dwell-time, spending patterns. Pseudonymised by default. Hybrid segmentation (rules + ML). Feeds CRM and commercial planning.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128179;</div><div class="card-title">Billing &amp; Payments</div></div>
+                    <div class="card-content">
+                        <p><strong>Aeronautical Billing</strong> (ICT-0292, 113 reqs)<br>Landing, parking, pax charges. IATA AHM compliant. Tariff-driven calculation. Decoupled from ERP: ABS owns charges, ERP owns invoices.</p>
+                        <p style="margin-top:.4rem"><strong>Non-Aero Billing Engine</strong> (ICT-0304, 136 reqs)<br>Concession rent, revenue-sharing, utility recoveries, media revenue, loyalty fees. CMS as contract authority. IFRS 15/16 compliant.</p>
+                        <p style="margin-top:.4rem"><strong>Repeat Payments</strong> (ICT-0296, 128 reqs)<br>Recurring payment processing, subscription management, direct debit integration.</p>
+                        <p style="margin-top:.4rem"><strong>POS Retail</strong> (ICT-0297, 137 reqs)<br>Middleware connecting all tenant POS terminals. SKU-level sales data normalisation. 50K-150K transactions/day. GBIA owns all commercial transaction data.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128663;</div><div class="card-title">Parking &amp; Media</div></div>
+                    <div class="card-content">
+                        <p><strong>Car Park Management</strong> (ICT-0293, 149 reqs)<br>ANPR-based barrierless entry, dynamic pricing, real-time occupancy (zone &amp; bay level), pre-booking via Passenger App. 5,000-8,500 spaces.</p>
+                        <p style="margin-top:.4rem"><strong>Valet Parking</strong> (ICT-0294, 7 reqs)<br>Key management, vehicle tracking, drop-off/pickup orchestration, premium tier integration.</p>
+                        <p style="margin-top:.4rem"><strong>DOOH Advertising</strong> (ICT-0290, 72 reqs)<br>Programmatic digital advertising across airport screens. Real-time audience measurement and dynamic content.</p>
+                        <p style="margin-top:.4rem"><strong>Digital Signage CMS</strong> (ICT-0300, 57 reqs &middot; SL-1)<br>Central content management for all non-FIDS digital displays across terminal and AeroCity.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--commercial)">
+                    <div class="card-header"><div class="card-icon">&#128722;</div><div class="card-title">Commerce &amp; Fulfilment</div></div>
+                    <div class="card-content">
+                        <p><strong>Commercial Management</strong> (ICT-0291, 84 reqs)<br>The "commercial AODB": tenant lifecycle, lease administration, rent rules, compliance. Single commercial record.</p>
+                        <p><strong>Ecommerce Platform</strong> (ICT-0295)<br>Pre-order duty-free, F&amp;B, services up to 30 days before travel. Six fulfilment methods. Marketplace model.</p>
+                        <p><strong>Pre-Order Integrations</strong> (ICT-0298, 146 reqs)<br>Duty-free and retail pre-order fulfilment connectors</p>
+                        <p><strong>Pre-Reservation</strong> (ICT-0299, 78 reqs)<br>Lounge, fast-track, and service pre-booking connectors</p>
+                    </div>
+                </div>
+                <div class="callout" style="margin:0">
+                    <h4>&#127919; Strategic Revenue Targets</h4>
+                    <div class="callout-grid">
+                        <div class="callout-item"><h5>50/50 Revenue Split</h5><p>Target equal aero &amp; non-aero revenue. Every commercial system is an enabler</p></div>
+                        <div class="callout-item"><h5>Per-PAX Yield</h5><p>Maximise commercial yield per passenger through data-driven offers &amp; omnichannel retail</p></div>
+                        <div class="callout-item"><h5>AeroCity Ecosystem</h5><p>Commercial reach extends beyond the terminal into the wider precinct: 500+ outlets</p></div>
+                        <div class="callout-item"><h5>Experience Equation</h5><p>Low Friction + Maximum Experience + Maximum Revenue at Lowest Possible Cost</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: CUSTOMER & PARTNER PLATFORMS -->
+    <section class="section" id="customer">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Commercial Domain</span><h2>Customer &amp; Partner Platforms <span style="opacity:.4">|</span> 5 Systems</h2><p class="section-subtitle">The relationship layer: 360-degree passenger profiles, loyalty currency, commercial partner management, and the merchant self-service ecosystem.</p></div>
+            <div class="subdomain-header subdomain-customer"><h3>&#128101; Customer &amp; Partner Management</h3><div class="sub-stats">5 sub-specs &middot; 510 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1.2rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128100;</div><div class="card-title">CRM Platform (ICT-0301)</div></div>
+                    <div class="card-content">
+                        <p><strong>121 requirements</strong><br>Airport-owned system managing customer profiles, campaign orchestration, SKU-level transaction analytics, consent-based personalisation across all AeroCity touchpoints.</p>
+                        <p style="margin-top:.4rem">"Calm, not aggressive" engagement: AI determines optimal timing/channel, max 3 commercial offers per hour per passenger. Target: 40%+ app-registered passengers with enriched profiles within 12 months.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127873;</div><div class="card-title">Loyalty Programme (ICT-0336)</div></div>
+                    <div class="card-content">
+                        <p><strong>145 requirements</strong><br>Airport-owned loyalty currency: points earn/burn across all commercial touchpoints, tier management, partner settlement, airport service entitlements, reward fulfilment.</p>
+                        <p style="margin-top:.4rem">Operates as a revenue stream: participating parties pay in when points are issued, cash out on redemption. Immutable transaction ledger. Real-time earn within 60s of POS transaction. Target: 40%+ enrolled within 12 months.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="three-col">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128190;</div><div class="card-title">Merchant Portal (ICT-0302)</div></div>
+                    <div class="card-content"><p><strong>152 reqs</strong><br>Tenant self-service: sales reporting, lease compliance, operational notifications, marketing submission, staff pass requests. Reduces GBIA admin overhead.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#129309;</div><div class="card-title">Partner Lifecycle (ICT-0303)</div></div>
+                    <div class="card-content"><p><strong>82 reqs</strong><br>End-to-end partner onboarding, contract management, performance tracking, compliance monitoring across all commercial partners.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127915;</div><div class="card-title">Digital Voucher Engine (ICT-0305)</div></div>
+                    <div class="card-content"><p><strong>110 reqs</strong><br>Generates, distributes, redeems digital vouchers. Disruption compensation, promotional campaigns, loyalty rewards. Anti-fraud and single-use enforcement.</p></div>
+                </div>
+            </div>
+            <div class="insight-box"><p><strong>Integration Pattern:</strong> CRM + Loyalty + Voucher Engine form a tightly coupled trio. CRM provides customer context, Loyalty provides earn/burn rules, Voucher Engine provides the fulfilment mechanism. All exchange data via the Commercial Event Streaming platform (ICT-0322). CRM and Loyalty are companion systems with bidirectional interfaces but independent domain ownership.</p></div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: DIGITAL EXPERIENCE -->
+    <section class="section" id="digital">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Commercial Domain</span><h2>Digital Experience <span style="opacity:.4">|</span> 10 Systems</h2><p class="section-subtitle">The passenger-facing digital touchpoints: mobile app, website, AI assistant, and omnichannel commerce channels delivering the hyper-personalised journey.</p></div>
+            <div class="subdomain-header subdomain-customer"><h3>&#128241; Digital Experience Channels</h3><div class="sub-stats">10 sub-specs &middot; 954 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128241;</div><div class="card-title">Passenger App (ICT-0307)</div></div>
+                    <div class="card-content">
+                        <p><strong>81 requirements</strong><br>The primary passenger digital touchpoint. Native iOS/Android. Flight info, indoor wayfinding, gate notifications, mobile boarding pass, pre-order F&amp;B, lounge booking, loyalty wallet, real-time queue times, disruption rebooking.</p>
+                        <p style="margin-top:.4rem">100% digital aspiration for check-in. Biometric enrolment makes border control a "non-event". Target: 80%+ of departing passengers. Follows the Experience Equation.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#129302;</div><div class="card-title">AI Concierge (ICT-0309)</div></div>
+                    <div class="card-content">
+                        <p><strong>63 requirements</strong><br>Conversational AI across App, website, and kiosks. NLU + knowledge graph + contextual awareness. Flight queries, wayfinding, restaurant recommendations, duty-free search, lounge availability.</p>
+                        <p style="margin-top:.4rem">Context-aware proactivity: suggests lounges when flights are delayed, restaurants based on dwell time. "Calm engagement": max 2 unsolicited messages per 30 min. On-premise AI inference per Decree 53/2022. Human escalation within 2 interactions. 5K-10K simultaneous conversations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="four-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127760;</div><div class="card-title">Website (ICT-0308)</div></div>
+                    <div class="card-content"><p><strong>122 reqs</strong><br>Public website, booking portal, flight status, parking reservation, AeroCity directory. Multi-language, SEO optimised.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#127881;</div><div class="card-title">Offer Management (ICT-0310)</div></div>
+                    <div class="card-content"><p><strong>212 reqs</strong><br>Unified commercial offer engine. Tenant-agnostic: ranked by passenger relevance, not commercial arrangements. Rules engine, real-time triggers, consent-driven. Target: 30%+ order within 12 months.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128715;</div><div class="card-title">Lounge Navigator (ICT-0311)</div></div>
+                    <div class="card-content"><p><strong>20 reqs</strong><br>Real-time lounge capacity, access rules by airline/tier, reservation and walk-in management.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128230;</div><div class="card-title">Last-Mile Delivery (ICT-0306)</div></div>
+                    <div class="card-content"><p><strong>16 reqs</strong><br>Delivers duty-free to gate, hotel, or home. Order tracking, temperature-controlled chain.</p></div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128246;</div><div class="card-title">Public Wi-Fi (ICT-0312)</div></div>
+                    <div class="card-content"><p><strong>110 reqs</strong><br>Free and premium tiers. Captive portal with CRM integration, loyalty tier detection for auto-upgrade, content filtering, PDPL-compliant session logging. WiFi 7 compatible.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #7B1FA2">
+                    <div class="card-header"><div class="card-icon">&#128273;</div><div class="card-title">Customer IAM (ICT-0337)</div></div>
+                    <div class="card-content"><p><strong>71 reqs &middot; 99.99%</strong><br>Passenger SSO across App, Web, Wi-Fi, Loyalty. Social login (Google, Apple, Zalo), passwordless auth, progressive profile enrichment. 50K concurrent sessions scalable to 150K. Separate from enterprise DIAM.</p></div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#127919; The Hyper-Personalised Journey</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Pre-Travel</h5><p>Website &rarr; Pre-order duty-free (30 days ahead) &rarr; Reserve lounge &rarr; Book parking &rarr; Loyalty enrolment</p></div>
+                    <div class="callout-item"><h5>At Airport</h5><p>App wayfinding &rarr; Queue-time alerts &rarr; Gate notifications &rarr; Personalised offers &rarr; AI Concierge &rarr; Face-to-pay</p></div>
+                    <div class="callout-item"><h5>In Transit</h5><p>Lounge Navigator &rarr; Wi-Fi auto-connect (tier-based) &rarr; Loyalty points earn &rarr; Last-mile delivery to gate</p></div>
+                    <div class="callout-item"><h5>Post-Travel</h5><p>Loyalty tier update &rarr; Voucher rewards &rarr; CRM re-engagement (calm, not aggressive) &rarr; Next-visit offers</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: IDENTITY & ACCESS -->
+    <section class="section" id="identity">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Identity &amp; Access Control <span style="opacity:.4">|</span> 5 Systems</h2><p class="section-subtitle">Zero-trust identity and access management for staff, passengers, and partners. Biometric-first, app-delivered credentials with ICAO Annex 17 and PDPL 91/2025 compliance.</p></div>
+            <div class="subdomain-header subdomain-identity"><h3>&#128272; Identity &amp; Access Management</h3><div class="sub-stats">5 sub-specs &middot; 597 requirements &middot; SL-3 Critical</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128274;</div><div class="card-title">Physical Access Control (ICT-0277)</div></div>
+                    <div class="card-content">
+                        <p><strong>99 reqs &middot; SL-3 &middot; 99.99% availability</strong></p>
+                        <p>2,500+ controlled access points (doors, turnstiles, mantraps). NFC via Staff App as primary credential, facial recognition as biometric fallback (ISO 30107-3 PAD), contactless cards for visitors. Anti-passback enforcement across all zones.</p>
+                        <p style="margin-top:.4rem">Flight-driven access policies via AODB integration: ground handlers access gate zones only during allocated turnaround windows. Fail-safe/fail-secure by zone per ICAO Annex 17.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128100;</div><div class="card-title">Physical Identity Mgmt (ICT-0278)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs</strong></p>
+                        <p>Lifecycle management of all physical access rights: issuance, modification, suspension, revocation. Attribute-Based Access Control (ABAC) combining role + time + location + training status + behavioural context.</p>
+                        <p style="margin-top:.4rem">Training-driven access activation: privileges progressively unlock as certifications are completed in LMS. Auto-suspension on expiry.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="three-col">
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128187;</div><div class="card-title">Digital IAM (ICT-0279)</div></div>
+                    <div class="card-content"><p><strong>150 reqs</strong><br>SSO, MFA, role-based access for all enterprise applications. Privileged Access Management (PAM). Joiner/mover/leaver automation linked to HR lifecycle.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128273;</div><div class="card-title">Customer IAM (ICT-0337)</div></div>
+                    <div class="card-content"><p><strong>71 reqs &middot; 99.99%</strong><br>B2C identity: passenger SSO, social login, passwordless auth, granular consent per PDPL. Separate from enterprise DIAM. 50M+ accounts.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid #AD1457">
+                    <div class="card-header"><div class="card-icon">&#128272;</div><div class="card-title">Consent &amp; Privacy (ICT-0327)</div></div>
+                    <div class="card-content"><p><strong>146 reqs</strong><br>PDPL 91/2025 compliance engine. Consent verification API in the critical path of biometric processing. Default deny if consent cannot be verified. 5M+ active consent records. 200K-500K verifications/day.</p></div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128737; Zero-Trust Security Model</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Biometric-First</h5><p>Staff App NFC as primary credential; facial recognition (ISO 30107-3 PAD) as fallback; cards only for visitors/contingency</p></div>
+                    <div class="callout-item"><h5>Training-Gated Access</h5><p>Access privileges unlock progressively as staff complete LMS certifications; auto-suspend on expiry</p></div>
+                    <div class="callout-item"><h5>AODB-Linked Policies</h5><p>Dynamic access tied to flight schedules: ground handlers access gate zones only during allocated turnaround windows</p></div>
+                    <div class="callout-item"><h5>Consent Before Processing</h5><p>No biometric data processing without verified consent. Default deny. Consent &amp; Privacy platform in critical path</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: WORKFORCE & HR -->
+    <section class="section" id="workforce">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Workforce &amp; HR <span style="opacity:.4">|</span> 7 Systems</h2><p class="section-subtitle">The people engine: managing 10,000-50,000 staff across multiple employer entities, with a "direct staff-airport relationship" via the Staff App.</p></div>
+            <div class="subdomain-header subdomain-workforce"><h3>&#128101; Workforce &amp; Human Resources</h3><div class="sub-stats">7 sub-specs &middot; 774 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128188;</div><div class="card-title">Core HCM (ICT-0280)</div></div>
+                    <div class="card-content">
+                        <p><strong>18 reqs</strong><br>The authoritative employee record: single source of truth for worker identity, employment status, organisational placement, and contractual terms. Vietnamese labour law native.</p>
+                        <p style="margin-top:.4rem">Multi-entity: airport operator, ground handlers, concessionaires, contractors, government secondees. 10K-50K records.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128241;</div><div class="card-title">Staff App (ICT-0285)</div></div>
+                    <div class="card-content">
+                        <p><strong>159 reqs</strong><br>Unifies 31 staff system modules into one platform: digital identity/SSO, NFC credential wallet, task allocation, eSOP delivery, shift management, break scheduling, leave requests, incident reporting, peer comms.</p>
+                        <p style="margin-top:.4rem">100% digital from Day 1: no paper forms, no manual time clocks. Geofence-based duty recording with auto clock-in/out. Target: 90%+ adoption. Primary credential delivery for PACS. Offline-capable for airside/basement.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="five-col">
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128197;</div><div class="card-title">Workforce Mgmt</div></div>
+                    <div class="card-content"><p><strong>ICT-0282 &middot; 131 reqs</strong><br>AODB flight-driven demand forecasting, shift scheduling, time &amp; attendance, fatigue rules, Vietnamese Labour Code 2019 hard constraints. Target: 30-40% productivity gains.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#127891;</div><div class="card-title">LMS</div></div>
+                    <div class="card-content"><p><strong>ICT-0283 &middot; 99 reqs</strong><br>Training courses, certifications, compliance tracking. Feeds PIAM for training-gated access activation</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#129657;</div><div class="card-title">Occupational Health</div></div>
+                    <div class="card-content"><p><strong>ICT-0284 &middot; 106 reqs</strong><br>Medical assessments, fitness-for-duty, incident health tracking, regulatory reporting</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128221;</div><div class="card-title">Digital SOP</div></div>
+                    <div class="card-content"><p><strong>ICT-0286 &middot; 104 reqs</strong><br>Digitised procedures, quality checklists, version control, audit trails, offline-capable</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--workforce)">
+                    <div class="card-header"><div class="card-icon">&#128172;</div><div class="card-title">HR Service</div></div>
+                    <div class="card-content"><p><strong>ICT-0281 &middot; 157 reqs</strong><br>HR helpdesk, case management, employee requests, knowledge base, SLA tracking</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: DATA & AI -->
+    <section class="section" id="dataai">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Data &amp; AI Intelligence <span style="opacity:.4">|</span> 7 Systems</h2><p class="section-subtitle">The "Thinking Airport" data backbone: lakehouse architecture, real-time streaming, BI, governance, and ML operations powering predictive intelligence across all domains.</p></div>
+            <div class="subdomain-header subdomain-data"><h3>&#129504; Data &amp; Artificial Intelligence</h3><div class="sub-stats">7 sub-specs &middot; 655 requirements</div></div>
+            <div class="flow-container">
+                <h4 style="text-align:center;margin-bottom:1rem">Data Architecture Flow</h4>
+                <div class="three-col">
+                    <div class="spoke-card" style="border-top:3px solid #1565C0">
+                        <h5>Ingest &amp; Store</h5>
+                        <p><strong>Data Lakehouse</strong> (ICT-0313, 118 reqs)<br>Bronze/Silver/Gold medallion architecture. Batch ETL + streaming. ACID transactions. Open table formats (Iceberg/Delta/Hudi). 5-100 TB/day. "GBIA owns all data."</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #E65100">
+                        <h5>Govern &amp; Catalogue</h5>
+                        <p><strong>Data Governance</strong> (ICT-0316, 165 reqs)<br>Data quality, lineage, cataloguing, stewardship. Contract-first integration. PDPL compliance. Federated ownership with centralised standards. 40+ source systems.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #2E7D32">
+                        <h5>Analyse &amp; Serve</h5>
+                        <p><strong>BI Platform</strong> (ICT-0315, 96 reqs)<br>Corporate dashboards, self-service analytics, scheduled reports. Role-based data access. Executive KPI scorecards.</p>
+                    </div>
+                </div>
+                <div style="text-align:center;font-size:1.5rem;color:var(--navy);margin:.6rem 0">&#8595; &#8595; &#8595;</div>
+                <div class="three-col">
+                    <div class="spoke-card" style="border-top:3px solid #C62828">
+                        <h5>Stream &amp; React</h5>
+                        <p><strong>Real-Time Analytics</strong> (ICT-0314, 97 reqs)<br>Streaming analytics for live business insights. Sub-second event processing. Powers operational dashboards and alerts.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #7B1FA2">
+                        <h5>Train &amp; Deploy</h5>
+                        <p><strong>MLOps Platform</strong> (ICT-0319, 95 reqs)<br>20-500 production models. Experiment tracking, model registry, A/B testing, drift detection. No Black Box policy. Vietnam AI Law 134/2025 conformity. GPU compute.</p>
+                    </div>
+                    <div class="spoke-card" style="border-top:3px solid #00838F">
+                        <h5>Predict &amp; Optimise</h5>
+                        <p><strong>Predictive Operations</strong> (ICT-0318, 83 reqs)<br>Rules-based Day 1, ML 6-12 months post-opening (cold-start constraint). Flight delays, congestion, equipment failure, resource demand. 15 min-4 hr forecast horizons. Action-oriented output.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128300; The "Thinking Airport" Intelligence Stack</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Feature Store (ICT-0317)</h5><p>Centralised ML features: shared computation, point-in-time correctness, online+offline serving for all models</p></div>
+                    <div class="callout-item"><h5>Airport Data Ownership</h5><p>"GBIA owns all data generated by or transiting through airport systems". Enforced at lakehouse level via contract-first ingestion</p></div>
+                    <div class="callout-item"><h5>4 AI Consumers</h5><p>Predictive Ops, Prognostic Maintenance, Computer Vision, AI Concierge. All models managed by MLOps</p></div>
+                    <div class="callout-item"><h5>Vietnam Data Residency</h5><p>All data physically stored in-country per Decree 53/2022. On-premise training infrastructure. AI inference on-premise per AI Law 134/2025</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: INTEGRATION BACKBONE -->
+    <section class="section" id="integration">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Integration Backbone <span style="opacity:.4">|</span> 4 Systems</h2><p class="section-subtitle">The nervous system connecting all 61 enterprise systems. Point-to-point integrations are prohibited; all data exchange must traverse this centralised integration layer.</p></div>
+            <div class="subdomain-header subdomain-integration"><h3>&#128260; Integration &amp; Middleware</h3><div class="sub-stats">4 sub-specs &middot; 424 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1.2rem">
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#128232;</div><div class="card-title">Enterprise Service Bus (ICT-0320)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs &middot; SL-3 &middot; 99.99%</strong></p>
+                        <p>Message-oriented middleware: pub/sub, request-reply, guaranteed delivery, content-based routing, protocol mediation (AMQP, REST, SOAP, JMS, MQTT, OPC UA via IT/OT Bridge). Contract-first integration.</p>
+                        <p style="margin-top:.4rem">50K-500K+ messages/hour at peak. 40+ connected systems Day 1. Separate from OT ESB (ICT-0220).</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#128295;</div><div class="card-title">API Gateway (ICT-0321)</div></div>
+                    <div class="card-content">
+                        <p><strong>123 reqs &middot; 99.99%</strong></p>
+                        <p>Single point of entry for all programmatic access. OAuth 2.0/OIDC authentication (via DIAM), rate limiting, API versioning, developer portal, usage analytics. Direct backend access prohibited.</p>
+                        <p style="margin-top:.4rem">10K-1M+ API calls/hour. Consumers: airlines, handlers, Passenger App, Staff App, third-party developers.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#9889;</div><div class="card-title">Commercial Event Streaming (ICT-0322)</div></div>
+                    <div class="card-content">
+                        <p><strong>98 reqs</strong><br>Enterprise event bus (Kafka-based) for real-time business events: transactions, loyalty events, CRM triggers, offer activations, booking confirmations. Decouples producers from consumers.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--integration)">
+                    <div class="card-header"><div class="card-icon">&#9729;</div><div class="card-title">iPaaS (ICT-0323)</div></div>
+                    <div class="card-content">
+                        <p><strong>72 reqs</strong><br>Cloud-based integration for SaaS-to-SaaS and SaaS-to-on-prem workflows. Pre-built connectors (Salesforce, SAP, Workday). Low-code workflow orchestration. Cloud API federation via API Gateway.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-container">
+                <h4 style="text-align:center;margin-bottom:.8rem">Integration Architecture: Four Pillars</h4>
+                <div class="spoke-grid">
+                    <div class="spoke-card"><h5>Aviation Domain</h5><p>AODB, A-CDM, BHS, CUPPS &rarr; via OT ESB &amp; IT/OT Bridge</p></div>
+                    <div class="hub-center"><h4>ESB + API Gateway + Event Streaming + iPaaS</h4><p>Point-to-point prohibited. All 149 systems integrate via these four pillars</p></div>
+                    <div class="spoke-card"><h5>OT Domain</h5><p>BMS, VMS, PACS, FAS &rarr; via OT ESB &amp; data diodes</p></div>
+                    <div class="spoke-card"><h5>Commercial Systems</h5><p>CRM, Loyalty, POS, Billing &rarr; Event Streaming + ESB</p></div>
+                    <div class="spoke-card"><h5>External Partners</h5><p>Airlines, ride-hailing, GDS &rarr; API Gateway + iPaaS</p></div>
+                    <div class="spoke-card"><h5>Data Platform</h5><p>Lakehouse, BI, ML &rarr; Event Streaming + batch ETL</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 10: CYBERSECURITY -->
+    <section class="section" id="security">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Cybersecurity <span style="opacity:.4">|</span> 4 Systems</h2><p class="section-subtitle">Protecting 25,000+ endpoints across IT and OT. IEC 62443 zone model, converged SOC, zero-trust endpoint protection, and centralised secrets vault.</p></div>
+            <div class="subdomain-header subdomain-security"><h3>&#128737; Cybersecurity &amp; Threat Defence</h3><div class="sub-stats">4 sub-specs &middot; 243 requirements</div></div>
+            <div class="two-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128065;</div><div class="card-title">Enterprise SOC (ICT-0325)</div></div>
+                    <div class="card-content">
+                        <p><strong>95 reqs &middot; SL-3 &middot; 99.99% &middot; 24/7/365</strong></p>
+                        <p>SIEM for log aggregation and correlation (50K+ EPS sustained, 150K+ EPS peak). SOAR for playbook-driven incident response. Threat Intelligence Platform (TIP). Single pane of glass across all IEC 62443 zones (Level 0-5).</p>
+                        <p style="margin-top:.4rem">Staffed: Tier 1/2/3 analysts, SOC manager, CISO. 25K+ monitored endpoints. 12-month hot/warm, 24-month total log retention. NIST CSF 2.0 aligned.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128165;</div><div class="card-title">Network Security (ICT-0324)</div></div>
+                    <div class="card-content">
+                        <p><strong>15 reqs &middot; SL-3</strong></p>
+                        <p>Next-gen firewalls, IDS/IPS, network segmentation, DDoS protection. Implements IEC 62443 zone/conduit model with hardware data diodes for unidirectional OT-to-IT data flow. Micro-segmentation at application level. TLS 1.3 minimum.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128270;</div><div class="card-title">Extended Detection &amp; Response (ICT-0326)</div></div>
+                    <div class="card-content">
+                        <p><strong>55 reqs</strong><br>Endpoint protection, advanced threat hunting, behavioural analysis, automated containment. Covers servers, workstations, mobile, containers. Feeds SOC SIEM for correlated detection.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--security)">
+                    <div class="card-header"><div class="card-icon">&#128272;</div><div class="card-title">Secrets Management (ICT-0338)</div></div>
+                    <div class="card-content">
+                        <p><strong>78 reqs &middot; 99.99%</strong><br>HSM-backed vault (FIPS 140-2 Level 3). Static secrets with enforced rotation, dynamic short-lived credentials, PKI/X.509 lifecycle, SSH keys, encryption-as-a-service. Zero standing credentials. 10K-50K+ secrets. Namespace multi-tenancy.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128737; Defence-in-Depth: Enterprise Security Stack</h4>
+                <div class="callout-grid">
+                    <div class="callout-item"><h5>Prevention</h5><p>NSS firewalls &amp; micro-segmentation &rarr; XDR endpoint protection &rarr; Secrets Management (zero standing secrets) &rarr; IAM access control</p></div>
+                    <div class="callout-item"><h5>Detection</h5><p>SOC SIEM correlation (50K+ EPS) &rarr; XDR behavioural analysis &rarr; Network anomaly detection &rarr; OT security monitoring</p></div>
+                    <div class="callout-item"><h5>Response</h5><p>SOAR automated playbooks &rarr; Tiered analyst escalation (T1/T2/T3) &rarr; Automated containment &rarr; Forensic evidence preservation</p></div>
+                    <div class="callout-item"><h5>Compliance</h5><p>Vietnamese Cybersecurity Law &rarr; IEC 62443 &rarr; Decree 53/2022 &rarr; 24-month log retention &rarr; NIST CSF 2.0</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 11: PLATFORM & INFRASTRUCTURE -->
+    <section class="section" id="platform">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Enterprise Domain</span><h2>Platform &amp; Infrastructure <span style="opacity:.4">|</span> 9 Systems</h2><p class="section-subtitle">The foundational services layer: hybrid cloud, DevOps, observability, digital platform, interoperability, and operational tooling underpinning every enterprise application.</p></div>
+            <div class="subdomain-header subdomain-platform"><h3>&#9729; Platform, DevOps &amp; Infrastructure</h3><div class="sub-stats">9 sub-specs &middot; 820 requirements</div></div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#9729;</div><div class="card-title">Hybrid Cloud (ICT-0330)</div></div>
+                    <div class="card-content">
+                        <p><strong>122 reqs &middot; 99.99%</strong><br>"Vietnam-First" architecture: on-prem Tier III data centre (default) + selective cloud for dev/test, analytics, SaaS. Kubernetes container orchestration. Workload placement policy enforcement per Decree 53/2022. 200-1,000+ containerised services.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128295;</div><div class="card-title">Digital Platform (ICT-0329)</div></div>
+                    <div class="card-content">
+                        <p><strong>131 reqs &middot; 99.99%</strong><br>Core technology foundation: 6 shared service categories (runtime, auth, integration, data, AI, observability). Eliminates duplication across siloed systems. Software-defined architecture. Hosts 40+ applications. OCI containers, OpenTelemetry, OAuth 2.0.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128736;</div><div class="card-title">Enterprise DevOps (ICT-0331)</div></div>
+                    <div class="card-content">
+                        <p><strong>59 reqs</strong><br>CI/CD pipelines, Infrastructure-as-Code, GitOps, automated testing, artifact registry. Separate from OT DevOps (ICT-0234).</p></div>
+                </div>
+            </div>
+            <div class="three-col" style="margin-bottom:1rem">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128200;</div><div class="card-title">Observability (ICT-0332)</div></div>
+                    <div class="card-content"><p><strong>55 reqs</strong><br>APM, distributed tracing, log aggregation, custom metrics, SLO monitoring. Health visibility across all enterprise applications.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128257;</div><div class="card-title">Interoperability (ICT-0328)</div></div>
+                    <div class="card-content"><p><strong>90 reqs</strong><br>Standards compliance and data exchange with CAAV, customs, immigration, IATA, ICAO. EDI, EDIFACT, and API-based government interfaces.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128218;</div><div class="card-title">CMDB (ICT-0339)</div></div>
+                    <div class="card-content"><p><strong>76 reqs &middot; SL-3</strong><br>IT/OT asset inventory and relationships. Auto-discovery, dependency mapping, change tracking. Feeds incident management and impact analysis.</p></div>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128269;</div><div class="card-title">Expert Finder (ICT-0333)</div></div>
+                    <div class="card-content"><p><strong>118 reqs</strong><br>Locates subject-matter experts and institutional knowledge. Skills taxonomy, expertise mapping, knowledge articles, Q&amp;A platform. Accelerates problem resolution.</p></div>
+                </div>
+                <div class="card" style="border-left:4px solid var(--platform)">
+                    <div class="card-header"><div class="card-icon">&#128202;</div><div class="card-title">Non-Aero Billing (ICT-0304)</div></div>
+                    <div class="card-content"><p><strong>136 reqs</strong><br>Invoicing engine for all non-aero revenue. CMS as contract authority: rule-driven calculation, no code changes for billing model updates. Multi-source reconciliation. IFRS 15/16, VAS, Decree 123/2020 compliant.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 12: CROSS-SYSTEM INTEGRATION -->
+    <section class="section" id="crosscut">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Synthesis</span><h2>Cross-System Integration Patterns</h2><p class="section-subtitle">Five architectural patterns that bind the 61 enterprise systems into a cohesive ecosystem.</p></div>
+            <div class="three-col" style="margin-bottom:1.5rem">
+                <div class="pillar-card" style="border-top:4px solid var(--orange)">
+                    <div class="pillar-icon">&#128176;</div>
+                    <div class="pillar-title">Commercial Revenue Loop</div>
+                    <div class="pillar-desc">POS &rarr; Event Streaming &rarr; Revenue Dashboard &rarr; CRM &rarr; Offer Management &rarr; Passenger App &rarr; POS</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--data)">
+                    <div class="pillar-icon">&#128202;</div>
+                    <div class="pillar-title">Data Intelligence Pipeline</div>
+                    <div class="pillar-desc">All Systems &rarr; Event Streaming &rarr; Lakehouse &rarr; Feature Store &rarr; MLOps &rarr; Predictive Ops &rarr; APOC Actions</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--identity)">
+                    <div class="pillar-icon">&#128100;</div>
+                    <div class="pillar-title">Identity Lifecycle Chain</div>
+                    <div class="pillar-desc">HCM (hire) &rarr; LMS (train) &rarr; PIAM (credential) &rarr; PACS (access) &rarr; WFM (schedule) &rarr; Staff App (deliver)</div>
+                </div>
+            </div>
+            <div class="two-col" style="margin-bottom:1.5rem">
+                <div class="pillar-card" style="border-top:4px solid var(--security)">
+                    <div class="pillar-icon">&#128737;</div>
+                    <div class="pillar-title">Security Telemetry Flow</div>
+                    <div class="pillar-desc">All Systems &rarr; XDR agents &rarr; SOC SIEM (50K+ EPS) &rarr; SOAR playbooks &rarr; Automated containment &rarr; Incident response</div>
+                </div>
+                <div class="pillar-card" style="border-top:4px solid var(--digital)">
+                    <div class="pillar-icon">&#128241;</div>
+                    <div class="pillar-title">Passenger Journey Orchestration</div>
+                    <div class="pillar-desc">CIAM (identity) &rarr; CRM (profile) &rarr; Loyalty (tier) &rarr; App (channel) &rarr; AI Concierge &rarr; Offers &rarr; Fulfilment</div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; Requirement Distribution by Domain</h4>
+                <div style="margin-top:.8rem">
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Commercial</span><div class="req-bar" style="width:200px;background:var(--commercial)">1,196</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Digital Exp.</span><div class="req-bar" style="width:160px;background:var(--digital)">954</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Platform</span><div class="req-bar" style="width:137px;background:var(--platform)">820</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Workforce</span><div class="req-bar" style="width:130px;background:var(--workforce)">774</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Data &amp; AI</span><div class="req-bar" style="width:110px;background:var(--data)">655</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Identity</span><div class="req-bar" style="width:100px;background:var(--identity)">597</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Integration</span><div class="req-bar" style="width:71px;background:var(--integration)">424</div></div>
+                    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem"><span style="font-size:.75rem;width:120px;text-align:right;font-weight:600">Cybersecurity</span><div class="req-bar" style="width:41px;background:var(--security)">243</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 13: SUMMARY & NEXT STEPS -->
+    <section class="section" id="summary">
+        <div class="section-inner">
+            <div class="section-header"><span class="section-label">Summary</span><h2>Key Takeaways &amp; Next Steps</h2><p class="section-subtitle">The Enterprise Division URD delivers a comprehensive, integrated specification for every non-aviation and non-OT system at GBIA.</p></div>
+            <div class="three-col" style="margin-bottom:1.5rem">
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#127919;</div><div class="card-title">Commercial Differentiation</div></div>
+                    <div class="card-content">
+                        <p><strong>29 commercial + digital systems</strong> form a complete digital marketplace: from aeronautical billing through loyalty-driven omnichannel retail to AI-powered passenger engagement.</p>
+                        <p style="margin-top:.4rem">The airport operates as a <strong>platform business</strong>. GBIA is facilitator, not merchant of record. "Calm, not aggressive" engagement.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#129504;</div><div class="card-title">Data-Driven Operations</div></div>
+                    <div class="card-content">
+                        <p><strong>7 data &amp; AI systems</strong> transform raw data into predictive intelligence. Lakehouse architecture with contract-first integration provides a single copy of truth.</p>
+                        <p style="margin-top:.4rem"><strong>165 data governance requirements</strong>, the highest single sub-spec count, reflecting the criticality of data quality at scale. Vietnam AI Law 134/2025 conformity.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><div class="card-icon">&#128737;</div><div class="card-title">Security by Design</div></div>
+                    <div class="card-content">
+                        <p><strong>9 identity + security systems</strong> implement defence-in-depth from physical access to cyber threat detection. Zero-trust, biometric-first, training-gated access model.</p>
+                        <p style="margin-top:.4rem">Vietnamese regulatory compliance embedded in every sub-spec: PDPL 91/2025, Cybersecurity Law, Decree 53/2022, AI Law 134/2025.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout">
+                <h4>&#128203; Cross-Cutting Design Principles</h4>
+                <div class="callout-grid" style="grid-template-columns:repeat(3,1fr)">
+                    <div class="callout-item"><h5>Vietnam Data Residency</h5><p>All personal and operational data stored in-country. Enforced at lakehouse, cloud, and application levels per Decree 53/2022</p></div>
+                    <div class="callout-item"><h5>IEC 62443 Classification</h5><p>Every system assigned a security level (SL-1 to SL-3). Zone-based segmentation. Hardware data diodes for OT boundaries</p></div>
+                    <div class="callout-item"><h5>No Point-to-Point</h5><p>All systems integrate via ESB, API Gateway, Event Streaming, or iPaaS. Contract-first integration with published data contracts</p></div>
+                    <div class="callout-item"><h5>Capability Evolution</h5><p>Every sub-spec includes a roadmap from Day 1 baseline through Phase 1, Phase 2, and Ultimate Capacity at 50 MPPA</p></div>
+                    <div class="callout-item"><h5>Direct Relationships</h5><p>Staff: direct via Staff App (90%+ adoption, 100% digital). Passengers: direct via GBIA App (50%+ adoption)</p></div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+                <div>
+                    <h3 style="margin-bottom:.8rem">Next Steps</h3>
+                    <div class="card"><div class="card-content"><ul style="list-style:none;padding:0;font-size:.85rem">
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>1.</strong> Client review and approval of ICT-0341 Rev 1.0</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>2.</strong> Cross-reference validation against Enterprise Architecture (ICT-0343 Rev 3)</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>3.</strong> Consistency check with Aviation URD (ICT-0340) and OT URD (ICT-0335) integration points</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>4.</strong> MSI tender package preparation with all 61 sub-specifications</li>
+                        <li style="padding:.4rem 0"><strong>5.</strong> Architecture Review Board sign-off and Stage Gate 1 (HLD) initiation</li>
+                    </ul></div></div>
+                </div>
+                <div>
+                    <h3 style="margin-bottom:.8rem">Document References</h3>
+                    <div class="card"><div class="card-content"><ul style="list-style:none;padding:0;font-size:.85rem">
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0341</strong>: Enterprise Division URD (this document)</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0343</strong>: Enterprise Architecture Rev 3</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0340</strong>: Aviation Division URD</li>
+                        <li style="padding:.4rem 0;border-bottom:1px solid var(--border)"><strong>ICT-0335</strong>: OT Division URD</li>
+                        <li style="padding:.4rem 0"><strong>KPIs v4</strong>: Technical Standards &amp; KPIs</li>
+                    </ul></div></div>
+                </div>
+            </div>
+            <div class="final-cta">
+                <h2>Enterprise &amp; Commercial Division URD</h2>
+                <p>61 systems. 5,910 requirements. 8 sub-domains. One integrated enterprise platform powering the Thinking Airport.</p>
+                <div class="final-logos"><span class="logo-text">Masterise</span><span class="logo-divider-text">&times;</span><span class="logo-text">AAC</span><span class="logo-divider-text">&times;</span><span class="logo-text">Gradion</span></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const sections=['landing','scope','commercial','customer','digital','identity','workforce','dataai','integration','security','platform','crosscut','summary'];
+        let currentSection=0;
+        const navToggle=document.getElementById('navToggle'),navPanel=document.getElementById('navPanel'),themeToggle=document.getElementById('themeToggle'),prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),slideCounter=document.getElementById('slideCounter'),navItems=document.querySelectorAll('.nav-item');
+        navToggle.addEventListener('click',()=>navPanel.classList.toggle('open'));
+        themeToggle.addEventListener('click',()=>{const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme-urd',t)});
+        const savedTheme=localStorage.getItem('theme-urd')||'light';document.documentElement.setAttribute('data-theme',savedTheme);
+        function navigateToSection(id){const i=sections.indexOf(id);if(i!==-1)showSection(i)}
+        function showSection(i){if(i<0||i>=sections.length)return;document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const t=document.getElementById(sections[i]);if(t){t.classList.add('active');currentSection=i;updateUI();window.scrollTo(0,0)}}
+        function updateUI(){slideCounter.textContent=`${currentSection+1} / ${sections.length}`;navItems.forEach(item=>{item.classList.remove('active');if(item.getAttribute('data-section')===sections[currentSection])item.classList.add('active')});prevBtn.disabled=currentSection===0;nextBtn.disabled=currentSection===sections.length-1}
+        prevBtn.addEventListener('click',()=>showSection(currentSection-1));
+        nextBtn.addEventListener('click',()=>showSection(currentSection+1));
+        navItems.forEach(item=>item.addEventListener('click',()=>{navigateToSection(item.getAttribute('data-section'));navPanel.classList.remove('open')}));
+        document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')showSection(currentSection+1);else if(e.key==='ArrowLeft'||e.key==='ArrowUp')showSection(currentSection-1);else if(e.key==='Escape')navPanel.classList.remove('open')});
+        document.addEventListener('click',e=>{if(!navPanel.contains(e.target)&&!navToggle.contains(e.target))navPanel.classList.remove('open')});
+        updateUI();
+    </script>
+</body>
+</html>
