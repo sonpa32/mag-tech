@@ -1,4 +1,6 @@
 {
+  "name": "my-static-files",
+  "version": "1.0.0",
   "scripts": {
     "build": "node generate-index.js"
   }
