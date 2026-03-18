@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Governance — Scope Overview</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #F8FAFC; zoom: 1.2; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const SYS_COLORS = {
+      "MCM":  { bg: "#DBEAFE", text: "#1D4ED8", border: "#93C5FD",  full: "MCM — Xây dựng" },
+      "CLMS": { bg: "#F5F3FF", text: "#6D28D9", border: "#C4B5FD",  full: "CLMS — Quản lý HĐ" },
+      "NSP":  { bg: "#DCFCE7", text: "#166534", border: "#86EFAC",  full: "NSP — Sales Platform" },
+      "MPM":  { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D",  full: "MPM — QL Toà nhà" },
+      "ERP":  { bg: "#FEE2E2", text: "#991B1B", border: "#FCA5A5",  full: "ERP — SAP" },
+      "HRMS": { bg: "#F0FDFA", text: "#115E59", border: "#5EEAD4",  full: "HRMS — Nhân sự" },
+      "SCM":  { bg: "#FFF7ED", text: "#C2410C", border: "#FDBA74",  full: "SCM — Cung ứng/Đấu thầu" },
+      "MDM":  { bg: "#EDE9FE", text: "#5B21B6", border: "#A78BFA",  full: "MDM — Master Data" },
+    };
+
+    function SysTagMain({ name }) {
+      const s = SYS_COLORS[name] || { bg: "#F1F5F9", text: "#475569", border: "#CBD5E1" };
+      return (
+        <span style={{ background: s.bg, color: s.text, border: `1.5px solid ${s.border}`, fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 4, whiteSpace: "nowrap" }}>{name}</span>
+      );
+    }
+    function SysTagSub({ name }) {
+      const s = SYS_COLORS[name] || { bg: "#F1F5F9", text: "#475569", border: "#CBD5E1" };
+      return (
+        <span style={{ background: s.bg, color: s.text, border: `1px solid ${s.border}`, fontSize: 8, fontWeight: 600, padding: "1px 5px", borderRadius: 3, whiteSpace: "nowrap", opacity: 0.85 }}>{name}</span>
+      );
+    }
+
+    const DOMAINS = [
+      {
+        group: "Quản lý xây dựng", groupColor: "#3B82F6", groupBg: "#EFF6FF", cols: 3,
+        items: [
+          { label: "Dự án BĐS",        main: "MCM",  others: ["MDM","NSP","MPM","CLMS"], entities: ["Dự án","Khu đô thị","Zone/Phân khu","Giai đoạn"] },
+          { label: "Sản phẩm BĐS",     main: "MCM",  others: ["MDM","NSP","MPM"],        entities: ["Tòa nhà","Tầng","Căn hộ/Nhà","Lô đất","Parking"] },
+          { label: "Vật tư & Cung ứng",main: "SCM",  others: ["MDM","MCM","ERP"],        entities: ["Material","BOQ","Gói thầu","Kho","Giá","Nhà CC"] },
+        ]
+      },
+      {
+        group: "Kinh doanh & Vận hành", groupColor: "#EA580C", groupBg: "#FFF7ED", cols: 3,
+        items: [
+          { label: "Kinh doanh & Bán hàng", main: "NSP",  others: ["MPM"],             entities: ["Customer","Giao dịch","Đại lý","Lead"] },
+          { label: "Hợp đồng",              main: "CLMS", others: ["MCM","SCM","ERP"], entities: ["Hợp đồng","SOW","Phụ lục","Điều khoản"] },
+          { label: "Tổ chức & Đối tác",     main: "ERP",  others: ["CLMS","MCM","NSP"],entities: ["Organization","Business Partner","Pháp nhân"] },
+        ]
+      },
+      {
+        group: "Vận hành BĐS", groupColor: "#0D9488", groupBg: "#F0FDFA", cols: 1,
+        items: [
+          { label: "Vận hành BĐS", main: "MPM", others: [], entities: ["Tòa nhà","Cư dân","Dịch vụ","Bảo trì"] },
+        ]
+      },
+      {
+        group: "Quản trị và vận hành doanh nghiệp", groupColor: "#6366F1", groupBg: "#EEF2FF", cols: 4,
+        items: [
+          { label: "Tài chính & Kế toán", main: "ERP",  others: ["CLMS"], entities: ["Ngân sách","Hóa đơn","Thanh toán","Cost Center"] },
+          { label: "Nhân sự",             main: "HRMS", others: [],        entities: ["Nhân viên","Org Chart","Vị trí","Lương"] },
+          { label: "Marketing",           main: "NSP",  others: [],        entities: ["Lead","Campaign","Kênh bán"] },
+          { label: "Dịch vụ khác",        main: null,   others: [],        entities: ["TBD theo lộ trình"] },
+        ]
+      },
+    ];
+
+    function DGScopeSketch() {
+      const [hovered, setHovered] = useState(null);
+      const [expanded, setExpanded] = useState(null);
+
+      return (
+        <div style={{
+          fontFamily: "Inter, Arial, sans-serif", background: "#F8FAFC",
+          minHeight: "80vh", display: "flex", flexDirection: "column",
+          padding: "10px 14px", gap: 6, boxSizing: "border-box", overflow: "hidden",
+        }}>
+
+          {/* ROW 1: Header + Legend */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+            <div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#0F1B2D", lineHeight: 1.2 }}>DATA GOVERNANCE — Scope Overview</div>
+              <div style={{ fontSize: 10, color: "#64748B", marginTop: 1 }}>Quản trị toàn bộ dữ liệu doanh nghiệp theo vòng đời · Triển khai theo phase</div>
+            </div>
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end", maxWidth: 620 }}>
+              <span style={{ fontSize: 10, color: "#64748B", alignSelf: "center" }}>Hệ thống:</span>
+              {Object.entries(SYS_COLORS).map(([name, s]) => (
+                <span key={name} style={{ background: s.bg, color: s.text, border: `1px solid ${s.border}`, fontSize: 9.5, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>
+                  {s.full}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* ROW 2: DG Boundary */}
+          <div style={{
+            border: "2px solid #EF4444", borderRadius: 12, background: "#FFF",
+            padding: "10px 12px 10px", position: "relative",
+            flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 8,
+            boxShadow: "0 2px 16px rgba(239,68,68,0.06)",
+          }}>
+            <div style={{
+              position: "absolute", top: -10, left: 16,
+              background: "#EF4444", color: "#fff",
+              fontSize: 9.5, fontWeight: 700, letterSpacing: 1.5, padding: "2px 12px", borderRadius: 20,
+            }}>🛡 DATA GOVERNANCE — PHẠM VI QUẢN TRỊ TOÀN BỘ</div>
+
+            {/* Capabilities strip */}
+            <div style={{
+              background: "#FEF2F2", borderRadius: 6, padding: "5px 12px",
+              fontSize: 9.5, color: "#7F1D1D", display: "flex", gap: 14, flexWrap: "nowrap",
+              flexShrink: 0, overflow: "hidden",
+            }}>
+              {["Chính sách & chuẩn mực","Data Classification","Data Catalog & Metadata","Quality Rules & Monitoring","Data Lineage","Compliance & Audit","Access Control","Retention Policy"].map(t => (
+                <span key={t} style={{ display: "flex", alignItems: "center", gap: 3, whiteSpace: "nowrap" }}>
+                  <span style={{ color: "#EF4444" }}>✦</span>{t}
+                </span>
+              ))}
+            </div>
+
+            {/* Main content */}
+            <div style={{ display: "flex", gap: 10, flex: 1, minHeight: 0 }}>
+
+              {/* LEFT: Customer Data */}
+              <div style={{
+                flex: "0 0 285px", border: "1.5px solid #F59E0B", borderRadius: 10,
+                background: "#FFF", overflow: "hidden", display: "flex", flexDirection: "column",
+                boxShadow: "0 1px 8px rgba(245,158,11,0.10)",
+              }}>
+                <div style={{ background: "#FBBF24", padding: "8px 11px", flexShrink: 0 }}>
+                  <div style={{ background: "rgba(255,255,255,0.3)", color: "#7C2D12", fontSize: 8.5, fontWeight: 800, letterSpacing: 0.8, padding: "1px 8px", borderRadius: 20, display: "inline-block", marginBottom: 4 }}>⚡ PHASE 1 — ƯU TIÊN</div>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: "#1C1917" }}>Customer Data</div>
+                  <div style={{ fontSize: 9, color: "#78350F", marginTop: 1 }}>Dữ liệu cá nhân khách hàng</div>
+                </div>
+                <div style={{ padding: "8px 11px", background: "#FFFBEB", flex: 1, overflow: "auto" }}>
+                  <div style={{ fontSize: 8.5, fontWeight: 700, color: "#92400E", letterSpacing: 0.8, marginBottom: 4 }}>SOURCE OF RECORD</div>
+                  <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
+                    <SysTagMain name="NSP" /><SysTagSub name="MPM" />
+                  </div>
+                  <div style={{ fontSize: 9.5, color: "#78350F", marginBottom: 8, lineHeight: 1.5 }}>
+                    {["Rải rác nhiều hệ thống & điểm chạm","Trùng lặp, không nhất quán","Rủi ro pháp lý — PII"].map(r => (
+                      <div key={r} style={{ display: "flex", gap: 4, marginBottom: 2 }}>
+                        <span style={{ color: "#F59E0B", flexShrink: 0 }}>▸</span><span>{r}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ background: "#FFF", border: "1px solid #F59E0B", borderRadius: 6, padding: "6px 8px", fontSize: 9.5, marginBottom: 8 }}>
+                    <div style={{ fontWeight: 700, color: "#B45309", marginBottom: 3 }}>🔒 NĐ 13/2023/NĐ-CP</div>
+                    <div style={{ color: "#78350F", lineHeight: 1.4 }}>Yêu cầu <b>sự đồng ý</b>, mục đích rõ ràng, quyền xoá/sửa. Phạt đến <b>5% doanh thu</b>.</div>
+                  </div>
+                  <div style={{ fontSize: 8.5, fontWeight: 700, color: "#92400E", letterSpacing: 0.8, marginBottom: 4 }}>THUỘC TÍNH (ví dụ)</div>
+                  {[
+                    { label: "Họ tên, CCCD, ngày sinh", pii: true },
+                    { label: "Địa chỉ, email, SĐT",    pii: true },
+                    { label: "Tài chính cá nhân",       pii: true },
+                    { label: "Lịch sử giao dịch",       pii: false },
+                  ].map(a => (
+                    <div key={a.label} style={{ display: "flex", gap: 4, fontSize: 9.5, marginBottom: 3, alignItems: "center" }}>
+                      <span style={{ background: a.pii ? "#FEE2E2" : "#FEF9C3", color: a.pii ? "#DC2626" : "#92400E", fontSize: 7.5, fontWeight: 700, padding: "1px 3px", borderRadius: 3, flexShrink: 0 }}>{a.pii ? "PII" : "STD"}</span>
+                      <span style={{ color: "#44403C" }}>{a.label}</span>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 8.5, color: "#B45309", fontStyle: "italic", marginTop: 3 }}>
+                    + Các thuộc tính khác sẽ được xác định cụ thể trong dự án
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT: Business Data Domains */}
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#1E293B" }}>Business Data Domains
+                    <span style={{ fontSize: 10, fontWeight: 400, color: "#64748B", marginLeft: 6 }}>Phase 2 — mở rộng toàn bộ</span>
+                  </span>
+                  <span style={{ background: "#E0E7FF", color: "#3730A3", fontSize: 9, fontWeight: 700, padding: "2px 9px", borderRadius: 20 }}>4 nhóm · 11 domains</span>
+                </div>
+
+                <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 5, overflow: "hidden" }}>
+                  {DOMAINS.map((group) => (
+                    <div key={group.group} style={{
+                      border: `1px solid ${group.groupColor}33`, borderRadius: 8,
+                      background: group.groupBg, padding: "6px 9px", flexShrink: 0,
+                    }}>
+                      <div style={{ fontSize: 8.5, fontWeight: 800, color: group.groupColor, letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 5 }}>◆ {group.group}</div>
+                      <div style={{ display: "grid", gridTemplateColumns: `repeat(${group.cols}, 1fr)`, gap: 5 }}>
+                        {group.items.map((d) => {
+                          const key = group.group + d.label;
+                          const isHov = hovered === key;
+                          const isExp = expanded === key;
+                          return (
+                            <div key={d.label}
+                              onMouseEnter={() => setHovered(key)}
+                              onMouseLeave={() => setHovered(null)}
+                              onClick={() => setExpanded(isExp ? null : key)}
+                              style={{
+                                background: "#FFF",
+                                border: `1px solid ${isHov || isExp ? group.groupColor : "#E2E8F0"}`,
+                                borderRadius: 6, padding: "6px 8px", cursor: "pointer",
+                                transition: "all 0.15s",
+                                boxShadow: isHov || isExp ? `0 1px 8px ${group.groupColor}22` : "none",
+                              }}
+                            >
+                              <div style={{ fontWeight: 700, fontSize: 10.5, color: isHov || isExp ? group.groupColor : "#1E293B", marginBottom: 4 }}>{d.label}</div>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: 3, alignItems: "center" }}>
+                                {d.main ? <SysTagMain name={d.main} /> : <span style={{ fontSize: 8, color: "#94A3B8", fontStyle: "italic" }}>TBD</span>}
+                                {d.others.map(s => <SysTagSub key={s} name={s} />)}
+                              </div>
+                              {isExp && (
+                                <div style={{ marginTop: 5, paddingTop: 5, borderTop: `1px dashed ${group.groupColor}66` }}>
+                                  <div style={{ fontSize: 8, fontWeight: 700, color: "#94A3B8", letterSpacing: 0.8, marginBottom: 3 }}>KEY ENTITIES</div>
+                                  <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                                    {d.entities.map(e => (
+                                      <span key={e} style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", fontSize: 8, color: "#475569", padding: "1px 5px", borderRadius: 3 }}>{e}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ background: "#F1F5F9", borderRadius: 6, padding: "5px 10px", fontSize: 9.5, color: "#475569", flexShrink: 0 }}>
+                  <span style={{ fontWeight: 700, color: "#334155" }}>DG áp dụng thống nhất: </span>
+                  Data Owner · Data Steward · Classification · Quality Rules · Lineage · Retention Policy · Access Control
+                </div>
+              </div>
+            </div>
+
+            {/* Lifecycle bar */}
+            <div style={{ flexShrink: 0 }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: "#94A3B8", letterSpacing: 1.5, marginBottom: 4, textAlign: "center" }}>
+                VÒNG ĐỜI DỮ LIỆU — DATA GOVERNANCE KIỂM SOÁT TOÀN BỘ
+              </div>
+              <div style={{ display: "flex", alignItems: "stretch", gap: 0 }}>
+                {[
+                  { stage: "Thu thập",    icon: "📥", desc: "Consent, purpose",           bg: "#FEF3C7", border: "#FCD34D", text: "#92400E" },
+                  { stage: "Lưu trữ",    icon: "💾", desc: "Classification, encryption",  bg: "#DBEAFE", border: "#93C5FD", text: "#1D4ED8" },
+                  { stage: "Xử lý",      icon: "⚙️", desc: "Quality, lineage",            bg: "#F0FDF4", border: "#86EFAC", text: "#166534" },
+                  { stage: "Chia sẻ",    icon: "🔗", desc: "Access control, API",         bg: "#FFF7ED", border: "#FDBA74", text: "#C2410C" },
+                  { stage: "Phân tích",  icon: "📊", desc: "Usage audit",                 bg: "#EEF2FF", border: "#A5B4FC", text: "#3730A3" },
+                  { stage: "Xoá/Archive",icon: "🗄️", desc: "Retention policy",            bg: "#F1F5F9", border: "#CBD5E1", text: "#475569" },
+                ].map((s, i, arr) => (
+                  <div key={s.stage} style={{ flex: 1, display: "flex", alignItems: "stretch" }}>
+                    <div style={{
+                      flex: 1,
+                      background: s.bg,
+                      border: `1px solid ${s.border}`,
+                      borderRight: i < arr.length - 1 ? "none" : `1px solid ${s.border}`,
+                      borderRadius: i === 0 ? "6px 0 0 6px" : i === arr.length - 1 ? "0 6px 6px 0" : 0,
+                      padding: "5px 4px", textAlign: "center",
+                    }}>
+                      <div style={{ fontSize: 13 }}>{s.icon}</div>
+                      <div style={{ fontSize: 8.5, fontWeight: 800, color: s.text }}>{s.stage}</div>
+                      <div style={{ fontSize: 7.5, color: "#94A3B8", marginTop: 1 }}>{s.desc}</div>
+                    </div>
+                    {i < arr.length - 1 && (
+                      <div style={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 18, flexShrink: 0, zIndex: 1,
+                        background: "#FFF",
+                        border: "1px solid #E2E8F0",
+                        borderLeft: "none", borderRight: "none",
+                      }}>
+                        <span style={{ fontSize: 13, fontWeight: 900, color: "#64748B", lineHeight: 1 }}>→</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ROW 3: Phase Roadmap */}
+          <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+            <div style={{ flex: 3, border: "1.5px solid #EF4444", borderRadius: 10, background: "#FFF", overflow: "hidden" }}>
+              <div style={{ background: "#7F1D1D", padding: "5px 12px", display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ background: "#EF4444", color: "#FFF", fontWeight: 800, fontSize: 9.5, padding: "1px 8px", borderRadius: 20, letterSpacing: 0.8 }}>PHASE 1</span>
+                <span style={{ fontWeight: 800, fontSize: 12, color: "#FFF" }}>Data Governance cho Customer Data</span>
+                <span style={{ fontSize: 9.5, color: "#FCA5A5", marginLeft: "auto" }}>SoR: NSP · MPM</span>
+              </div>
+              <div style={{ display: "flex", padding: "8px 10px", gap: 0, alignItems: "stretch" }}>
+                {[
+                  {
+                    num: "1", title: "Exploration", sub: "Đánh giá hiện trạng",
+                    items: [
+                      "🗺️ Kiểm kê toàn bộ luồng dữ liệu KH trên tất cả điểm chạm (online & offline)",
+                      "📍 Xác định hệ thống lưu trữ, owner, mức độ trùng lặp giữa các nguồn",
+                      "⚖️ Gap analysis đối chiếu với yêu cầu NĐ 13/2023/NĐ-CP",
+                      "📊 Đánh giá rủi ro & ưu tiên hành động khắc phục",
+                    ]
+                  },
+                  {
+                    num: "2", title: "Thiết kế giải pháp", sub: "Governance & Operating Model",
+                    items: [
+                      "🏛️ Mô hình quản trị: Data Council, Data Owner, Data Steward",
+                      "⚙️ Mô hình vận hành: quy trình, vòng đời, cơ chế kiểm soát",
+                      "📋 Chính sách: data policy, classification, consent model",
+                      "🗂️ Data Catalog design: metadata schema, lineage map",
+                    ]
+                  },
+                  {
+                    num: "3", title: "Triển khai", sub: "Implementation & Enforcement",
+                    items: [
+                      "🔐 Ma trận phân quyền: ai được đọc/sửa/xoá từng loại dữ liệu",
+                      "📌 RACI: phân rõ trách nhiệm cho từng quy trình & data asset",
+                      "📄 Văn kiện pháp lý: quy định, quy trình, chính sách DLCN",
+                      "🖥️ Công nghệ: Data Catalog, consent mgmt, access control, audit log",
+                    ]
+                  },
+                ].map((step, idx, arr) => (
+                  <div key={step.num} style={{ flex: 1, display: "flex" }}>
+                    {idx > 0 && <div style={{ display: "flex", alignItems: "center", padding: "0 4px", color: "#FCA5A5", fontSize: 18, flexShrink: 0 }}>›</div>}
+                    <div style={{
+                      flex: 1,
+                      borderLeft: idx > 0 ? "1px dashed #FCA5A5" : "none",
+                      paddingLeft: idx > 0 ? 8 : 0,
+                      paddingRight: idx < arr.length - 1 ? 4 : 0,
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#FEE2E2", border: "1.5px solid #EF4444", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 11, color: "#EF4444", flexShrink: 0 }}>{step.num}</div>
+                        <div>
+                          <div style={{ fontSize: 10.5, fontWeight: 800, color: "#EF4444" }}>{step.title}</div>
+                          <div style={{ fontSize: 8.5, color: "#94A3B8" }}>{step.sub}</div>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        {step.items.map(item => (
+                          <div key={item} style={{ fontSize: 9, color: "#475569", lineHeight: 1.4 }}>{item}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+              {[
+                { phase: "Phase 2", focus: "11 Business Domains", detail: "Mở rộng governance toàn bộ domain. Data Owner/Steward, quality rules, lineage map.", color: "#F59E0B" },
+                { phase: "Phase 3", focus: "Optimize & Automate",  detail: "Tự động hoá quality checks, shift-left vào CI/CD, Maturity Assessment định kỳ.", color: "#10B981" },
+              ].map(p => (
+                <div key={p.phase} style={{ flex: 1, border: `1.5px solid ${p.color}`, borderRadius: 10, padding: "8px 12px", background: "#FFF", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <div style={{ fontWeight: 700, fontSize: 9.5, color: p.color }}>{p.phase}</div>
+                  <div style={{ fontWeight: 800, fontSize: 11.5, color: "#1E293B", margin: "1px 0" }}>{p.focus}</div>
+                  <div style={{ fontSize: 9.5, color: "#64748B", lineHeight: 1.4 }}>{p.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ textAlign: "center", fontSize: 8.5, color: "#CBD5E1", flexShrink: 0 }}>
+            Click vào từng domain để xem key entities · Hover để highlight
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<DGScopeSketch />);
+  </script>
+</body>
+</html>

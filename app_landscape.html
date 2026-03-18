@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Landscape — One Mount Group</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #F8FAFC; zoom: 1.2; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const APP_GROUPS = [
+      {
+        id: "xd", label: "Quản lý xây dựng", color: "#3B82F6", bg: "#EFF6FF", border: "#BFDBFE",
+        apps: [
+          { code: "MCM",        name: "Masterise Construction Management", vi: "Hệ thống quản trị xây dựng",           role: "SoR: Dự án, Sản phẩm BĐS, Vật tư" },
+          { code: "ACC",        name: "Autodesk Construction Cloud",       vi: "Hệ thống Autodesk",                     role: "Thiết kế, mô hình BIM" },
+          { code: "SCM",        name: "Supply Chain Management",           vi: "Hệ thống quản lý cung ứng & đấu thầu", role: "Cung ứng, đấu thầu, kho" },
+          { code: "SmartSheet", name: "Smartsheet",                        vi: "Hệ thống quản lý tiến độ xây dựng",    role: "Project plan, quản lý tiến độ" },
+        ],
+      },
+      {
+        id: "kd", label: "Kinh doanh & Vận hành", color: "#EA580C", bg: "#FFF7ED", border: "#FED7AA",
+        apps: [
+          { code: "NSP",       name: "New Sales Platform",           vi: "Hệ thống quản lý vận hành kinh doanh bán hàng",   role: "SoR: Customer, giao dịch bán hàng" },
+          { code: "Web & CMS", name: "Website, Landing Pages & CMS", vi: "Hệ thống website, landing pages & quản lý nội dung", role: "Digital marketing, thông tin dự án" },
+        ],
+      },
+      {
+        id: "bds", label: "Vận hành BĐS", color: "#0D9488", bg: "#F0FDFA", border: "#99F6E4",
+        apps: [
+          { code: "MPM",       name: "Masterise Property Management",   vi: "Hệ thống quản lý vận hành BĐS", role: "SoR: Cư dân, vận hành tòa nhà" },
+          { code: "IoT/Smart", name: "Smart Home / Building / Parking", vi: "Hệ thống IoT & Smart X",         role: "Cảm biến, tự động hoá tòa nhà" },
+        ],
+      },
+      {
+        id: "dn", label: "Quản lý & vận hành doanh nghiệp", color: "#6366F1", bg: "#EEF2FF", border: "#C7D2FE",
+        apps: [
+          { code: "CLMS",        name: "Contract Lifecycle Management System", vi: "Hệ thống quản lý hợp đồng",               role: "SoR: Hợp đồng, SOW, phụ lục" },
+          { code: "HRMS",        name: "Human Resource Management System",     vi: "Hệ thống quản lý nhân sự",                 role: "SoR: Nhân sự, tổ chức" },
+          { code: "ERP",         name: "Enterprise Resource Planning (SAP)",   vi: "Các hệ thống quản trị doanh nghiệp",       role: "SoR: Tài chính, kế toán" },
+          { code: "FINS",        name: "Financial Intelligence Navigator",     vi: "Hệ thống quản trị tài chính kế toán",      role: "Báo cáo tài chính tập trung" },
+          { code: "AAM",         name: "Authorization Approval Matrix",        vi: "Hệ thống quản lý phân quyền & ủy quyền",  role: "Phân quyền & ủy quyền" },
+          { code: "BeeTrack",    name: "Asset Management",                     vi: "Hệ thống quản lý tài sản",                 role: "Quản lý tài sản" },
+          { code: "Call Center", name: "Call Center",                          vi: "Hệ thống tổng đài CSKH",                   role: "Tổng đài, chăm sóc KH" },
+          { code: "Jira",        name: "Jira Service & Software",              vi: "Hệ thống service desk & internal process", role: "Service desk, quy trình nội bộ" },
+          { code: "O365",        name: "Office 365 / SharePoint / Teams",      vi: "Bộ công cụ văn phòng & cộng tác",         role: "Cộng tác, văn phòng" },
+          { code: "PHVB",        name: "Phát hành văn bản nội bộ",             vi: "Ứng dụng phát hành văn bản nội bộ",       role: "Văn bản, quy định nội bộ" },
+        ],
+      },
+    ];
+
+    const MDM_CONSUMERS = ["NSP", "MPM", "CLMS", "MCM", "ERP", "SCM", "FINS"];
+    const DPF_SOURCES   = ["MCM", "SCM", "NSP", "MPM", "CLMS", "HRMS", "ERP", "MDM", "IoT/Smart", "Web & CMS"];
+
+    function Chip({ app, highlight, dimmed }) {
+      const isM = highlight === "mdm", isD = highlight === "dpf";
+      const accent = isM ? "#5B21B6" : isD ? "#0369A1" : "#1E293B";
+      const sub    = isM ? "#7C3AED" : isD ? "#0284C7" : "#475569";
+      const muted  = isM ? "#A78BFA" : isD ? "#38BDF8" : "#94A3B8";
+      return (
+        <div style={{
+          background: isM ? "#EDE9FE" : isD ? "#E0F2FE" : "#FFF",
+          border: `1px solid ${isM ? "#A78BFA" : isD ? "#7DD3FC" : "#E2E8F0"}`,
+          borderRadius: 7, padding: "6px 9px",
+          opacity: dimmed ? 0.28 : 1,
+          transition: "all 0.2s",
+        }}>
+          <div style={{ fontWeight: 800, fontSize: 11, color: accent, whiteSpace: "nowrap" }}>{app.code}</div>
+          <div style={{ fontSize: 9, color: sub, lineHeight: 1.3, marginTop: 2 }}>{app.name}</div>
+          <div style={{ fontSize: 8.5, color: muted, lineHeight: 1.3, marginTop: 1, fontStyle: "italic" }}>{app.vi}</div>
+        </div>
+      );
+    }
+
+    function AppLandscape() {
+      const [focus, setFocus] = useState(null);
+
+      const hl  = (app) => {
+        if (!focus) return null;
+        if (focus === "mdm" && MDM_CONSUMERS.includes(app.code)) return "mdm";
+        if (focus === "dpf" && DPF_SOURCES.includes(app.code))   return "dpf";
+        return null;
+      };
+      const dim = (app) => focus !== null && hl(app) === null;
+
+      return (
+        <div style={{
+          fontFamily: "Inter, Arial, sans-serif",
+          background: "#F8FAFC",
+          minHeight: "80vh",
+          display: "flex", flexDirection: "column",
+          padding: "16px 20px", gap: 12, boxSizing: "border-box",
+        }}>
+
+          {/* HEADER */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: "#94A3B8", letterSpacing: 2, textTransform: "uppercase" }}>One Mount Group — MAG</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#0F1B2D", lineHeight: 1.2 }}>Application Landscape</div>
+              <div style={{ fontSize: 10, color: "#64748B" }}>Phạm vi MDM & Data Platform trong hệ sinh thái ứng dụng</div>
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              {[
+                { key: "mdm", label: "💡 MDM scope",           activeColor: "#5B21B6", inactiveBg: "#EDE9FE", inactiveColor: "#5B21B6" },
+                { key: "dpf", label: "🗄️ Data Platform scope", activeColor: "#0369A1", inactiveBg: "#E0F2FE", inactiveColor: "#0369A1" },
+              ].map(b => (
+                <button key={b.key} onClick={() => setFocus(focus === b.key ? null : b.key)} style={{
+                  background: focus === b.key ? b.activeColor : b.inactiveBg,
+                  color: focus === b.key ? "#FFF" : b.inactiveColor,
+                  border: "none", borderRadius: 20, padding: "5px 13px",
+                  fontWeight: 700, fontSize: 11, cursor: "pointer", transition: "all 0.2s",
+                }}>{b.label}</button>
+              ))}
+              {focus && (
+                <button onClick={() => setFocus(null)} style={{
+                  background: "#F1F5F9", color: "#64748B", border: "none",
+                  borderRadius: 20, padding: "5px 11px", fontWeight: 600, fontSize: 11, cursor: "pointer",
+                }}>✕</button>
+              )}
+            </div>
+          </div>
+
+          {/* ROW 1: Source | Connector | MDM */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 88px 360px", gap: 0, alignItems: "stretch" }}>
+
+            {/* LEFT: Source & Business Systems */}
+            <div style={{
+              border: "1.5px solid #E2E8F0", borderRadius: "12px 0 0 12px", background: "#FFF",
+              padding: "16px 14px", position: "relative", borderRight: "none",
+            }}>
+              <div style={{
+                position: "absolute", top: -10, left: 14,
+                background: "#334155", color: "#FFF",
+                fontSize: 9.5, fontWeight: 700, letterSpacing: 1.5, padding: "2px 12px", borderRadius: 20,
+              }}>SOURCE & BUSINESS SYSTEMS</div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 6 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 8 }}>
+                  {(() => { const g = APP_GROUPS[0]; return (
+                    <div key={g.id} style={{ background: g.bg, border: `1px solid ${g.border}`, borderRadius: 9, padding: "10px 11px" }}>
+                      <div style={{ fontSize: 9.5, fontWeight: 800, color: g.color, letterSpacing: 0.4, marginBottom: 8 }}>◆ {g.label}</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                        {g.apps.map(a => <Chip key={a.code} app={a} highlight={hl(a)} dimmed={dim(a)} />)}
+                      </div>
+                    </div>
+                  ); })()}
+                  {APP_GROUPS.slice(1, 3).map(g => (
+                    <div key={g.id} style={{ background: g.bg, border: `1px solid ${g.border}`, borderRadius: 9, padding: "10px 11px" }}>
+                      <div style={{ fontSize: 9.5, fontWeight: 800, color: g.color, letterSpacing: 0.4, marginBottom: 8 }}>◆ {g.label}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {g.apps.map(a => <Chip key={a.code} app={a} highlight={hl(a)} dimmed={dim(a)} />)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {APP_GROUPS.slice(3).map(g => (
+                  <div key={g.id} style={{ background: g.bg, border: `1px solid ${g.border}`, borderRadius: 9, padding: "10px 11px" }}>
+                    <div style={{ fontSize: 9.5, fontWeight: 800, color: g.color, letterSpacing: 0.4, marginBottom: 8 }}>◆ {g.label}</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 6 }}>
+                      {g.apps.map(a => <Chip key={a.code} app={a} highlight={hl(a)} dimmed={dim(a)} />)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CENTER: MDM Flow Connector */}
+            <div style={{
+              display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
+              gap: 10, padding: "16px 0", background: "#FAFAFF",
+              borderTop: "1.5px solid #E2E8F0", borderBottom: "1.5px solid #E2E8F0",
+            }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{
+                  background: "#F8FAFC", border: "1px solid #CBD5E1", borderRadius: 8,
+                  padding: "5px 7px", textAlign: "center", width: 74,
+                }}>
+                  <div style={{ fontSize: 8, fontWeight: 800, color: "#475569", lineHeight: 1.3 }}>Master data</div>
+                  <div style={{ fontSize: 8, color: "#64748B", lineHeight: 1.3 }}>dùng chung</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <div style={{ width: 28, height: 1.5, background: "#CBD5E1" }} />
+                  <div style={{ fontSize: 16, color: "#CBD5E1", lineHeight: 1 }}>↔</div>
+                  <div style={{ width: 28, height: 1.5, background: "#CBD5E1" }} />
+                </div>
+                <div style={{ fontSize: 8, color: "#64748B", fontWeight: 600, textAlign: "center", lineHeight: 1.3 }}>
+                  MDM ↔ tất cả<br/>hệ thống
+                </div>
+              </div>
+              <div style={{ width: 50, height: 1, background: "#E2E8F0" }} />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <div style={{
+                  background: "#F8FAFC", border: "1px solid #CBD5E1", borderRadius: 8,
+                  padding: "5px 7px", textAlign: "center", width: 74,
+                }}>
+                  <div style={{ fontSize: 8, fontWeight: 800, color: "#475569", lineHeight: 1.3 }}>Proxy API</div>
+                  <div style={{ fontSize: 8, color: "#64748B", lineHeight: 1.3 }}>MCM / ERP</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <div style={{ width: 20, height: 1.5, background: "#CBD5E1" }} />
+                  <div style={{ fontSize: 16, color: "#CBD5E1", lineHeight: 1 }}>→</div>
+                  <div style={{ width: 20, height: 1.5, background: "#CBD5E1" }} />
+                </div>
+                <div style={{ fontSize: 8, color: "#64748B", fontWeight: 600, textAlign: "center", lineHeight: 1.3 }}>
+                  SoR → MDM<br/>→ consumers
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT: MDM */}
+            <div style={{
+              border: `2px solid ${focus === "mdm" ? "#7C3AED" : "#A78BFA"}`,
+              borderRadius: "0 12px 12px 0", position: "relative",
+              background: focus === "mdm" ? "#FAF5FF" : "#FFF",
+              padding: "16px 14px",
+              boxShadow: focus === "mdm" ? "0 2px 16px rgba(124,58,237,0.12)" : "none",
+              transition: "all 0.2s",
+              display: "flex", flexDirection: "column", gap: 10,
+            }}>
+              <div style={{
+                position: "absolute", top: -10, left: 14,
+                background: "#5B21B6", color: "#FFF",
+                fontSize: 9.5, fontWeight: 700, letterSpacing: 1.5, padding: "2px 12px", borderRadius: 20,
+              }}>MDM — MASTER DATA MANAGEMENT</div>
+
+              <div style={{ background: "#EDE9FE", borderRadius: 9, padding: "12px 13px", marginTop: 4 }}>
+                <div style={{ fontSize: 10, fontWeight: 800, color: "#5B21B6", marginBottom: 7 }}>📦 ROLE 1 — Master Data dùng chung</div>
+                <div style={{ fontSize: 10, color: "#4C1D95", lineHeight: 1.6, marginBottom: 9 }}>
+                  MDM là <strong>Source of Record</strong> cho master data không có hệ thống nguồn riêng:
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 9 }}>
+                  {["Danh mục vật tư", "Thông số kỹ thuật", "Giá vật liệu XD", "Đơn vị hành chính", "Danh mục dùng chung"].map(t => (
+                    <span key={t} style={{ background: "#FFF", color: "#5B21B6", border: "1px solid #A78BFA", fontSize: 9, fontWeight: 600, padding: "3px 8px", borderRadius: 10 }}>{t}</span>
+                  ))}
+                  <span style={{ color: "#7C3AED", fontSize: 9, fontWeight: 600, padding: "3px 4px", fontStyle: "italic" }}>và các loại khác...</span>
+                </div>
+                <div style={{ fontSize: 9, color: "#7C3AED", display: "flex", gap: 5, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontWeight: 700 }}>Cung cấp cho:</span>
+                  {["SCM", "MCM", "ERP", "NSP", "CLMS", "MPM"].map(s => (
+                    <span key={s} style={{ background: "#DDD6FE", padding: "2px 7px", borderRadius: 8, fontWeight: 700, fontSize: 9 }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ background: "#EDE9FE", borderRadius: 8, padding: "9px 11px" }}>
+                <div style={{ fontSize: 9.5, fontWeight: 800, color: "#5B21B6", marginBottom: 5 }}>🔀 ROLE 2 — Hệ thống trung gian (Proxy API)</div>
+                <div style={{ fontSize: 9.5, color: "#4C1D95", lineHeight: 1.5, marginBottom: 8 }}>
+                  Khi các hệ thống SoR không expose API trực tiếp (như <strong>MCM</strong>, <strong>ERP</strong>), MDM đóng vai trò <strong>trung gian</strong>:
+                </div>
+                <div style={{ background: "#FFF", border: "1px solid #A78BFA", borderRadius: 7, padding: "8px 10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap", marginBottom: 6 }}>
+                    <span style={{ background: "#DBEAFE", color: "#1D4ED8", fontWeight: 800, fontSize: 10, padding: "2px 8px", borderRadius: 5 }}>MCM / ERP</span>
+                    <span style={{ color: "#A78BFA", fontWeight: 700, fontSize: 14 }}>→</span>
+                    <span style={{ background: "#EDE9FE", color: "#5B21B6", fontWeight: 800, fontSize: 10, padding: "2px 8px", borderRadius: 5, border: "1.5px solid #A78BFA" }}>MDM</span>
+                    <span style={{ color: "#A78BFA", fontWeight: 700, fontSize: 14 }}>→</span>
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                      {["NSP", "MPM", "CLMS", "ERP"].map(s => (
+                        <span key={s} style={{ background: "#F5F3FF", color: "#6D28D9", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 5, border: "1px solid #C4B5FD" }}>{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                    {["Thông tin Dự án BĐS", "Sản phẩm / Căn hộ", "Phân khu / Zone"].map(d => (
+                      <span key={d} style={{ background: "#F5F3FF", color: "#7C3AED", fontSize: 8.5, padding: "2px 6px", borderRadius: 8, border: "1px dashed #C4B5FD" }}>{d}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CONNECTOR to Data Platform */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 2px" }}>
+            <div style={{ flex: 1, height: 1, background: focus === "dpf" ? "#7DD3FC" : "#E2E8F0", transition: "all 0.3s" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: 16, color: focus === "dpf" ? "#0369A1" : "#CBD5E1", transition: "all 0.3s" }}>↓</span>
+              <span style={{ fontSize: 10, color: focus === "dpf" ? "#0369A1" : "#94A3B8", fontWeight: 600 }}>Đồng bộ toàn bộ dữ liệu nguồn</span>
+              <span style={{ fontSize: 16, color: focus === "dpf" ? "#0369A1" : "#CBD5E1", transition: "all 0.3s" }}>↓</span>
+            </div>
+            <div style={{ flex: 1, height: 1, background: focus === "dpf" ? "#7DD3FC" : "#E2E8F0", transition: "all 0.3s" }} />
+          </div>
+
+          {/* ROW 2: Data Platform */}
+          <div style={{
+            border: `2px solid ${focus === "dpf" ? "#0369A1" : "#7DD3FC"}`,
+            borderRadius: 12, position: "relative",
+            background: focus === "dpf" ? "#F0F9FF" : "#FFF",
+            padding: "16px 18px",
+            boxShadow: focus === "dpf" ? "0 2px 16px rgba(3,105,161,0.12)" : "none",
+            transition: "all 0.2s",
+          }}>
+            <div style={{
+              position: "absolute", top: -10, left: 14,
+              background: "#0369A1", color: "#FFF",
+              fontSize: 9.5, fontWeight: 700, letterSpacing: 1.5, padding: "2px 12px", borderRadius: 20,
+            }}>DATA PLATFORM — LAKEHOUSE · Nền tảng dữ liệu tập trung</div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "auto 1px auto 1px 1fr", gap: 18, alignItems: "center", marginTop: 8 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0369A1" }}>📥 Nguồn dữ liệu</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, maxWidth: 300 }}>
+                  {DPF_SOURCES.map(s => (
+                    <span key={s} style={{
+                      background: s === "MDM" ? "#EDE9FE" : "#E0F2FE",
+                      color: s === "MDM" ? "#5B21B6" : "#0369A1",
+                      border: `1px solid ${s === "MDM" ? "#A78BFA" : "#7DD3FC"}`,
+                      fontSize: 9.5, fontWeight: 700, padding: "3px 9px", borderRadius: 10,
+                    }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background: "#BAE6FD", alignSelf: "stretch" }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0369A1" }}>⚙️ Pipeline</div>
+                <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
+                  {[
+                    { label: "Bronze", desc: "Raw data",   bg: "#FEF3C7", color: "#92400E", border: "#FCD34D" },
+                    { label: "Silver", desc: "Cleaned",    bg: "#F1F5F9", color: "#475569", border: "#CBD5E1" },
+                    { label: "Gold",   desc: "Aggregated", bg: "#FEF9C3", color: "#713F12", border: "#FDE047" },
+                  ].map((t, i, arr) => (
+                    <div key={t.label} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: 7, padding: "7px 13px", textAlign: "center" }}>
+                        <div style={{ fontSize: 10, fontWeight: 800, color: t.color }}>{t.label}</div>
+                        <div style={{ fontSize: 8.5, color: "#94A3B8" }}>{t.desc}</div>
+                      </div>
+                      {i < arr.length - 1 && <span style={{ color: "#7DD3FC", fontSize: 16, fontWeight: 700 }}>›</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background: "#BAE6FD", alignSelf: "stretch" }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0369A1" }}>📤 Output — Phân tích & Khai thác</div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                  {[
+                    { icon: "📊", label: "Power BI",           desc: "Dashboard vận hành, kinh doanh, tài chính", color: "#F59E0B" },
+                    { icon: "💰", label: "FINS",               desc: "Báo cáo tài chính thông minh tập trung",    color: "#10B981" },
+                    { icon: "🤖", label: "Advanced Analytics", desc: "ML/AI models, dự báo, phân tích nâng cao",  color: "#8B5CF6" },
+                    { icon: "🔌", label: "Data API",           desc: "Cung cấp dữ liệu tổng hợp cho hệ thống",   color: "#3B82F6" },
+                  ].map(o => (
+                    <div key={o.label} style={{
+                      background: "#E0F2FE", border: "1px solid #BAE6FD",
+                      borderRadius: 8, padding: "7px 10px",
+                      display: "flex", gap: 8, alignItems: "flex-start",
+                    }}>
+                      <span style={{ fontSize: 15, flexShrink: 0 }}>{o.icon}</span>
+                      <div>
+                        <div style={{ fontSize: 10.5, fontWeight: 800, color: o.color }}>{o.label}</div>
+                        <div style={{ fontSize: 9, color: "#64748B", lineHeight: 1.35 }}>{o.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexShrink: 0 }}>
+            {[
+              { bg: "#EDE9FE", border: "#A78BFA", label: "MDM scope" },
+              { bg: "#E0F2FE", border: "#7DD3FC", label: "Data Platform scope" },
+              { bg: "#F8FAFC", border: "#E2E8F0", label: "Ngoài phạm vi highlight" },
+            ].map(l => (
+              <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 9, color: "#64748B" }}>
+                <span style={{ width: 12, height: 12, background: l.bg, border: `1.5px solid ${l.border}`, borderRadius: 3, display: "inline-block", flexShrink: 0 }} />
+                {l.label}
+              </div>
+            ))}
+            <span style={{ fontSize: 9, color: "#CBD5E1" }}>· Click button để highlight phạm vi</span>
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<AppLandscape />);
+  </script>
+</body>
+</html>
