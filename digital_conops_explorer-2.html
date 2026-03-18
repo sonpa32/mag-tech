@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBIA Digital ConOps Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0f14;
+    --surface: #141820;
+    --surface-2: #1a1f2b;
+    --surface-3: #222838;
+    --border: #2a3040;
+    --border-active: #3d4560;
+    --text: #e0e4ec;
+    --text-muted: #8890a0;
+    --text-dim: #5a6278;
+    --accent-aodb: #4e9af5;
+    --accent-cupps: #22c997;
+    --accent-brs: #f0a040;
+    --accent-soc: #e05577;
+    --accent-aodb-bg: rgba(78,154,245,0.08);
+    --accent-cupps-bg: rgba(34,201,151,0.08);
+    --accent-brs-bg: rgba(240,160,64,0.08);
+    --accent-soc-bg: rgba(224,85,119,0.08);
+    --critical: #ff4466;
+    --high: #f0a040;
+    --medium: #4e9af5;
+    --low: #22c997;
+    --flow-arrow: #4e9af550;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-title .badge {
+    background: linear-gradient(135deg, var(--accent-aodb), var(--accent-cupps));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .header-title h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .header-title h1 span { color: var(--text-muted); font-weight: 400; }
+  .header-meta { font-size: 12px; color: var(--text-dim); }
+
+  /* ─── TABS ─── */
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    padding: 0 32px;
+    border-bottom: 1px solid var(--border);
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 14px 20px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); background: var(--surface-2); }
+  .tab-btn.active { color: var(--accent-aodb); border-bottom-color: var(--accent-aodb); }
+
+  /* ─── CONTENT ─── */
+  .content { max-width: 1400px; margin: 0 auto; padding: 32px; }
+  .tab-panel { display: none; animation: fadeIn 0.3s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── LAYER 1: PHASE MATRIX ─── */
+  .flight-type-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .ft-btn {
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ft-btn:hover { border-color: var(--border-active); color: var(--text); }
+  .ft-btn.active { background: var(--surface-2); border-color: var(--accent-aodb); color: var(--accent-aodb); }
+
+  .phase-grid {
+    display: grid;
+    gap: 2px;
+    background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .phase-grid-header {
+    display: contents;
+  }
+  .phase-grid .cell {
+    background: var(--surface);
+    padding: 12px 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+  }
+  .phase-grid .cell.header {
+    background: var(--surface-2);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 16px;
+  }
+  .phase-grid .cell.phase-name {
+    font-weight: 500;
+    min-width: 240px;
+  }
+  .phase-grid .cell.system-status {
+    justify-content: center;
+    min-width: 80px;
+  }
+  .status-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .status-dot.active { background: currentColor; box-shadow: 0 0 8px currentColor; }
+  .status-dot.monitoring { background: currentColor; opacity: 0.4; }
+  .status-dot.minimal { border: 2px solid currentColor; background: transparent; }
+  .status-dot.inactive { border: 1px solid var(--text-dim); background: transparent; opacity: 0.3; }
+  .status-dot.clickable { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .status-dot.clickable:hover { transform: scale(1.4); }
+  .status-dot.clickable.selected { transform: scale(1.5); box-shadow: 0 0 12px currentColor, 0 0 4px currentColor; }
+
+  .matrix-detail-panel {
+    grid-column: 1 / -1;
+    background: var(--surface-2);
+    border-left: 3px solid var(--border);
+    padding: 16px 20px;
+    animation: slideDown 0.2s ease;
+  }
+  @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 600px; } }
+  .matrix-detail-panel.aodb { border-left-color: var(--accent-aodb); }
+  .matrix-detail-panel.cupps { border-left-color: var(--accent-cupps); }
+  .matrix-detail-panel.brs { border-left-color: var(--accent-brs); }
+  .matrix-detail-panel.soc { border-left-color: var(--accent-soc); }
+  .mdp-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.03em;
+  }
+  .mdp-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .mdp-header .close-btn {
+    margin-left: auto; background: none; border: none; color: var(--text-dim);
+    cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px;
+  }
+  .mdp-header .close-btn:hover { background: var(--surface-3); color: var(--text); }
+  .mdp-rows { display: flex; flex-direction: column; gap: 6px; }
+  .mdp-row {
+    display: grid; grid-template-columns: 140px 1fr; gap: 10px;
+    font-size: 12px; padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mdp-row:last-child { border-bottom: none; }
+  .mdp-actor { color: var(--text-muted); font-weight: 500; }
+  .mdp-action { color: var(--text); line-height: 1.5; }
+  .mdp-inactive-msg { font-size: 12px; color: var(--text-dim); font-style: italic; }
+
+  .legend {
+    display: flex; gap: 20px; margin-top: 16px; font-size: 12px; color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+
+  /* ─── LAYER 2: INTERACTIONS ─── */
+  .phase-accordion { display: flex; flex-direction: column; gap: 4px; }
+  .phase-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .phase-section:hover { border-color: var(--border-active); }
+  .phase-section-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+  }
+  .phase-section-header:hover { background: var(--surface-2); }
+  .phase-label {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .phase-num {
+    background: var(--surface-3);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .phase-title { font-weight: 600; font-size: 14px; }
+  .phase-timing { font-size: 12px; color: var(--text-dim); }
+  .system-pills { display: flex; gap: 6px; }
+  .sys-pill {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .sys-pill.aodb { background: var(--accent-aodb-bg); color: var(--accent-aodb); }
+  .sys-pill.cupps { background: var(--accent-cupps-bg); color: var(--accent-cupps); }
+  .sys-pill.brs { background: var(--accent-brs-bg); color: var(--accent-brs); }
+  .sys-pill.soc { background: var(--accent-soc-bg); color: var(--accent-soc); }
+  .chevron {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .phase-section.open .chevron { transform: rotate(180deg); }
+  .phase-section-body {
+    display: none;
+    padding: 0 20px 20px;
+  }
+  .phase-section.open .phase-section-body { display: block; }
+
+  .interaction-card {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 12px;
+    border-left: 3px solid var(--border);
+  }
+  .interaction-card.aodb { border-left-color: var(--accent-aodb); }
+  .interaction-card.cupps { border-left-color: var(--accent-cupps); }
+  .interaction-card.brs { border-left-color: var(--accent-brs); }
+  .interaction-card.soc { border-left-color: var(--accent-soc); }
+
+  .ic-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600; font-size: 13px;
+  }
+  .ic-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .ic-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+  .ic-table th {
+    text-align: left; padding: 6px 10px; color: var(--text-muted);
+    font-weight: 500; border-bottom: 1px solid var(--border);
+    font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .ic-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.5;
+  }
+  .ic-table tr:last-child td { border-bottom: none; }
+  .actor-tag {
+    font-size: 11px; font-weight: 500; padding: 2px 6px;
+    background: var(--surface-3); border-radius: 3px;
+    display: inline-block; white-space: nowrap;
+  }
+
+  /* ─── LAYER 3: INFORMATION FLOWS ─── */
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+    text-align: center;
+    overflow-x: auto;
+  }
+  .arch-diagram svg { max-width: 100%; height: auto; }
+
+  .flow-filter-bar {
+    display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .flow-filter-btn {
+    padding: 6px 14px; font-family: inherit; font-size: 12px; font-weight: 500;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .flow-filter-btn:hover { border-color: var(--border-active); color: var(--text); }
+  .flow-filter-btn.active { background: var(--accent-aodb-bg); border-color: var(--accent-aodb); color: var(--accent-aodb); }
+
+  .flow-cards { display: flex; flex-direction: column; gap: 6px; }
+  .flow-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 2fr;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .flow-card:hover { border-color: var(--border-active); background: var(--surface-2); }
+  .flow-source, .flow-dest {
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .flow-source.aodb, .flow-dest.aodb { background: var(--accent-aodb-bg); color: var(--accent-aodb); }
+  .flow-source.cupps, .flow-dest.cupps { background: var(--accent-cupps-bg); color: var(--accent-cupps); }
+  .flow-source.brs, .flow-dest.brs { background: var(--accent-brs-bg); color: var(--accent-brs); }
+  .flow-source.soc, .flow-dest.soc { background: var(--accent-soc-bg); color: var(--accent-soc); }
+  .flow-source.hbs, .flow-dest.hbs { background: rgba(180,120,255,0.1); color: #b478ff; }
+  .flow-source.scanner, .flow-dest.scanner { background: var(--accent-brs-bg); color: var(--accent-brs); }
+
+  .flow-arrow-icon { color: var(--text-dim); font-size: 16px; }
+  .flow-detail { color: var(--text-muted); font-size: 12px; }
+  .flow-detail strong { color: var(--text); font-weight: 500; }
+  .flow-trigger {
+    display: inline-block; font-size: 10px; padding: 2px 6px;
+    background: var(--surface-3); border-radius: 3px; color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ─── LAYER 4: ERRORS ─── */
+  .error-filter-bar {
+    display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
+  }
+  .error-filter-bar .label { font-size: 12px; color: var(--text-dim); margin-right: 4px; }
+  .sev-btn {
+    padding: 6px 14px; font-family: inherit; font-size: 12px; font-weight: 600;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
+  }
+  .sev-btn.critical { color: var(--critical); }
+  .sev-btn.high { color: var(--high); }
+  .sev-btn.medium { color: var(--medium); }
+  .sev-btn.low { color: var(--low); }
+  .sev-btn.active { background: var(--surface-2); border-color: currentColor; }
+
+  .error-cards { display: flex; flex-direction: column; gap: 8px; }
+  .error-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .error-card:hover { border-color: var(--border-active); }
+  .error-card-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .error-card-header:hover { background: var(--surface-2); }
+  .sev-indicator {
+    width: 4px; height: 32px; border-radius: 2px; flex-shrink: 0;
+  }
+  .sev-indicator.critical { background: var(--critical); }
+  .sev-indicator.high { background: var(--high); }
+  .sev-indicator.medium { background: var(--medium); }
+  .sev-indicator.low { background: var(--low); }
+  .error-title { font-weight: 600; font-size: 13px; flex: 1; }
+  .error-sev-tag {
+    font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 3px; letter-spacing: 0.06em;
+  }
+  .error-sev-tag.critical { background: rgba(255,68,102,0.12); color: var(--critical); }
+  .error-sev-tag.high { background: rgba(240,160,64,0.12); color: var(--high); }
+  .error-sev-tag.medium { background: rgba(78,154,245,0.12); color: var(--medium); }
+  .error-sev-tag.low { background: rgba(34,201,151,0.12); color: var(--low); }
+
+  .error-card-body {
+    display: none;
+    padding: 0 18px 16px;
+  }
+  .error-card.open .error-card-body { display: block; }
+
+  .error-detail-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;
+  }
+  .error-detail-item {
+    background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px;
+  }
+  .error-detail-label {
+    font-size: 10px; font-weight: 600; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
+  }
+  .error-detail-value { font-size: 13px; line-height: 1.5; }
+  .affected-systems {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .content { padding: 16px; }
+    .flow-card { grid-template-columns: 1fr; gap: 6px; }
+    .error-detail-grid { grid-template-columns: 1fr; }
+    .phase-section-header { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ─── SECTION TITLES ─── */
+  .section-title {
+    font-size: 20px; font-weight: 700; margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .section-desc {
+    font-size: 14px; color: var(--text-muted); margin-bottom: 24px; max-width: 700px; line-height: 1.6;
+  }
+
+  /* ─── OVERVIEW CARDS ─── */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px; margin-bottom: 32px;
+  }
+  .overview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    border-top: 3px solid var(--border);
+  }
+  .overview-card.aodb { border-top-color: var(--accent-aodb); }
+  .overview-card.cupps { border-top-color: var(--accent-cupps); }
+  .overview-card.brs { border-top-color: var(--accent-brs); }
+  .overview-card.soc { border-top-color: var(--accent-soc); }
+  .oc-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .oc-role { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .oc-users { font-size: 12px; color: var(--text-dim); }
+  .oc-users strong { color: var(--text-muted); }
+
+  .interface-table {
+    width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 24px;
+  }
+  .interface-table th {
+    text-align: left; padding: 10px 14px; background: var(--surface-2);
+    color: var(--text-muted); font-weight: 600; font-size: 11px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .interface-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top;
+  }
+  .interface-table tr:hover td { background: var(--surface); }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .sla-tag {
+    display: inline-block; font-size: 10px; padding: 2px 6px;
+    background: var(--surface-3); border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-title">
+      <span class="badge">Draft</span>
+      <h1>GBIA Digital ConOps <span>— VIP / GA Terminal</span></h1>
+    </div>
+    <div class="header-meta">6 February 2026 · GBIA ICT LTDC</div>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="matrix">Phase Matrix</button>
+  <button class="tab-btn" data-tab="interactions">User Interactions</button>
+  <button class="tab-btn" data-tab="flows">Information Flows</button>
+  <button class="tab-btn" data-tab="errors">Error Handling</button>
+</nav>
+
+<main class="content">
+
+  <!-- ══════════════ OVERVIEW ══════════════ -->
+  <div class="tab-panel active" id="panel-overview">
+    <h2 class="section-title">System Landscape</h2>
+    <p class="section-desc">Four interim ICT systems support all operational processes at the GBIA VIP and GA terminals. The AODB is the data backbone; CUPPS and BRS handle passenger and baggage transactions; the SOC monitors everything.</p>
+
+    <div class="overview-grid">
+      <div class="overview-card aodb">
+        <div class="oc-name">AODB</div>
+        <div class="oc-role">Airport Operational Database — Flight data master, manifest hub, resource allocation</div>
+        <div class="oc-users"><strong>Users:</strong> AOCC Operators, Duty Manager, Airport Authority</div>
+      </div>
+      <div class="overview-card cupps">
+        <div class="oc-name">CUPPS</div>
+        <div class="oc-role">Common Use Passenger Processing — Check-in and boarding workstation hosting airline DCS</div>
+        <div class="oc-users"><strong>Users:</strong> Ground Handling Agents, Airline Agents (check-in & boarding)</div>
+      </div>
+      <div class="overview-card brs">
+        <div class="oc-name">BRS</div>
+        <div class="oc-role">Baggage Reconciliation System — Bag tracking from acceptance to aircraft loading</div>
+        <div class="oc-users"><strong>Users:</strong> BRS Operators, Ground Handlers (ramp, via handheld scanners)</div>
+      </div>
+      <div class="overview-card soc">
+        <div class="oc-name">SOC Platform</div>
+        <div class="oc-role">Security Operations Centre — Cybersecurity monitoring, SIEM, incident detection</div>
+        <div class="oc-users"><strong>Users:</strong> SOC Analysts, ICT Support</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Integration Architecture</h2>
+    <p class="section-desc">All inter-system data flows pass through defined interfaces with strict latency SLAs. The AODB is the single source of truth.</p>
+
+    <table class="interface-table">
+      <thead>
+        <tr><th>Interface</th><th>Direction</th><th>Protocol</th><th>Format</th><th>Latency SLA</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="sys-pill aodb">AODB</span> → <span class="sys-pill cupps">CUPPS</span></td><td>Outbound</td><td class="mono">REST API / AIDX</td><td class="mono">XML (AIDX v16.1+)</td><td><span class="sla-tag">≤ 5 sec</span></td></tr>
+        <tr><td><span class="sys-pill cupps">CUPPS</span> → <span class="sys-pill aodb">AODB</span></td><td>Inbound</td><td class="mono">REST API / AIDX</td><td class="mono">XML (AIDX v16.1+)</td><td><span class="sla-tag">≤ 5 sec</span></td></tr>
+        <tr><td><span class="sys-pill aodb">AODB</span> → <span class="sys-pill brs">BRS</span></td><td>Outbound</td><td class="mono">REST API / AIDX</td><td class="mono">JSON preferred</td><td><span class="sla-tag">push / ≤ 60s poll</span></td></tr>
+        <tr><td><span class="sys-pill brs">BRS</span> → <span class="sys-pill aodb">AODB</span></td><td>Inbound</td><td class="mono">REST API</td><td class="mono">JSON</td><td><span class="sla-tag">on event</span></td></tr>
+        <tr><td><span class="sys-pill cupps">CUPPS</span> → <span class="sys-pill brs">BRS</span></td><td>Outbound</td><td class="mono">REST API</td><td class="mono">JSON</td><td><span class="sla-tag">on acceptance</span></td></tr>
+        <tr><td>Scanner → <span class="sys-pill brs">BRS</span></td><td>Inbound</td><td class="mono">REST API</td><td class="mono">JSON</td><td><span class="sla-tag">< 2 sec</span></td></tr>
+        <tr><td>All Systems → <span class="sys-pill soc">SOC</span></td><td>Outbound</td><td class="mono">Agent / Syslog / API</td><td class="mono">CEF</td><td><span class="sla-tag">real-time / 5min batch</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Key Observations</h2>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px;">
+      <div class="error-detail-item"><div class="error-detail-label">AODB is the backbone</div><div class="error-detail-value">Every information flow originates from or passes through the AODB. If it fails, the entire digital ecosystem degrades. RTO: 30 minutes.</div></div>
+      <div class="error-detail-item"><div class="error-detail-label">VIP A creates a digital gap</div><div class="error-detail-value">VIP A passengers are exempt from CUPPS and largely from BRS. The digital ConOps for VIP A is primarily AODB record-keeping.</div></div>
+      <div class="error-detail-item"><div class="error-detail-label">BRS reconciliation is the critical gate</div><div class="error-detail-value">Positive passenger–baggage matching (ICAO Annex 17) blocks departure if mismatched. The most safety-critical digital interface.</div></div>
+      <div class="error-detail-item"><div class="error-detail-label">Offline resilience designed in</div><div class="error-detail-value">Handheld scanners cache 500 scans; CUPPS polls at 30s; BRS polls at 60s. Low-volume FBO tolerates intermittent connectivity.</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PHASE MATRIX ══════════════ -->
+  <div class="tab-panel" id="panel-matrix">
+    <h2 class="section-title">System-to-Process Phase Mapping</h2>
+    <p class="section-desc">Which systems are active in which process phases, by flight type. Select a flight type, then <strong style="color:var(--text)">click any coloured dot</strong> to see what that system is doing at that stage.</p>
+
+    <div class="flight-type-selector">
+      <button class="ft-btn active" data-ft="state-dep">State Departures</button>
+      <button class="ft-btn" data-ft="state-arr">State Arrivals</button>
+      <button class="ft-btn" data-ft="ga-dep">GA Departures</button>
+      <button class="ft-btn" data-ft="ga-arr">GA Arrivals</button>
+      <button class="ft-btn" data-ft="dedicated">Dedicated Cabin</button>
+    </div>
+
+    <div id="matrix-container"></div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="status-dot active" style="color:var(--accent-aodb)"></span> Active (primary use)</div>
+      <div class="legend-item"><span class="status-dot monitoring" style="color:var(--accent-soc)"></span> Active (monitoring)</div>
+      <div class="legend-item"><span class="status-dot minimal" style="color:var(--text-muted)"></span> Minimal presence</div>
+      <div class="legend-item"><span class="status-dot inactive"></span> Not involved</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ USER INTERACTIONS ══════════════ -->
+  <div class="tab-panel" id="panel-interactions">
+    <h2 class="section-title">User–System Interactions</h2>
+    <p class="section-desc">What each actor does in each system during each process phase. Expand a phase to see the detailed interactions. Covers GA departures as the most complete flow; state flight differences are noted.</p>
+
+    <div class="phase-accordion" id="interaction-accordion"></div>
+  </div>
+
+  <!-- ══════════════ INFORMATION FLOWS ══════════════ -->
+  <div class="tab-panel" id="panel-flows">
+    <h2 class="section-title">Information Flows Between Systems</h2>
+    <p class="section-desc">Every data exchange between systems, showing source, destination, data content, and trigger. Filter by process trigger to explore flows at each stage.</p>
+
+    <div class="flow-filter-bar">
+      <button class="flow-filter-btn active" data-filter="all">All Flows</button>
+      <button class="flow-filter-btn" data-filter="creation">Flight Creation</button>
+      <button class="flow-filter-btn" data-filter="manifest">Manifest Update</button>
+      <button class="flow-filter-btn" data-filter="checkin">Check-in</button>
+      <button class="flow-filter-btn" data-filter="screening">Screening</button>
+      <button class="flow-filter-btn" data-filter="loading">Baggage Loading</button>
+      <button class="flow-filter-btn" data-filter="boarding">Boarding</button>
+      <button class="flow-filter-btn" data-filter="completion">Flight Completion</button>
+      <button class="flow-filter-btn" data-filter="continuous">SOC Continuous</button>
+    </div>
+
+    <div class="flow-cards" id="flow-cards-container"></div>
+  </div>
+
+  <!-- ══════════════ ERROR HANDLING ══════════════ -->
+  <div class="tab-panel" id="panel-errors">
+    <h2 class="section-title">Digital Exception Handling</h2>
+    <p class="section-desc">How the ICT systems behave when operational errors or system failures occur. Filter by severity; click an error to see digital impact, affected systems, and mitigation.</p>
+
+    <div class="error-filter-bar">
+      <span class="label">Severity:</span>
+      <button class="sev-btn critical active" data-sev="all">All</button>
+      <button class="sev-btn critical" data-sev="critical">Critical</button>
+      <button class="sev-btn high" data-sev="high">High</button>
+      <button class="sev-btn medium" data-sev="medium">Medium</button>
+    </div>
+
+    <div class="error-cards" id="error-cards-container"></div>
+  </div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+
+const matrixData = {
+  'state-dep': {
+    title: 'State Flights (VIP A) — Departures',
+    phases: [
+      { num:'0', name:'Pre-Flight Notification (T-10d/T-5d)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Creates flight record: airline, flight number, origin/dest, STD/STA, aircraft type and registration'},
+            {actor:'AOCC Operator', action:'Assigns parking stand (primary + standby)'},
+            {actor:'AOCC Operator', action:'Enters preliminary passenger manifest; sets VIP A flags'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Ingests flight creation event from AODB; detects VIP flag'},
+            {actor:'SOC Analyst', action:'May elevate alert thresholds for upcoming state flight window'},
+          ]
+        }
+      },
+      { num:'1', name:'Pre-Arrival Preparation (T-24h to T-60min)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Updates flight with final passenger manifest (T-24h); pushes to BRS'},
+            {actor:'AOCC Operator', action:'Updates ETD/ETA — changes pushed to BRS within 5 seconds'},
+            {actor:'AOCC Operator', action:'Confirms stand allocation and gate assignment'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors flight appearing in dashboard (received from AODB)'},
+            {actor:'BRS Operator', action:'Verifies baggage manifest data received via BSM from AODB'},
+            {actor:'Ground Handler', action:'Accepts delegation baggage at consolidation point (T-3h); records acceptance event with tag, PAX link, weight'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Ingests logs from AODB and BRS as systems activate for flight'},
+            {actor:'SOC Analyst', action:'Confirms elevated monitoring posture for VIP flight window'},
+          ]
+        }
+      },
+      { num:'2', name:'Arrival at Airport (T-60min to T-30min)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Updates flight status as VIP convoy arrives'},
+            {actor:'AOCC Operator', action:'Records operational restrictions (T-5min to STD+5)'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Elevated monitoring active; correlates physical and cyber events'},
+          ]
+        }
+      },
+      { num:'3a', name:'Processing — VIP A (EXEMPT)', aodb:'minimal', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records VIP A presence in terminal as manifest status update (confirmed, in terminal). No check-in or processing workflow.'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Monitors for anomalous access during VIP A terminal presence'},
+          ]
+        }
+      },
+      { num:'3b', name:'Processing — Accompanying Delegation', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Receives check-in status from CUPPS; updates PAX counts'},
+            {actor:'AODB (auto)', action:'Receives bag acceptance events; generates BSM and forwards to BRS'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Opens check-in; queries AODB for flight data and delegation manifest'},
+            {actor:'GH Agent', action:'Scans travel documents (passport via document reader); verifies against manifest'},
+            {actor:'GH Agent', action:'Processes check-in: seat assignment, boarding pass and bag tag printing'},
+            {actor:'GH Agent', action:'Accepts checked baggage → sends bag acceptance event to BRS and status to AODB'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors bag acceptance events arriving from CUPPS'},
+            {actor:'BRS System', action:'Receives HBS screening events (if available); updates bag clearance status'},
+            {actor:'Ground Handler', action:'Scans bags at make-up area using handheld scanner'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Active monitoring of CUPPS workstation activity, BRS scans, AODB transactions'},
+            {actor:'SOC Analyst', action:'Watches for anomalies: failed auth, unusual access patterns during state flight'},
+          ]
+        }
+      },
+      { num:'4', name:'Dwell / Lounge (T-30min to T-10min)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Monitors flight readiness: aircraft prep, fuel status, baggage loading, ATC slot'},
+            {actor:'AOCC Operator', action:'If ATC slot changes: updates ETD → pushed to BRS within 5 seconds'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors reconciliation dashboard — are all bags accepted, screened, at make-up?'},
+            {actor:'Ground Handler', action:'Begins loading bags to aircraft; scans each bag at stand with handheld scanner'},
+            {actor:'BRS System', action:'Records load events; updates bag status to "loaded"; reconciliation count updates in real time'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Continues elevated monitoring; watches for system performance issues ahead of boarding'},
+          ]
+        }
+      },
+      { num:'5', name:'Boarding (T-10min to T-5min)', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Receives boarding status from CUPPS and reconciliation status from BRS'},
+            {actor:'AOCC Operator', action:'Confirms flight ready for departure when all checks green'},
+            {actor:'AOCC Operator', action:'Records VIP A boarding manually (no boarding pass scan for VIP A)'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Initiates boarding mode → signals boarding commenced to AODB'},
+            {actor:'GH Agent', action:'Scans each delegation member boarding pass → progressive count to AODB'},
+            {actor:'GH Agent', action:'Closes boarding → final count (boarded/no-show) to AODB'},
+          ],
+          brs: [
+            {actor:'Ground Handler', action:'Completes bag loading scans at aircraft stand'},
+            {actor:'BRS System', action:'Compares boarded PAX (from AODB/CUPPS) vs loaded bags → MATCH or MISMATCH'},
+            {actor:'BRS Operator', action:'If MISMATCH: receives alert → triggers offload workflow'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Peak transaction rate — monitors for anomalies and performance degradation'},
+          ]
+        }
+      },
+      { num:'6', name:'Aircraft Operations (T-5min to T+5min)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records actual departure time (ATD) at off-block → pushed to BRS'},
+            {actor:'AOCC Operator', action:'Releases operational restrictions after aircraft departs'},
+          ],
+          brs: [
+            {actor:'BRS System', action:'Receives ATD from AODB; locks reconciliation for flight'},
+            {actor:'BRS Operator', action:'Reviews final reconciliation report (available for audit)'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Continues monitoring through departure window'},
+          ]
+        }
+      },
+      { num:'7', name:'Departure Completion (T+5min to T+30min)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Releases stand for reallocation'},
+            {actor:'AOCC Operator', action:'Completes post-operation documentation; records fuel sample retention status'},
+          ],
+          soc: [
+            {actor:'SOC Analyst', action:'Reviews flight-window security events; closes any open alerts'},
+            {actor:'SOC Platform', action:'Steps down elevated monitoring posture; thresholds return to baseline'},
+          ]
+        }
+      },
+    ]
+  },
+  'state-arr': {
+    title: 'State Flights (VIP A) — Arrivals',
+    phases: [
+      { num:'0–1', name:'Pre-Arrival (T-10d to ETA)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Creates inbound flight record; enters manifest and schedule'},
+            {actor:'AOCC Operator', action:'Assigns arrival stand; coordinates with ATC for arrival slot'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Detects VIP flag on inbound flight; prepares elevated monitoring'},
+          ]
+        }
+      },
+      { num:'2', name:'Aircraft Arrival (ETA-30min to Landing)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Monitors inbound flight; confirms ETA from ATC; records operational restrictions (ETA-5min)'},
+            {actor:'AOCC Operator', action:'Records ATA (actual time of arrival) at on-block'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Elevated monitoring active from ETA-30 minutes'},
+          ]
+        }
+      },
+      { num:'3', name:'Disembarkation & Ceremony', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Updates flight status: arrived, on-block; records ceremony progress milestones'},
+          ],
+          brs: [
+            {actor:'Ground Handler', action:'Unloads baggage from aircraft; scans each bag with handheld scanner'},
+            {actor:'BRS System', action:'Tracks VIP A baggage (diplomatic exemption flag) — delivered directly to official vehicles'},
+            {actor:'BRS System', action:'Tracks delegation baggage through normal delivery workflow'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Peak monitoring during VIP A disembarkation and ceremony'},
+          ]
+        }
+      },
+      { num:'4a', name:'Processing — VIP A (EXEMPT)', aodb:'minimal', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records VIP A departure from airport. No processing workflow.'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Monitors until VIP A has departed the airport'},
+          ]
+        }
+      },
+      { num:'4b', name:'Processing — Delegation (International)', aodb:'active', cupps:'inactive', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Tracks delegation processing status through CIQ (immigration, customs)'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors delegation baggage delivery; tracks through customs screening and claim'},
+            {actor:'Ground Handler', action:'Scans bags at delivery point; confirms handover to delegation'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Active monitoring of CIQ-related system activity'},
+          ]
+        }
+      },
+      { num:'5–7', name:'Departure from Airport', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Releases operational restrictions; releases stand for reallocation'},
+            {actor:'AOCC Operator', action:'Completes post-arrival documentation'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Confirms all baggage delivered; closes arrival baggage record'},
+          ],
+          soc: [
+            {actor:'SOC Analyst', action:'Reviews arrival-window events; steps down elevated monitoring'},
+          ]
+        }
+      },
+    ]
+  },
+  'ga-dep': {
+    title: 'General Aviation — Departures',
+    phases: [
+      { num:'0', name:'Booking & Confirmation (T-72h to T-24h)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'GA Station Mgr', action:'Enters booking after slot and stand feasibility confirmed'},
+            {actor:'AOCC Operator', action:'Creates flight record: airline, flight number, origin/dest, STD/STA, aircraft type'},
+            {actor:'AOCC Operator', action:'Assigns stand; records handling agent; issues booking confirmation'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Ingests flight creation event log from AODB'},
+          ]
+        }
+      },
+      { num:'1', name:'Pre-Arrival Preparation (T-24h to T-2h)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Updates flight with final manifest (T-24h); pushes to CUPPS and BRS'},
+            {actor:'AOCC Operator', action:'Confirms stand, fuel order, catering; updates ETD/ETA'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors flight appearing in dashboard with schedule and PAX count'},
+            {actor:'BRS System', action:'Receives manifest data; prepares for bag acceptance tracking'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Ingests logs from activating systems; establishes baseline'},
+          ]
+        }
+      },
+      { num:'2', name:'Passenger Arrival (T-2h to T-1h)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Flight status updated as GA terminal confirms passenger arrival'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Background log collection continues'},
+          ]
+        }
+      },
+      { num:'3', name:'Terminal Processing (T-90min to T-30min)', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Receives check-in status updates from CUPPS; progressive PAX counts'},
+            {actor:'AODB (auto)', action:'Receives bag acceptance events; generates BSM and forwards to BRS'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Opens check-in; CUPPS queries AODB for flight data and passenger manifest'},
+            {actor:'GH Agent', action:'Scans travel document (passport via MRZ reader); matches to manifest'},
+            {actor:'GH Agent', action:'Processes check-in: seat assignment, boarding pass printed, bag tags printed'},
+            {actor:'GH Agent', action:'Accepts checked baggage (weighed via scale) → bag acceptance event to BRS'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors bag acceptance events arriving from CUPPS on reconciliation dashboard'},
+            {actor:'BRS System', action:'Receives HBS screening events (if available); updates clearance status'},
+            {actor:'Ground Handler', action:'Scans bags at make-up area using handheld scanner'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Active monitoring: CUPPS auth events, BRS scans, AODB transactions'},
+            {actor:'SOC Analyst', action:'Monitors dashboard; responds to any security alerts'},
+          ]
+        }
+      },
+      { num:'4', name:'Dwell / Lounge (T-30min to boarding)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Monitors flight readiness: aircraft prep, fuel, baggage loading, ATC slot'},
+            {actor:'AOCC Operator', action:'Updates ETD if ATC slot changes → pushed to BRS within 5 seconds'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors reconciliation dashboard — bags accepted, screened, at make-up?'},
+            {actor:'Ground Handler', action:'Loads bags to aircraft; scans each bag at stand with handheld scanner'},
+            {actor:'BRS System', action:'Records load events; bag status → "loaded"; reconciliation updates in real time'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Background monitoring; watches for system issues ahead of boarding'},
+          ]
+        }
+      },
+      { num:'5', name:'Boarding (T-15min to T-5min)', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Receives boarding status from CUPPS and reconciliation status from BRS'},
+            {actor:'AOCC Operator', action:'Confirms flight ready for departure when all checks green'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Initiates boarding mode → boarding commenced signal to AODB'},
+            {actor:'GH Agent', action:'Scans each boarding pass → validates, increments count, progressive update to AODB'},
+            {actor:'GH Agent', action:'Closes boarding → final count (boarded/no-show) to AODB'},
+          ],
+          brs: [
+            {actor:'Ground Handler', action:'Completes bag loading scans at aircraft stand'},
+            {actor:'BRS System', action:'Compares boarded PAX vs loaded bags → reconciliation: MATCH or MISMATCH'},
+            {actor:'BRS Operator', action:'If MISMATCH: receives alert, triggers offload workflow'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Peak transaction monitoring — anomaly detection, performance watch'},
+          ]
+        }
+      },
+      { num:'6', name:'Aircraft Operations', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records ATD at off-block → pushed to BRS'},
+          ],
+          brs: [
+            {actor:'BRS System', action:'Receives ATD; locks reconciliation record; audit trail sealed'},
+            {actor:'BRS Operator', action:'Reviews final reconciliation report for IATA Res 753 compliance'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Continues monitoring through departure window'},
+          ]
+        }
+      },
+      { num:'7', name:'Departure Completion', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Releases stand for reallocation; completes post-operation documentation'},
+          ],
+          soc: [
+            {actor:'SOC Analyst', action:'Reviews flight-window events; closes alerts; returns to baseline monitoring'},
+          ]
+        }
+      },
+    ]
+  },
+  'ga-arr': {
+    title: 'General Aviation — Arrivals',
+    phases: [
+      { num:'0–1', name:'Pre-Arrival (T-24h to ETA)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Creates inbound flight record; enters manifest; assigns arrival stand'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Ingests flight creation event; background monitoring'},
+          ]
+        }
+      },
+      { num:'2', name:'Aircraft Arrival (ETA-30min to Landing)', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Monitors inbound flight; confirms ETA; records ATA at on-block'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Background monitoring continues'},
+          ]
+        }
+      },
+      { num:'3', name:'Disembarkation', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Updates flight status: arrived, on-block'},
+          ],
+          brs: [
+            {actor:'Ground Handler', action:'Unloads baggage; scans each bag with handheld scanner'},
+            {actor:'BRS System', action:'Tracks bags through unloading to delivery area'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Background monitoring of arrival activity'},
+          ]
+        }
+      },
+      { num:'4', name:'Processing — Arrivals', aodb:'active', cupps:'inactive', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Tracks processing status (CIQ: immigration, customs, quarantine)'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors baggage delivery via dashboard'},
+            {actor:'Ground Handler', action:'Scans bags at delivery/claim point; confirms handover to passengers'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Active monitoring of CIQ-related system activity and AODB access'},
+          ]
+        }
+      },
+      { num:'5', name:'Departure from Airport', aodb:'active', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Releases stand; completes post-arrival documentation'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Returns to baseline monitoring'},
+          ]
+        }
+      },
+    ]
+  },
+  'dedicated': {
+    title: 'Dedicated Cabin (VIP A on Commercial)',
+    phases: [
+      { num:'0–1', name:'Pre-Flight (Hybrid)', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Creates flight record (single record covers both VIP A and commercial PAX)'},
+            {actor:'AOCC Operator', action:'Enters combined manifest; coordinates VIP and commercial stand positioning'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors flight; receives baggage manifest data for all PAX categories'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Detects VIP flag; prepares elevated monitoring'},
+          ]
+        }
+      },
+      { num:'2–3a', name:'VIP A via VIP Terminal (EXEMPT)', aodb:'minimal', cupps:'inactive', brs:'inactive', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records VIP A presence. No check-in or processing — full exemption.'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Elevated monitoring during VIP A terminal presence'},
+          ]
+        }
+      },
+      { num:'2–3b', name:'Commercial via Common Terminal', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Provides flight data to main terminal CUPPS (outside lightweight scope)'},
+          ],
+          cupps: [
+            {actor:'Main Terminal', action:'Commercial passengers processed via common terminal CUPPS (outside lightweight system scope)'},
+          ],
+          brs: [
+            {actor:'BRS System', action:'Tracks commercial passenger baggage through main terminal BHS'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Monitors across both terminal system environments'},
+          ]
+        }
+      },
+      { num:'2–3c', name:'Delegation via VIP Terminal', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AODB (auto)', action:'Receives delegation check-in status from VIP terminal CUPPS'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Processes delegation check-in at VIP terminal: document scan, boarding pass, bag tags'},
+          ],
+          brs: [
+            {actor:'BRS Operator', action:'Monitors delegation bag acceptance; tracks through screening and loading'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Active monitoring of VIP terminal CUPPS and BRS activity'},
+          ]
+        }
+      },
+      { num:'4–5', name:'Staged Boarding', aodb:'active', cupps:'active', brs:'active', soc:'active',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Coordinates staged boarding: commercial first (T-45 to T-30), then VIP A last (T-15 to T-10)'},
+            {actor:'AODB (auto)', action:'Receives combined boarding counts and reconciliation status'},
+          ],
+          cupps: [
+            {actor:'GH Agent', action:'Manages boarding for delegation members; VIP A boards without scan'},
+          ],
+          brs: [
+            {actor:'BRS System', action:'Reconciles all bags (commercial + delegation + VIP A) against total boarded PAX'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Peak monitoring during complex staged boarding operation'},
+          ]
+        }
+      },
+      { num:'6–7', name:'Departure', aodb:'active', cupps:'inactive', brs:'active', soc:'monitoring',
+        details: {
+          aodb: [
+            {actor:'AOCC Operator', action:'Records ATD; releases restrictions and stand; completes documentation'},
+          ],
+          brs: [
+            {actor:'BRS System', action:'Locks reconciliation; audit trail sealed'},
+          ],
+          soc: [
+            {actor:'SOC Platform', action:'Steps down elevated monitoring; returns to baseline'},
+          ]
+        }
+      },
+    ]
+  }
+};
+
+const interactionData = [
+  {
+    num: '0', title: 'Pre-Flight Notification & Planning', timing: 'T-10d/T-5d (State) · T-72h (GA)',
+    systems: ['aodb','soc'],
+    cards: [
+      { sys:'aodb', label:'AODB', rows:[
+        ['AOCC Operator','Creates flight record: airline, flight number, origin/dest, STD/STA, aircraft type','AODB assigns Flight ID; status set to "Scheduled"'],
+        ['AOCC Operator','Assigns parking stand (primary + standby)','Stand allocated; availability updated'],
+        ['AOCC Operator','Enters preliminary passenger manifest','Manifest stored; VIP/CIP flags set; PAX count by category'],
+        ['GA Station Manager','(GA) Enters booking after slot confirmation','Service package, coordinator assigned, confirmation issued'],
+      ]},
+      { sys:'soc', label:'SOC (Background)', rows:[
+        ['SOC Platform','Collects AODB logs via API','Ingests flight creation events; detects VIP flag'],
+        ['SOC Analyst','Reviews VIP flight flag','May elevate alert thresholds for VIP flight window'],
+      ]}
+    ]
+  },
+  {
+    num: '1', title: 'Pre-Arrival Preparation', timing: 'T-24h to T-2h (GA) / T-60min (State)',
+    systems: ['aodb','brs','soc'],
+    cards: [
+      { sys:'aodb', label:'AODB', rows:[
+        ['AOCC Operator','Updates flight with final manifest (T-24h)','Manifest pushed to CUPPS and BRS; PAX counts updated'],
+        ['AOCC Operator','Updates ETD/ETA as info changes','Time changes pushed to BRS and CUPPS within 5 seconds'],
+        ['AOCC Operator','Confirms stand allocation, gate assignment','Resource data published to downstream systems'],
+      ]},
+      { sys:'brs', label:'BRS', rows:[
+        ['BRS Operator','Monitors flight appearing in dashboard','Flight displayed with schedule, stand, PAX count'],
+        ['BRS Operator','Verifies baggage manifest data (BSM from AODB)','Bag records created; PAX–bag associations established'],
+        ['Ground Handler','(State) Accepts delegation baggage at consolidation (T-3h)','Acceptance event: tag number, PAX link, weight, handling codes'],
+      ]},
+      { sys:'soc', label:'SOC (Background)', rows:[
+        ['SOC Platform','Ingests logs from activating systems','Baseline activity established for flight window'],
+      ]}
+    ]
+  },
+  {
+    num: '3', title: 'Terminal Processing', timing: 'T-90min to T-30min (GA) · Delegation only (State)',
+    systems: ['cupps','brs','aodb','soc'],
+    cards: [
+      { sys:'cupps', label:'CUPPS', rows:[
+        ['GH Agent','Opens check-in; CUPPS queries AODB','DCS receives flight context: flight, times, aircraft, PAX list'],
+        ['GH Agent','Scans travel document (passport via document reader)','MRZ captured; matched to manifest'],
+        ['GH Agent','Processes check-in: seat, bag tag, boarding pass','Boarding pass printed; bag tags printed; status → AODB'],
+        ['GH Agent','Accepts checked baggage (weight via scale)','Bag acceptance event sent to BRS; check-in status to AODB'],
+        ['GH Agent','(Boarding) Scans boarding pass','Validates; boarding count incremented; status → AODB'],
+      ]},
+      { sys:'brs', label:'BRS', rows:[
+        ['BRS Operator','Monitors bag acceptance events from CUPPS','Each bag on dashboard, linked to PAX and flight'],
+        ['BRS System','Receives HBS screening events (if available)','Bag status: cleared / alarm / rejected'],
+        ['Ground Handler','Scans bag at make-up area (handheld)','Bag status → "at make-up position"'],
+      ]},
+      { sys:'aodb', label:'AODB', rows:[
+        ['AODB (auto)','Receives check-in status from CUPPS','Flight record updated with progressive PAX counts'],
+        ['AODB (auto)','Receives bag acceptance; generates BSM → BRS','BRS gets BSM: tag, PAX, weight, routing'],
+      ]},
+      { sys:'soc', label:'SOC (Active)', rows:[
+        ['SOC Platform','Monitors CUPPS, BRS, AODB transactions','Correlates for anomalies: failed auth, unusual access'],
+        ['SOC Analyst','Active dashboard monitoring','Responds to security alerts; escalates via ticket desk'],
+      ]}
+    ]
+  },
+  {
+    num: '4–5', title: 'Lounge, Loading & Boarding', timing: 'T-30min to T-5min',
+    systems: ['aodb','brs','cupps','soc'],
+    cards: [
+      { sys:'brs', label:'BRS (Ramp Loading)', rows:[
+        ['Ground Handler','Scans each bag at aircraft stand (handheld)','BRS records load event; status → "loaded"; reconciliation updates'],
+        ['BRS System','Compares boarded PAX (from AODB/CUPPS) vs loaded bags','Reconciliation: MATCH or MISMATCH'],
+        ['BRS Operator','If MISMATCH: receives alert','Triggers offload workflow; generates offload instruction'],
+        ['Ground Handler','Scans offloaded bag','Bag status → "offloaded"; reconciliation re-evaluated'],
+      ]},
+      { sys:'cupps', label:'CUPPS (Boarding)', rows:[
+        ['GH Agent','Initiates boarding mode','Boarding commenced signal → AODB'],
+        ['GH Agent','Scans each boarding pass','Validates; boarded count → AODB progressively'],
+        ['GH Agent','Closes boarding','Final count (boarded/no-show) → AODB'],
+      ]},
+      { sys:'aodb', label:'AODB', rows:[
+        ['AODB (auto)','Receives boarding + reconciliation status','Unified view: PAX boarded, bags loaded, recon status'],
+        ['AOCC Operator','Confirms flight ready for departure','Flight status → ready for pushback'],
+      ]},
+      { sys:'soc', label:'SOC', rows:[
+        ['SOC Platform','Peak transaction monitoring','High event rate correlation; performance degradation watch'],
+      ]}
+    ]
+  },
+  {
+    num: '6–7', title: 'Aircraft Operations & Completion', timing: 'T-5min to T+30min',
+    systems: ['aodb','brs','soc'],
+    cards: [
+      { sys:'aodb', label:'AODB', rows:[
+        ['AOCC Operator','Records ATD at off-block','ATD pushed to BRS; flight status → departed'],
+        ['AOCC Operator','(State) Releases operational restrictions','Restriction lifted; stand recovery starts'],
+        ['AOCC Operator','Releases stand for reallocation','Stand availability updated'],
+      ]},
+      { sys:'brs', label:'BRS', rows:[
+        ['BRS System','Receives ATD; locks reconciliation','Reconciliation record finalised; audit trail sealed'],
+        ['BRS Operator','Reviews final reconciliation report','Available for IATA Res 753 compliance and audit'],
+      ]},
+      { sys:'soc', label:'SOC', rows:[
+        ['SOC Analyst','Reviews flight-window events; closes alerts','Post-flight security debrief data available'],
+        ['SOC Platform','(State) Steps down elevated monitoring','Alert thresholds return to baseline'],
+      ]}
+    ]
+  },
+];
+
+const flowData = [
+  { cat:'creation', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'Flight ID (airline code + flight number)', trigger:'Flight creation' },
+  { cat:'creation', src:'AODB', srcCls:'aodb', dest:'CUPPS', destCls:'cupps', data:'Flight ID, Schedule Times (STD, STA, ETD, ETA)', trigger:'Flight creation' },
+  { cat:'creation', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'Aircraft Info (type, registration)', trigger:'On assignment' },
+  { cat:'creation', src:'AODB', srcCls:'aodb', dest:'CUPPS', destCls:'cupps', data:'Stand/Gate allocation, counter assignment', trigger:'On allocation' },
+  { cat:'creation', src:'AODB', srcCls:'aodb', dest:'SOC', destCls:'soc', data:'Flight creation event log (user ID, timestamp)', trigger:'Flight creation' },
+  { cat:'manifest', src:'AODB', srcCls:'aodb', dest:'CUPPS', destCls:'cupps', data:'Passenger Manifest (PAX names, doc refs, bag count)', trigger:'Manifest update (T-24h)' },
+  { cat:'manifest', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'PAX Count by category, VIP/CIP flags', trigger:'Manifest update' },
+  { cat:'manifest', src:'AODB', srcCls:'aodb', dest:'SOC', destCls:'soc', data:'VIP flag → elevated monitoring trigger', trigger:'Manifest update' },
+  { cat:'checkin', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'Check-in status (PADIS 1245 code S)', trigger:'PAX checked in' },
+  { cat:'checkin', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'PAX count update by category (adult, child, infant)', trigger:'Each check-in' },
+  { cat:'checkin', src:'CUPPS', srcCls:'cupps', dest:'BRS', destCls:'brs', data:'Bag acceptance event (10-digit IATA tag, PNR, flight, weight, handling codes)', trigger:'Bag tag printed' },
+  { cat:'checkin', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'BSM (bag tag, PAX name, weight, routing) — IATA RP1755 BIX', trigger:'Check-in processed' },
+  { cat:'screening', src:'HBS', srcCls:'hbs', dest:'BRS', destCls:'brs', data:'SCREENING_CLEARED (bag tag, timestamp, HBS ID, level)', trigger:'Bag passes screening' },
+  { cat:'screening', src:'HBS', srcCls:'hbs', dest:'BRS', destCls:'brs', data:'SCREENING_ALARM (bag tag, timestamp, alarm type)', trigger:'Bag triggers alarm' },
+  { cat:'screening', src:'HBS', srcCls:'hbs', dest:'BRS', destCls:'brs', data:'SCREENING_REJECTED (bag tag, timestamp, reason)', trigger:'Bag rejected' },
+  { cat:'loading', src:'Scanner', srcCls:'scanner', dest:'BRS', destCls:'brs', data:'BAG_MAKEUP (bag tag, timestamp, position ID)', trigger:'Bag scanned at make-up' },
+  { cat:'loading', src:'Scanner', srcCls:'scanner', dest:'BRS', destCls:'brs', data:'BAG_LOADED (bag tag, timestamp, loader ID, ULD/bulk)', trigger:'Bag scanned at aircraft' },
+  { cat:'loading', src:'BRS', srcCls:'brs', dest:'Scanner', destCls:'scanner', data:'Scan validation response (accept/reject)', trigger:'Each scan' },
+  { cat:'loading', src:'BRS', srcCls:'brs', dest:'AODB', destCls:'aodb', data:'Load confirmation (bag tag, aircraft, ULD/bulk)', trigger:'Each bag loaded' },
+  { cat:'boarding', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'Boarding commenced (flight status: boarding)', trigger:'Agent initiates boarding' },
+  { cat:'boarding', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'Boarding count (progressive boarded count)', trigger:'Each PAX scan' },
+  { cat:'boarding', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'Boarding complete + final count (boarded, no-show)', trigger:'Agent closes boarding' },
+  { cat:'boarding', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'PAX boarded count for reconciliation', trigger:'Boarding update' },
+  { cat:'boarding', src:'BRS', srcCls:'brs', dest:'AODB', destCls:'aodb', data:'Reconciliation status (complete/mismatch)', trigger:'Boarding close' },
+  { cat:'completion', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'ATD/ATA (actual times)', trigger:'On event' },
+  { cat:'completion', src:'AODB', srcCls:'aodb', dest:'CUPPS', destCls:'cupps', data:'Flight status: departed', trigger:'Aircraft departs' },
+  { cat:'completion', src:'AODB', srcCls:'aodb', dest:'BRS', destCls:'brs', data:'Flight status: departed → reconciliation lock', trigger:'Aircraft departs' },
+  { cat:'completion', src:'CUPPS', srcCls:'cupps', dest:'AODB', destCls:'aodb', data:'Check-in close (PADIS 1245 code SB/SC)', trigger:'Flight departs' },
+  { cat:'continuous', src:'AODB', srcCls:'aodb', dest:'SOC', destCls:'soc', data:'Application logs (transactions, user activity)', trigger:'Agent-based, continuous' },
+  { cat:'continuous', src:'CUPPS', srcCls:'cupps', dest:'SOC', destCls:'soc', data:'Workstation logs (auth events, peripheral status)', trigger:'Agent-based, continuous' },
+  { cat:'continuous', src:'BRS', srcCls:'brs', dest:'SOC', destCls:'soc', data:'Scan events, reconciliation alerts', trigger:'Agent-based, continuous' },
+  { cat:'continuous', src:'SOC', srcCls:'soc', dest:'AODB', destCls:'aodb', data:'VIP context query (flight status, VIP flags)', trigger:'On-demand via secure ESB' },
+  { cat:'continuous', src:'SOC', srcCls:'soc', dest:'Ticket Desk', destCls:'soc', data:'Security incident (auto-created, bidirectional sync)', trigger:'Confirmed incident' },
+];
+
+const errorData = [
+  { sev:'critical', title:'Complete IT system failure', affected:['aodb','cupps','brs','soc'], impact:'All digital processing stops. Manual fallback: handwritten boarding passes, paper baggage lists, no reconciliation, no cybersecurity monitoring.', mitigation:'Revert to fully manual operations. UPS provides 2-hour buffer for graceful shutdown. SOC offline — physical security only.', detection:'Loss of all system interfaces; UPS alarm' },
+  { sev:'critical', title:'Power outage beyond UPS capacity', affected:['aodb','cupps','brs','soc'], impact:'All systems shut down. No digital capability until power restored.', mitigation:'All systems on UPS (2-hour minimum). If exceeded: graceful shutdown, manual operations, restore on power return.', detection:'UPS low-battery alarm' },
+  { sev:'high', title:'AODB unavailable', affected:['aodb','cupps','brs','soc'], impact:'CUPPS and BRS lose flight data master. No manifest updates propagate. SOC loses operational context for correlation.', mitigation:'CUPPS: manual DCS with cached data. BRS: manual bag tracking. Restore from backup (RTO: 30 min).', detection:'CUPPS/BRS connection timeouts; SOC heartbeat failure' },
+  { sev:'high', title:'BRS unavailable', affected:['brs'], impact:'No digital baggage tracking or reconciliation. IATA Res 753 compliance lost. Cannot digitally verify positive PAX-bag match.', mitigation:'Manual positive bag identification by ground handlers. Paper reconciliation. Restore from backup (RTO: 30 min, RPO: 5 min).', detection:'BRS dashboard unreachable; handheld scanners get connection errors' },
+  { sev:'high', title:'CUPPS → BRS bag acceptance events not sending', affected:['cupps','brs'], impact:'BRS shows no bags for active flight. Tracking starts incomplete. Reconciliation will fail.', mitigation:'BRS operator manually creates bag records. Investigate CUPPS→BRS interface immediately.', detection:'BRS flight has zero bags despite check-in activity' },
+  { sev:'high', title:'AODB → BRS BSM not received', affected:['aodb','brs'], impact:'BRS has no passenger–baggage association. Cannot perform positive matching.', mitigation:'BRS manual bag record creation with PAX association. Manual reconciliation against manifest.', detection:'BRS shows bags without PAX linkage' },
+  { sev:'high', title:'Network failure (terminal LAN)', affected:['aodb','cupps','brs','soc'], impact:'Inter-system communication severed. Each system isolated with cached data.', mitigation:'Systems operate independently. Handheld scanners queue offline (500 scans). Restore network ASAP.', detection:'Multiple system interface failures simultaneously; SOC network monitoring' },
+  { sev:'high', title:'SOC platform unavailable', affected:['soc'], impact:'No cybersecurity monitoring. Security log gap. Threat detection blind spot.', mitigation:'ICT Support monitors systems directly. Heightened manual vigilance. SOC restore from backup.', detection:'SOC dashboard unreachable; no log ingestion' },
+  { sev:'high', title:'Ransomware detected on BRS server', affected:['brs','soc'], impact:'BRS offline. Potential data encryption. Baggage tracking lost.', mitigation:'SOC immediately isolates BRS. Restore from backup (RTO: 30 min). Manual tracking during recovery. Investigate lateral movement.', detection:'SOC endpoint agent detects encryption activity' },
+  { sev:'high', title:'Passenger manifest not distributed 24h in advance', affected:['aodb','cupps','brs'], impact:'CUPPS and BRS lack full manifest. Check-in proceeds with incomplete data.', mitigation:'AODB accepts late update; pushes immediately. Agents manually verify unlisted passengers.', detection:'Operational — manifest not received by deadline' },
+  { sev:'high', title:'BRS reconciliation mismatch at boarding close', affected:['brs','aodb'], impact:'Bags loaded for no-show passenger. Flight departure blocked until resolved.', mitigation:'BRS generates offload instruction. Ground handler offloads and scans bag. Reconciliation re-evaluated. Flight cannot depart until MATCH.', detection:'BRS reconciliation dashboard shows MISMATCH' },
+  { sev:'medium', title:'CUPPS workstation failure', affected:['cupps'], impact:'Single check-in/boarding point lost. Processing interrupted for that station.', mitigation:'Swap to pre-configured spare workstation. Re-authenticate agent. Resume processing.', detection:'Workstation unresponsive; peripheral errors' },
+  { sev:'medium', title:'Handheld scanner failure', affected:['brs'], impact:'No scan-based bag tracking at ramp. Loading verification incomplete.', mitigation:'Use spare handheld. If both fail: manual paper recording, retrospective data entry.', detection:'Scanner not connecting to BRS; scan errors' },
+  { sev:'medium', title:'AODB → CUPPS data not updating within 5 seconds', affected:['aodb','cupps'], impact:'Check-in agent working with stale times or manifest data.', mitigation:'Agent manually refreshes. If persistent, CUPPS falls back to polling (30s interval).', detection:'CUPPS shows outdated times; SOC may detect latency anomaly' },
+  { sev:'medium', title:'CUPPS → AODB check-in status not propagating', affected:['cupps','aodb'], impact:'AODB and BRS do not reflect true check-in state. Reconciliation may be affected.', mitigation:'Manual PAX count entry in AODB. Investigate interface.', detection:'AODB shows zero check-ins despite active processing' },
+  { sev:'medium', title:'Handheld scanner offline scans not syncing', affected:['brs'], impact:'BRS shows bags unaccounted for at ramp. Reconciliation incomplete until sync.', mitigation:'Wait for reconnection (auto-sync within 30s). Manual entry if prolonged.', detection:'BRS load count lower than expected; scanner shows queued scans' },
+  { sev:'medium', title:'SOC log ingestion gap', affected:['soc'], impact:'Blind spot in security monitoring for gap duration.', mitigation:'Investigate source. Buffered logs may fill gap on reconnection. Manual review of affected period.', detection:'SOC gap detection alert' },
+  { sev:'medium', title:'Invalid travel documents at check-in', affected:['cupps'], impact:'CUPPS document reader fails MRZ validation. Passenger cannot be processed.', mitigation:'Agent escalates to Immigration. PAX cannot check in until resolved or document verified manually.', detection:'CUPPS MRZ read error or validation failure' },
+  { sev:'medium', title:'Data exfiltration attempt (VIP manifest)', affected:['soc','aodb'], impact:'Potential diplomatic/security incident. VIP passenger data at risk.', mitigation:'SOC immediately escalates. Initiates incident response. All VIP data access reviewed and audited.', detection:'SOC DLP rules or UEBA detect unusual data access pattern' },
+  { sev:'medium', title:'Unauthorised access attempt on AODB', affected:['soc','aodb'], impact:'If successful: data integrity risk. If during active flight: operational disruption.', mitigation:'SOC locks account, investigates. AOCC uses backup credentials if during active flight.', detection:'SOC UEBA detects anomalous login; SIEM alert' },
+];
+
+
+// ═══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════
+
+let currentMatrixFt = 'state-dep';
+let selectedCell = null; // {phaseIdx, sys}
+
+function renderMatrix(ft) {
+  currentMatrixFt = ft;
+  selectedCell = null;
+  const d = matrixData[ft];
+  const container = document.getElementById('matrix-container');
+  let html = `<div class="phase-grid" id="phase-grid-inner" style="grid-template-columns: 44px 1fr 80px 80px 80px 80px;">`;
+  html += `<div class="cell header">#</div><div class="cell header">Phase</div>`;
+  html += `<div class="cell header" style="color:var(--accent-aodb)">AODB</div>`;
+  html += `<div class="cell header" style="color:var(--accent-cupps)">CUPPS</div>`;
+  html += `<div class="cell header" style="color:var(--accent-brs)">BRS</div>`;
+  html += `<div class="cell header" style="color:var(--accent-soc)">SOC</div>`;
+
+  d.phases.forEach((p, pIdx) => {
+    html += `<div class="cell system-status"><span style="color:var(--text-dim);font-size:12px;font-weight:600">${p.num}</span></div>`;
+    html += `<div class="cell phase-name">${p.name}</div>`;
+    ['aodb','cupps','brs','soc'].forEach(sys => {
+      const st = p[sys];
+      const color = `var(--accent-${sys})`;
+      const hasDetails = p.details && p.details[sys];
+      const clickable = (st !== 'inactive') ? 'clickable' : '';
+      const onclick = clickable ? `onclick="showMatrixDetail(${pIdx},'${sys}')"` : '';
+      const title = clickable ? `title="Click to see what ${sys.toUpperCase()} does here"` : '';
+      html += `<div class="cell system-status"><span class="status-dot ${st} ${clickable}" style="color:${color}" data-pidx="${pIdx}" data-sys="${sys}" ${onclick} ${title}></span></div>`;
+    });
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function showMatrixDetail(phaseIdx, sys) {
+  const d = matrixData[currentMatrixFt];
+  const phase = d.phases[phaseIdx];
+  const grid = document.getElementById('phase-grid-inner');
+
+  // Remove any existing detail panel
+  const existing = grid.querySelector('.matrix-detail-panel');
+  if (existing) existing.remove();
+
+  // Deselect all dots
+  grid.querySelectorAll('.status-dot.selected').forEach(el => el.classList.remove('selected'));
+
+  // If clicking the same cell, just close
+  if (selectedCell && selectedCell.phaseIdx === phaseIdx && selectedCell.sys === sys) {
+    selectedCell = null;
+    return;
+  }
+  selectedCell = { phaseIdx, sys };
+
+  // Highlight the clicked dot
+  const dot = grid.querySelector(`.status-dot[data-pidx="${phaseIdx}"][data-sys="${sys}"]`);
+  if (dot) dot.classList.add('selected');
+
+  // Build detail panel
+  const sysNames = { aodb:'AODB', cupps:'CUPPS', brs:'BRS', soc:'SOC Platform' };
+  const details = phase.details && phase.details[sys];
+  const status = phase[sys];
+
+  let panelHtml = `<div class="matrix-detail-panel ${sys}">`;
+  panelHtml += `<div class="mdp-header">
+    <span class="dot" style="background:var(--accent-${sys})"></span>
+    <span>${sysNames[sys]} — Phase ${phase.num}: ${phase.name}</span>
+    <button class="close-btn" onclick="closeMatrixDetail()" title="Close">✕</button>
+  </div>`;
+
+  if (status === 'inactive') {
+    panelHtml += `<div class="mdp-inactive-msg">Not involved in this phase.</div>`;
+  } else if (status === 'minimal' && (!details || details.length === 0)) {
+    panelHtml += `<div class="mdp-inactive-msg">Minimal presence — system is available but no significant activity.</div>`;
+  } else if (details && details.length > 0) {
+    panelHtml += `<div class="mdp-rows">`;
+    details.forEach(row => {
+      panelHtml += `<div class="mdp-row">
+        <div class="mdp-actor">${row.actor}</div>
+        <div class="mdp-action">${row.action}</div>
+      </div>`;
+    });
+    panelHtml += `</div>`;
+  } else {
+    panelHtml += `<div class="mdp-inactive-msg">System is ${status} but no detailed interactions recorded for this phase.</div>`;
+  }
+  panelHtml += `</div>`;
+
+  // Insert panel after the row (each row is 6 cells: #, name, 4 systems)
+  const cells = grid.querySelectorAll('.cell:not(.header)');
+  const rowEndIndex = (phaseIdx + 1) * 6 - 1; // last cell of this row (0-indexed within non-header cells)
+  const insertAfter = cells[rowEndIndex];
+  if (insertAfter) {
+    insertAfter.insertAdjacentHTML('afterend', panelHtml);
+  }
+}
+
+function closeMatrixDetail() {
+  const grid = document.getElementById('phase-grid-inner');
+  const existing = grid.querySelector('.matrix-detail-panel');
+  if (existing) existing.remove();
+  grid.querySelectorAll('.status-dot.selected').forEach(el => el.classList.remove('selected'));
+  selectedCell = null;
+}
+
+function renderInteractions() {
+  const container = document.getElementById('interaction-accordion');
+  let html = '';
+  interactionData.forEach((phase, idx) => {
+    const pills = phase.systems.map(s => `<span class="sys-pill ${s}">${s.toUpperCase()}</span>`).join('');
+    html += `<div class="phase-section" data-idx="${idx}">
+      <div class="phase-section-header" onclick="togglePhase(this)">
+        <div class="phase-label">
+          <span class="phase-num">${phase.num}</span>
+          <div><div class="phase-title">${phase.title}</div><div class="phase-timing">${phase.timing}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="system-pills">${pills}</div>
+          <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="phase-section-body">`;
+
+    phase.cards.forEach(card => {
+      html += `<div class="interaction-card ${card.sys}">
+        <div class="ic-header"><span class="dot" style="background:var(--accent-${card.sys})"></span>${card.label}</div>
+        <table class="ic-table"><thead><tr><th>Actor</th><th>Action in System</th><th>System Response</th></tr></thead><tbody>`;
+      card.rows.forEach(r => {
+        html += `<tr><td><span class="actor-tag">${r[0]}</span></td><td>${r[1]}</td><td>${r[2]}</td></tr>`;
+      });
+      html += `</tbody></table></div>`;
+    });
+
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderFlows(filter) {
+  const container = document.getElementById('flow-cards-container');
+  const filtered = filter === 'all' ? flowData : flowData.filter(f => f.cat === filter);
+  let html = '';
+  filtered.forEach(f => {
+    html += `<div class="flow-card">
+      <div class="flow-source ${f.srcCls}">${f.src}</div>
+      <div class="flow-arrow-icon">→</div>
+      <div class="flow-dest ${f.destCls}">${f.dest}</div>
+      <div class="flow-arrow-icon">:</div>
+      <div class="flow-detail"><strong>${f.data}</strong><br><span class="flow-trigger">⚡ ${f.trigger}</span></div>
+    </div>`;
+  });
+  if (filtered.length === 0) html = '<p style="color:var(--text-dim);padding:20px;">No flows for this filter.</p>';
+  container.innerHTML = html;
+}
+
+function renderErrors(filter) {
+  const container = document.getElementById('error-cards-container');
+  const filtered = filter === 'all' ? errorData : errorData.filter(e => e.sev === filter);
+  let html = '';
+  filtered.forEach((e, idx) => {
+    const sysPills = e.affected.map(s => `<span class="sys-pill ${s}">${s.toUpperCase()}</span>`).join(' ');
+    html += `<div class="error-card" data-eidx="${idx}">
+      <div class="error-card-header" onclick="toggleError(this)">
+        <div class="sev-indicator ${e.sev}"></div>
+        <div class="error-title">${e.title}</div>
+        <div class="affected-systems">${sysPills}</div>
+        <span class="error-sev-tag ${e.sev}">${e.sev.toUpperCase()}</span>
+        <svg class="chevron" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="error-card-body">
+        <div class="error-detail-grid">
+          <div class="error-detail-item"><div class="error-detail-label">Digital Impact</div><div class="error-detail-value">${e.impact}</div></div>
+          <div class="error-detail-item"><div class="error-detail-label">Mitigation</div><div class="error-detail-value">${e.mitigation}</div></div>
+          <div class="error-detail-item"><div class="error-detail-label">Detection</div><div class="error-detail-value">${e.detection}</div></div>
+          <div class="error-detail-item"><div class="error-detail-label">Affected Systems</div><div class="error-detail-value">${sysPills}</div></div>
+        </div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════
+// EVENT HANDLERS
+// ═══════════════════════════════════════════
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Flight type selector
+document.querySelectorAll('.ft-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.ft-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMatrix(btn.dataset.ft);
+  });
+});
+
+// Flow filter
+document.querySelectorAll('.flow-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.flow-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFlows(btn.dataset.filter);
+  });
+});
+
+// Error severity filter
+document.querySelectorAll('.sev-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sev-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderErrors(btn.dataset.sev);
+  });
+});
+
+function togglePhase(el) { el.closest('.phase-section').classList.toggle('open'); }
+function toggleError(el) { el.closest('.error-card').classList.toggle('open'); }
+
+// ═══════════════════════════════════════════
+// INITIAL RENDER
+// ═══════════════════════════════════════════
+renderMatrix('state-dep');
+renderInteractions();
+renderFlows('all');
+renderErrors('all');
+</script>
+</body>
+</html>
