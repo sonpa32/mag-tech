@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Capability Development 2026–2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f7fa;--surface:#ffffff;--surface2:#f0f4f8;--surface3:#e4eaf2;
+  --border:#dce4ef;--border2:#b8c8de;
+  --blue:#2563eb;--blue-dim:rgba(37,99,235,.08);--blue-glow:rgba(37,99,235,.2);
+  --green:#059669;--green-dim:rgba(5,150,105,.08);
+  --amber:#d97706;--amber-dim:rgba(217,119,6,.08);
+  --red:#dc2626;--red-dim:rgba(220,38,38,.08);
+  --purple:#7c3aed;--purple-dim:rgba(124,58,237,.08);
+  --cyan:#0891b2;--cyan-dim:rgba(8,145,178,.08);
+  --text:#0f1f35;--text2:#4a6280;--text3:#8aa0bb;
+  --mono:'JetBrains Mono',monospace;--sans:'Sora',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+nav{position:fixed;top:0;left:0;bottom:0;width:214px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;padding:24px 0}
+.nav-logo{padding:0 18px 20px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.nav-logo-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.nav-logo-title{font-size:12px;font-weight:600;color:var(--text);line-height:1.4}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;border-left:2px solid transparent;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{border-left-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+.nav-num{font-family:var(--mono);font-size:10px;color:var(--text3);width:16px;flex-shrink:0}
+.nav-item.active .nav-num{color:var(--blue)}
+.nav-label{font-size:11px;font-weight:500;color:var(--text2);line-height:1.4}
+.nav-item.active .nav-label{color:var(--blue)}
+.nav-footer{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border);font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.7}
+main{margin-left:214px;min-height:100vh}
+.chapter{display:none;padding:44px 44px 80px;max-width:940px}
+.chapter.active{display:block;animation:fu .3s ease}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ch-header{display:flex;align-items:flex-start;gap:18px;margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.ch-num{flex-shrink:0;width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:600}
+.ch-num.c1{background:var(--blue-dim);border:1px solid var(--blue-glow);color:var(--blue)}
+.ch-num.c2{background:var(--purple-dim);border:1px solid rgba(139,92,246,.25);color:var(--purple)}
+.ch-num.c3{background:var(--green-dim);border:1px solid rgba(16,185,129,.25);color:var(--green)}
+.ch-num.c4{background:var(--amber-dim);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.ch-title{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:7px}
+.ch-sub{font-size:13px;color:var(--text2);line-height:1.6}
+.sec{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:32px 0 14px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.prose{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px}
+/* metrics */
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.mc.bl::before{background:var(--blue)}.mc.gr::before{background:var(--green)}.mc.am::before{background:var(--amber)}.mc.re::before{background:var(--red)}.mc.pu::before{background:var(--purple)}
+.ml{font-size:10px;color:var(--text3);margin-bottom:7px;font-weight:500}
+.mv{font-family:var(--mono);font-size:20px;font-weight:600;margin-bottom:3px}
+.mv.bl{color:var(--blue)}.mv.gr{color:var(--green)}.mv.am{color:var(--amber)}.mv.re{color:var(--red)}.mv.pu{color:var(--purple)}
+.ms{font-size:10px;color:var(--text3)}
+/* track table */
+.tt{width:100%;border-collapse:collapse;margin-bottom:24px}
+.tt th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);padding:9px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+.tt td{padding:11px 12px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;line-height:1.6}
+.tt tr:last-child td{border-bottom:none}
+.tt tr:hover td{background:var(--surface2)}
+.sb{display:flex;align-items:center;gap:7px}
+.bb{flex:1;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.bf{height:100%;border-radius:3px}
+.bn{font-family:var(--mono);font-size:11px;color:var(--text2);width:38px;text-align:right}
+/* insight grid */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.ic{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:16px 18px}
+.ich{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.icd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ict{font-size:13px;font-weight:600}
+.icb{font-size:12px;color:var(--text2);line-height:1.7}
+/* tags */
+.tg{display:inline-block;font-size:10px;font-weight:600;font-family:var(--mono);padding:2px 7px;border-radius:3px;margin-top:7px;margin-right:4px}
+.tg-r{background:var(--red-dim);color:#b91c1c;border:1px solid rgba(220,38,38,.25)}
+.tg-a{background:var(--amber-dim);color:#b45309;border:1px solid rgba(217,119,6,.25)}
+.tg-g{background:var(--green-dim);color:#047857;border:1px solid rgba(5,150,105,.25)}
+.tg-b{background:var(--blue-dim);color:#1d4ed8;border:1px solid rgba(37,99,235,.25)}
+.tg-p{background:var(--purple-dim);color:#6d28d9;border:1px solid rgba(124,58,237,.25)}
+.tg-c{background:var(--cyan-dim);color:#0e7490;border:1px solid rgba(8,145,178,.25)}
+/* callout */
+.co{border-radius:9px;padding:14px 18px;margin-bottom:18px;border-left:3px solid;display:flex;gap:11px;align-items:flex-start}
+.co.warn{background:var(--red-dim);border-color:var(--red)}.co.info{background:var(--blue-dim);border-color:var(--blue)}.co.ok{background:var(--green-dim);border-color:var(--green)}.co.note{background:var(--amber-dim);border-color:var(--amber)}
+.co-ic{font-size:13px;flex-shrink:0;margin-top:2px}
+.co-tx{font-size:12px;line-height:1.7;color:var(--text2)}
+.co-tx strong{color:var(--text)}
+/* pyramid */
+.pyr{display:flex;flex-direction:column;gap:5px;margin-bottom:24px}
+.pr{border-radius:8px;padding:13px 18px;display:flex;align-items:center;gap:14px;border:1px solid var(--border)}
+.pl{font-family:var(--mono);font-size:9px;color:var(--text3);width:55px;flex-shrink:0}
+.pt{font-size:13px;font-weight:600;flex:1}
+.pd{font-size:12px;color:var(--text2);line-height:1.5;flex:2}
+.pb{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;flex-shrink:0}
+/* cap grid */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.cc{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:18px 20px;position:relative}
+.cn{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:9px}
+.ctit{font-size:14px;font-weight:600;margin-bottom:7px}
+.cbod{font-size:12px;color:var(--text2);line-height:1.7}
+.cft{margin-top:11px;padding-top:9px;border-top:1px solid var(--border)}
+.cfl{font-size:10px;color:var(--text3);margin-bottom:3px}
+.cfv{font-size:11px;color:var(--text2)}
+.ait{position:absolute;top:13px;right:13px;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid}
+.ai-h{background:var(--green-dim);border-color:rgba(16,185,129,.3);color:#34d399}
+.ai-m{background:var(--amber-dim);border-color:rgba(245,158,11,.3);color:#fbbf24}
+.ai-e{background:var(--red-dim);border-color:rgba(239,68,68,.3);color:#f87171}
+/* timeline */
+.tl{position:relative;padding-left:26px;margin-bottom:24px}
+.tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.tli{position:relative;margin-bottom:22px}
+.tld{position:absolute;left:-26px;top:3px;width:14px;height:14px;border-radius:50%;border:2px solid;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.tld::after{content:'';width:5px;height:5px;border-radius:50%}
+.tld.bl{border-color:var(--blue)}.tld.bl::after{background:var(--blue)}
+.tld.gr{border-color:var(--green)}.tld.gr::after{background:var(--green)}
+.tld.am{border-color:var(--amber)}.tld.am::after{background:var(--amber)}
+.tld.pu{border-color:var(--purple)}.tld.pu::after{background:var(--purple)}
+.tlph{font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:3px}
+.tltit{font-size:13px;font-weight:600;margin-bottom:5px}
+.tlbod{font-size:12px;color:var(--text2);line-height:1.7}
+/* modules */
+.ml-list{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.mhdr{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;user-select:none}
+.mhdr:hover{background:var(--surface2)}
+.mn{font-family:var(--mono);font-size:9px;font-weight:600;width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mn.bl{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-glow)}
+.mn.gr{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.mn.pu{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(139,92,246,.25)}
+.mn.am{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.mtb{flex:1}
+.mtit{font-size:13px;font-weight:600;margin-bottom:3px}
+.mmet{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;border:1px solid}
+.p-bl{background:var(--blue-dim);color:#1d4ed8;border-color:rgba(37,99,235,.25)}
+.p-gr{background:var(--green-dim);color:#047857;border-color:rgba(5,150,105,.25)}
+.p-am{background:var(--amber-dim);color:#b45309;border-color:rgba(217,119,6,.25)}
+.p-pu{background:var(--purple-dim);color:#6d28d9;border-color:rgba(124,58,237,.25)}
+.p-cy{background:var(--cyan-dim);color:#0e7490;border-color:rgba(8,145,178,.25)}
+.p-gy{background:var(--surface3);color:var(--text2);border-color:var(--border2)}
+.mtog{color:var(--text3);font-size:13px;transition:transform .25s;flex-shrink:0}
+.mcard.open .mtog{transform:rotate(180deg)}
+.mbod{display:none;border-top:1px solid var(--border);padding:14px 16px}
+.mcard.open .mbod{display:block}
+/* sessions */
+.sess{display:flex;flex-direction:column;gap:9px}
+.ses{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:12px 14px;display:grid;grid-template-columns:50px 1fr auto;gap:11px;align-items:start}
+.sn{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--surface3);border:1px solid var(--border);border-radius:4px;padding:3px 4px;text-align:center}
+.stit{font-size:12px;font-weight:600;margin-bottom:5px}
+.stop{list-style:none}
+.stop li{font-size:11px;color:var(--text2);padding:2px 0;display:flex;gap:5px;align-items:flex-start}
+.stop li::before{content:'—';color:var(--border2);flex-shrink:0;margin-top:1px;font-size:10px}
+.sout{font-size:9px;font-weight:600;padding:3px 8px;border-radius:4px;background:var(--amber-dim);color:#b45309;border:1px solid rgba(217,119,6,.25);white-space:nowrap;align-self:flex-start}
+.mrow{margin-top:11px;padding:11px 13px;background:var(--bg);border:1px solid var(--border);border-radius:7px;display:flex;gap:16px;flex-wrap:wrap}
+.mi{display:flex;gap:7px;align-items:flex-start;min-width:170px;flex:1}
+.mic{font-size:13px;flex-shrink:0;margin-top:1px}
+.mitit{font-size:11px;font-weight:600;margin-bottom:2px}
+.midesc{font-size:10px;color:var(--text3);line-height:1.5}
+/* ai test */
+.atg{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.atc{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.atch{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.atidx{font-family:var(--mono);font-size:10px;font-weight:600;width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.attit{font-size:14px;font-weight:600;flex:1}
+.aturg{font-size:9px;font-weight:600;font-family:var(--mono);padding:3px 8px;border-radius:3px;flex-shrink:0}
+.atbod{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.atcol{padding:14px 18px;border-right:1px solid var(--border)}
+.atcol:last-child{border-right:none}
+.atcl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.atcb{font-size:11px;color:var(--text2);line-height:1.7}
+.atcb li{padding:2px 0;display:flex;gap:5px;list-style:none}
+.atcb li::before{content:'·';color:var(--text3);flex-shrink:0}
+/* audience */
+.ar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.auc{border-radius:9px;padding:13px 15px;border:1px solid}
+.auc.j{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.2)}
+.auc.s{background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.2)}
+.auc.l{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.2)}
+.aul{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.aul.j{color:var(--green)}.aul.s{color:var(--blue)}.aul.l{color:var(--amber)}
+.aub{font-size:11px;color:var(--text2);line-height:1.8}
+.aub span{display:block}
+.auh{color:var(--text)}
+/* kpi table */
+.kt{width:100%;border-collapse:collapse;margin-bottom:22px}
+.kt th{text-align:center;padding:9px 12px;background:var(--surface);border-bottom:1px solid var(--border);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.kt th:first-child{text-align:left}
+.kt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);text-align:center}
+.kt td:first-child{text-align:left;color:var(--text)}
+.kt tr:last-child td{border-bottom:none}
+.kt tr:hover td{background:var(--surface2)}
+.kt12{color:var(--green);font-weight:600;font-family:var(--mono)}
+.kt6{color:var(--blue);font-weight:600;font-family:var(--mono)}
+.kt0{color:var(--text3);font-family:var(--mono)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-label">Engineering L&D</div>
+    <div class="nav-logo-title">Capability Development<br>2026 – 2027</div>
+  </div>
+  <a class="nav-item active" onclick="show(1,this)">
+    <span class="nav-num">01</span>
+    <span class="nav-label">Kết quả năng lực hiện tại</span>
+  </a>
+  <a class="nav-item" onclick="show(2,this)">
+    <span class="nav-num">02</span>
+    <span class="nav-label">Chân dung Engineer AI</span>
+  </a>
+  <a class="nav-item" onclick="show(3,this)">
+    <span class="nav-num">03</span>
+    <span class="nav-label">Kế hoạch đào tạo</span>
+  </a>
+  <a class="nav-item" onclick="show(4,this)">
+    <span class="nav-num">04</span>
+    <span class="nav-label">Đánh giá năng lực AI</span>
+  </a>
+  <div class="nav-footer">160 engineers · 4 tracks<br>iMocha baseline 2026</div>
+</nav>
+
+<main>
+<!-- ═══ CH1 ═══ -->
+<div class="chapter active" id="ch1">
+  <div class="ch-header">
+    <div class="ch-num c1">CH.01</div>
+    <div>
+      <div class="ch-title">Nhận định kết quả năng lực hiện tại</div>
+      <div class="ch-sub">Phân tích iMocha 2026 · 160 engineers · 4 tracks: Backend, Web Frontend, Mobile, Low-code</div>
+    </div>
+  </div>
+
+  <div class="sec">Tổng quan điểm số theo track</div>
+  <div class="mg">
+    <div class="mc bl"><div class="ml">Web Frontend</div><div class="mv bl">77.6%</div><div class="ms">SD=14.0 · Median 78%</div></div>
+    <div class="mc gr"><div class="ml">Mobile</div><div class="mv gr">74.3%</div><div class="ms">SD=12.1 · Median 75%</div></div>
+    <div class="mc am"><div class="ml">Low-code</div><div class="mv am">73.8%</div><div class="ms">SD=8.2 · Median 73%</div></div>
+    <div class="mc re"><div class="ml">Backend</div><div class="mv re">72.3%</div><div class="ms">SD=14.3 · Gap rộng nhất</div></div>
+  </div>
+
+  <div class="sec">Điểm theo domain kỹ năng</div>
+  <table class="tt">
+    <thead><tr><th>Track</th><th>App Development</th><th>Software Design</th><th>Data Design</th><th>Software Testing</th><th>Nhận định</th></tr></thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:600;color:var(--text)">Backend</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:80%;background:var(--green)"></div></div><span class="bn">~80%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:63.8%;background:var(--amber)"></div></div><span class="bn">63.8%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:54%;background:var(--red)"></div></div><span class="bn">54.0%</span></div></td>
+        <td style="color:var(--text3);font-size:11px">Không thi</td>
+        <td style="font-size:11px;color:var(--text2)">Kim tự tháp ngược</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;color:var(--text)">Web Frontend</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:82.5%;background:var(--green)"></div></div><span class="bn">82.5%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:70%;background:var(--amber)"></div></div><span class="bn">SD=17.7</span></div></td>
+        <td style="color:var(--text3);font-size:11px">Không thi</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:72%;background:var(--blue)"></div></div><span class="bn">~72%</span></div></td>
+        <td style="font-size:11px;color:var(--text2)">Phân hoá Senior mạnh</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;color:var(--text)">Mobile</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:84.5%;background:var(--green)"></div></div><span class="bn">84.5%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:66.5%;background:var(--amber)"></div></div><span class="bn">66.5%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:60.8%;background:var(--amber)"></div></div><span class="bn">60.8%</span></div></td>
+        <td style="color:var(--text3);font-size:11px">Không thi</td>
+        <td style="font-size:11px;color:var(--text2)">Mạnh thực thi, yếu quy hoạch</td>
+      </tr>
+      <tr>
+        <td style="font-weight:600;color:var(--text)">Low-code</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:77.6%;background:var(--blue)"></div></div><span class="bn">77.6%</span></div></td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:73.6%;background:var(--blue)"></div></div><span class="bn">73.6%</span></div></td>
+        <td style="color:var(--text3);font-size:11px">—</td>
+        <td><div class="sb"><div class="bb"><div class="bf" style="width:73.6%;background:var(--blue)"></div></div><span class="bn">73.6%</span></div></td>
+        <td style="font-size:11px;color:var(--text2)">Đồng đều, Gap=0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sec">4 nhận định chiến lược</div>
+  <div class="ig">
+    <div class="ic">
+      <div class="ich"><div class="icd" style="background:var(--red)"></div><div class="ict">Backend: Kim tự tháp ngược</div></div>
+      <div class="icb">Mid/Senior điểm thực thi (App Dev 78–80%) cao hơn Lead/Expert (39–50%). Nguyên nhân: Lead/Expert nặng về Software Design và Data Design — hai domain không được thi ở cấp thấp hơn. Đây là rủi ro kiến trúc nghiêm trọng nhất toàn tổ chức.</div>
+      <span class="tg tg-r">Lead/Expert: 39–50%</span><span class="tg tg-a">Data Design: 54%</span>
+    </div>
+    <div class="ic">
+      <div class="ich"><div class="icd" style="background:var(--amber)"></div><div class="ict">Web Frontend: Phân hoá cấp Senior</div></div>
+      <div class="icb">SD=17.7 — cao nhất toàn tổ chức. Tồn tại song song: Senior vững kiến trúc (&gt;90%) và Senior hổng design (~40%). Cùng title nhưng năng lực khác nhau hoàn toàn — không thể dùng chung learning path.</div>
+      <span class="tg tg-a">SD=17.7</span><span class="tg tg-b">Avg cao nhất: 77.6%</span>
+    </div>
+    <div class="ic">
+      <div class="ich"><div class="icd" style="background:var(--blue)"></div><div class="ict">Mobile: Mạnh thực thi, yếu quy hoạch</div></div>
+      <div class="icb">App Dev 84.5% — cao nhất công ty. Nhưng Software Design 66.5% và Data Design 60.8% sẽ là điểm nghẽn khi engineer lên Lead/Manager và phải đưa ra quyết định kiến trúc tổng thể.</div>
+      <span class="tg tg-g">App Dev: 84.5%</span><span class="tg tg-a">Design gap khi scale</span>
+    </div>
+    <div class="ic">
+      <div class="ich"><div class="icd" style="background:var(--green)"></div><div class="ict">Low-code: Ổn định, thiếu bứt phá</div></div>
+      <div class="icb">Gap=0, SD=8.2 — nhóm đồng đều nhất. Ít rủi ro vận hành nhưng không có outlier để dẫn dắt. Max performer chỉ 85% — chưa có dấu hiệu hyper-performance để scale AI adoption.</div>
+      <span class="tg tg-g">Gap=0</span><span class="tg tg-a">Max: 85%</span>
+    </div>
+  </div>
+
+  <div class="co warn"><div class="co-ic">⚠</div><div class="co-tx"><strong>Rủi ro chiến lược cốt lõi:</strong> Toàn tổ chức mạnh nhất ở Application Development (avg 80–84%) — đúng năng lực AI đang thay thế nhanh nhất. Đồng thời yếu nhất ở Software Design và Data Design — đúng hai năng lực quan trọng nhất trong kỷ nguyên AI.</div></div>
+  <div class="co note"><div class="co-ic">!</div><div class="co-tx"><strong>Lưu ý cấu trúc đề thi:</strong> Junior/Mid không thi Software Design và Data Design. Chênh lệch điểm giữa cấp bậc không chỉ phản ánh năng lực — còn phản ánh phạm vi đề thi khác nhau. Cần đặt số liệu trong bối cảnh này khi so sánh.</div></div>
+</div>
+
+<!-- ═══ CH2 ═══ -->
+<div class="chapter" id="ch2">
+  <div class="ch-header">
+    <div class="ch-num c2">CH.02</div>
+    <div>
+      <div class="ch-title">Chân dung Engineer trong kỷ nguyên AI</div>
+      <div class="ch-sub">Năng lực quan trọng · Foundation thực sự · Những gì AI thay được và không thay được</div>
+    </div>
+  </div>
+
+  <div class="sec">Thực tế AI đang thay đổi SDLC</div>
+  <p class="prose">AI agent đang trở thành executor đầu tiên trên toàn SDLC — phân tích feasibility, implement feature, mở rộng test coverage, surface risk trong review. Điều này không có nghĩa engineer mất việc, nhưng <strong style="color:var(--text)">giá trị của từng năng lực đang thay đổi mạnh.</strong></p>
+  <div class="co info"><div class="co-ic">→</div><div class="co-tx"><strong>Dịch chuyển cốt lõi:</strong> Engineer tương lai ít thời gian viết code nền tảng hơn, nhiều thời gian hơn để orchestrate AI agents, định nghĩa objectives và guardrails, validate output. Core skill trở thành systems thinking, không phải syntax. Từ "violinist tự chơi từng nốt" sang "conductor điều phối cả dàn nhạc."</div></div>
+
+  <div class="sec">4 tầng Foundation — từ sâu nhất đến bề mặt</div>
+  <div class="pyr">
+    <div class="pr" style="background:var(--surface);border-color:rgba(139,92,246,.3)">
+      <div class="pl" style="color:var(--purple)">TẦNG 1</div>
+      <div class="pt">Computational Thinking</div>
+      <div class="pd">Không phải biết code — mà tư duy như máy tính. Decompose vấn đề, nhận ra pattern, abstraction, biết thuật toán nào phù hợp ngữ cảnh. Đây là thứ AI không thể thay vì cần hiểu context nghiệp vụ để đặt đúng vấn đề trước khi giải.</div>
+      <div class="pb" style="background:var(--purple-dim);color:var(--purple);border:1px solid rgba(139,92,246,.3)">Nền sâu nhất</div>
+    </div>
+    <div class="pr" style="background:var(--surface);border-color:rgba(59,130,246,.3)">
+      <div class="pl" style="color:var(--blue)">TẦNG 2</div>
+      <div class="pt">Mental Model về hệ thống</div>
+      <div class="pd">Hiểu điều gì xảy ra bên dưới: HTTP đi qua đâu trước khi đến DB, tại sao distributed lock gây deadlock, memory vs CPU vs I/O bottleneck. Không có cái này, engineer không detect được khi AI sinh schema sai với 10M records.</div>
+      <div class="pb" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-glow)">Systems depth</div>
+    </div>
+    <div class="pr" style="background:var(--surface);border-color:rgba(16,185,129,.3)">
+      <div class="pl" style="color:var(--green)">TẦNG 3</div>
+      <div class="pt">First Principles Reasoning</div>
+      <div class="pd">Suy luận từ nguyên lý cơ bản, không phụ thuộc pattern đã học. Khi AI đưa ra solution: biết hỏi "tại sao cái này đúng?" thay vì chỉ hỏi "cái này có chạy không?" Không build được từ tutorial — chỉ có từ giải quyết vấn đề khó thật sự.</div>
+      <div class="pb" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,.3)">Critical judgment</div>
+    </div>
+    <div class="pr" style="background:var(--surface);border-color:rgba(245,158,11,.3)">
+      <div class="pl" style="color:var(--amber)">TẦNG 4</div>
+      <div class="pt">Domain Knowledge nghiệp vụ</div>
+      <div class="pd">Hiểu tại sao business cần feature này, không chỉ "làm feature." Biết trade-off nào chấp nhận được với context cụ thể. Nhận ra khi AI sinh code "đúng kỹ thuật nhưng sai nghiệp vụ." AI không bao giờ có cái này từ codebase mới.</div>
+      <div class="pb" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.3)">AI-proof nhất</div>
+    </div>
+  </div>
+
+  <div class="sec">5 năng lực quan trọng nhất — xếp theo độ khó AI thay thế</div>
+  <div class="cg">
+    <div class="cc" style="border-color:rgba(139,92,246,.3)">
+      <div class="cn" style="background:var(--purple-dim);color:var(--purple)">① Khó nhất</div>
+      <div class="ait ai-h">AI không làm được</div>
+      <div class="ctit">Problem Framing & Intent Definition</div>
+      <div class="cbod">Chuyển ambiguous business problem → clear technical intent mà AI agent có thể thực thi. Cần hiểu context tổ chức, chính trị nội bộ, trade-off nghiệp vụ. AI yếu nhất ở đây vì đây là điểm tiếp xúc giữa business reality và technical execution.</div>
+      <div class="cft"><div class="cfl">Trong đội ngũ hiện tại</div><div class="cfv">Chưa được đo bởi iMocha — gap lớn nhất chưa được address</div></div>
+    </div>
+    <div class="cc" style="border-color:rgba(59,130,246,.3)">
+      <div class="cn" style="background:var(--blue-dim);color:var(--blue)">② Rất khó</div>
+      <div class="ait ai-h">AI hỗ trợ, không thay</div>
+      <div class="ctit">System Design & Architecture</div>
+      <div class="cbod">Càng design-dependent, engineer càng giữ lại thay vì delegate hoàn toàn cho AI. Đây cũng là foundation để AI agent hoạt động hiệu quả — codebase thiết kế tốt = AI làm việc tốt hơn hẳn.</div>
+      <div class="cft"><div class="cfl">Trong đội ngũ hiện tại</div><div class="cfv" style="color:var(--red)">Software Design 63.8%, Data Design 54% — yếu nhất, ưu tiên cao nhất</div></div>
+    </div>
+    <div class="cc" style="border-color:rgba(239,68,68,.3)">
+      <div class="cn" style="background:var(--red-dim);color:var(--red)">③ Hoàn toàn mới</div>
+      <div class="ait ai-h">Năng lực mới nổi</div>
+      <div class="ctit">AI Output Validation</div>
+      <div class="cbod">61% developers thừa nhận AI sinh code trông đúng nhưng không đáng tin. AI-generated code có 322% nhiều privilege escalation paths hơn code human viết. Engineer không detect được lỗi AI còn nguy hiểm hơn engineer không dùng AI.</div>
+      <div class="cft"><div class="cfl">Trong đội ngũ hiện tại</div><div class="cfv">Chưa được đào tạo — rủi ro thực xảy ra ngay hôm nay khi onboard AI tools</div></div>
+    </div>
+    <div class="cc" style="border-color:rgba(6,182,212,.3)">
+      <div class="cn" style="background:var(--cyan-dim);color:var(--cyan)">④ Mới nổi</div>
+      <div class="ait ai-m">Cần học ngay</div>
+      <div class="ctit">Context Engineering & AI Orchestration</div>
+      <div class="cbod">Thiết kế toàn bộ information environment xung quanh LLM — không chỉ là prompt. Viết CLAUDE.md, thiết kế agent workflow, định nghĩa guardrails. Người kiểm soát context, người đó kiểm soát chất lượng output của toàn team AI.</div>
+      <div class="cft"><div class="cfl">Trong đội ngũ hiện tại</div><div class="cfv">Đang introduce ở M5/D5 — nên đưa xuống sớm hơn, không chỉ Phase 3</div></div>
+    </div>
+    <div class="cc" style="border-color:rgba(16,185,129,.3);grid-column:1/-1">
+      <div class="cn" style="background:var(--green-dim);color:var(--green)">⑤ Tăng giá trị</div>
+      <div class="ait ai-m">Luôn cần</div>
+      <div class="ctit">Cross-domain Communication & Stakeholder Translation</div>
+      <div class="cbod">Khi AI xử lý execution, con người cần giao tiếp tốt hơn — giữa technical và business, giữa các team, giải thích AI decision cho stakeholders. Đặc biệt quan trọng cho Lead/Expert cần present architecture decision và AI ROI cho BOD. Năng lực này tăng giá trị, không giảm.</div>
+    </div>
+  </div>
+
+  <div class="co note"><div class="co-ic">!</div><div class="co-tx"><strong>Nghịch lý cần quản lý:</strong> Engineer cần foundation vững để biết khi nào AI sai — mà foundation đó chỉ có được qua việc tự làm thật. Đào tạo không thể bỏ qua fundamentals để rush vào AI orchestration. Thứ tự đúng: <strong style="color:var(--text)">Foundation → Design Thinking → AI Augmentation.</strong> Không thể đảo ngược.</div></div>
+
+  <div class="sec">Năng lực AI đang thay thế nhanh nhất</div>
+  <table class="tt">
+    <thead><tr><th>Năng lực</th><th>Tốc độ bị thay</th><th>Hệ quả cho đào tạo</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--text);font-weight:500">Viết code boilerplate (CRUD, unit test cơ bản)</td><td><span class="tg tg-r">Rất nhanh</span></td><td style="font-size:11px;color:var(--text2)">Giảm trọng số — đây là thứ Junior/Mid dùng thời gian nhiều nhất hiện tại</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">Debug lỗi thông thường (log analysis, stack trace)</td><td><span class="tg tg-r">Rất nhanh</span></td><td style="font-size:11px;color:var(--text2)">Dạy cách verify AI debug suggestion thay vì debug step-by-step</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">Documentation từ code</td><td><span class="tg tg-r">Đã xảy ra</span></td><td style="font-size:11px;color:var(--text2)">Dạy review và curate AI doc thay vì viết từ đầu</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">Code review style/naming/obvious bugs</td><td><span class="tg tg-a">Nhanh</span></td><td style="font-size:11px;color:var(--text2)">Focus code review vào logic, architecture, business context</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">System Design & Data Architecture</td><td><span class="tg tg-g">Chậm, có hỗ trợ</span></td><td style="font-size:11px;color:var(--text2)">Invest mạnh nhất — AI hỗ trợ nhưng không thay được judgment của engineer giỏi</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">Domain knowledge & Business context</td><td><span class="tg tg-g">Không thay được</span></td><td style="font-size:11px;color:var(--text2)">Giá trị tăng theo thời gian — engineer hiểu nghiệp vụ sâu ngày càng quý hiếm</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ CH3 ═══ -->
+<div class="chapter" id="ch3">
+  <div class="ch-header">
+    <div class="ch-num c3">CH.03</div>
+    <div>
+      <div class="ch-title">Kế hoạch đào tạo đóng gap</div>
+      <div class="ch-sub">12 tháng · Software Design + Data Design + AI Foundation · 10 modules · 3 hình thức đào tạo</div>
+    </div>
+  </div>
+
+  <div class="sec">Nguyên tắc thiết kế curriculum</div>
+  <div class="ig" style="margin-bottom:24px">
+    <div class="ic"><div class="ich"><div class="icd" style="background:var(--blue)"></div><div class="ict">Không dạy "cách làm" — dạy "tại sao"</div></div><div class="icb">Ranh giới giữa engineer có foundation và engineer chỉ biết template. Mỗi session phải có câu hỏi "cơ chế nào đằng sau điều này?"</div></div>
+    <div class="ic"><div class="ich"><div class="icd" style="background:var(--green)"></div><div class="ict">Cá nhân hoá theo Track × Cấp bậc</div></div><div class="icb">Không áp uniform curriculum. Engineer Low-code Gap=0 không học cùng lộ trình Backend Gap=6. Mỗi module có audience map rõ ràng.</div></div>
+    <div class="ic"><div class="ich"><div class="icd" style="background:var(--amber)"></div><div class="ict">Output cụ thể mỗi module</div></div><div class="icb">Mỗi session có deliverable thực: ADR, schema diagram, checklist, CLAUDE.md — không học xong rồi thôi. Output là bằng chứng năng lực.</div></div>
+    <div class="ic"><div class="ich"><div class="icd" style="background:var(--purple)"></div><div class="ict">Tích hợp AI tools từ Phase 1</div></div><div class="icb">Không tách AI ra Phase 3. Từ đầu, mỗi session có component "dùng AI làm X → validate AI output." Engineer học foundation trong context AI-augmented.</div></div>
+  </div>
+
+  <div class="sec">Roadmap 12 tháng — 4 Phases</div>
+  <div class="tl">
+    <div class="tli"><div class="tld bl"></div><div class="tlph">PHASE 1 · T1–T3 · Foundation</div><div class="tltit">Chuẩn hoá baseline & xây nền</div><div class="tlbod">Gap heatmap → Learning path cá nhân. Enroll Udemy/Coursera. Identify 15–20 Lead/Expert tiềm năng làm internal trainer. Kick off M1 (Design Patterns) và D1 (Relational Modeling). <strong style="color:var(--text)">iMocha re-test cuối T3.</strong></div></div>
+    <div class="tli"><div class="tld gr"></div><div class="tlph">PHASE 2 · T4–T6 · Core Skills</div><div class="tltit">Deep-dive Software Design & Data Design</div><div class="tlbod">Workshop series 6 buổi. Mentoring 1-1 bắt đầu. M2–M3 Architecture patterns, M4 Leadership. D2–D3 NoSQL, Distributed data. <strong style="color:var(--text)">iMocha re-test cuối T6 — target Software Design tăng ≥10%.</strong></div></div>
+    <div class="tli"><div class="tld am"></div><div class="tlph">PHASE 3 · T7–T9 · AI Integration</div><div class="tltit">Tích hợp AI vào SDLC thực tế</div><div class="tlbod">M5 AI-Ready Architecture + BMAD workflow. D5 Vector DB, RAG, Governance. AI Output Validation workshop. Lead/Expert dẫn dắt 1 POC sprint AI-augmented. <strong style="color:var(--text)">iMocha re-test T9.</strong></div></div>
+    <div class="tli"><div class="tld pu"></div><div class="tlph">PHASE 4 · T10–T12 · Scale & Sustain</div><div class="tltit">Scale & chứng nhận Internal Trainer</div><div class="tlbod">15–20 Lead/Expert chứng nhận làm internal trainer. Confluence Knowledge Base hoàn thiện. Cohort planning 2027. <strong style="color:var(--text)">iMocha final re-test T12 — so sánh với baseline T0.</strong></div></div>
+  </div>
+
+  <div class="sec">Software Design & System Architecture — 5 modules</div>
+  <div class="ml-list">
+
+    <div class="mcard" id="s1"><div class="mhdr" onclick="tog('s1')"><div class="mn bl">M1</div><div class="mtb"><div class="mtit">Design Thinking & Software Design Fundamentals</div><div class="mmet"><span class="pill p-gy">4 sessions · 12h</span><span class="pill p-gr">Junior→Mid · All tracks</span><span class="pill p-am">Online Course</span><span class="pill p-bl">Workshop</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S1.1</div><div><div class="stit">Từ requirement đến design — tư duy thiết kế</div><ul class="stop"><li>Functional vs Non-functional requirements</li><li>User story → class diagram → flow diagram</li><li>draw.io, PlantUML, Mermaid trong GitLab</li><li>AI component: Dùng Claude sinh diagram → validate logic</li></ul></div><div class="sout">Design doc mẫu</div></div>
+      <div class="ses"><div class="sn">S1.2</div><div><div class="stit">SOLID Principles — nền tảng code bền vững</div><ul class="stop"><li>SRP, OCP, LSP, ISP, DIP — ví dụ Java Spring từ codebase nội bộ</li><li>Code smell detection: God Class, Feature Envy, Shotgun Surgery</li><li>Refactor live → so sánh trước/sau với AI suggestions</li></ul></div><div class="sout">Refactor report</div></div>
+      <div class="ses"><div class="sn">S1.3–1.4</div><div><div class="stit">Design Patterns — Creational, Structural & Behavioural</div><ul class="stop"><li>Factory, Builder, Singleton, Adapter, Decorator, Facade, Observer, Strategy trong Java Spring</li><li>Mini project: Notification module — thiết kế không dùng AI trước, sau đó compare</li></ul></div><div class="sout">Pattern catalogue nội bộ</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🖥</div><div><div class="mitit">Online Course trước</div><div class="midesc">Udemy "Java Design Patterns & SOLID" — hoàn thành 60% trước workshop</div></div></div><div class="mi"><div class="mic">🛠</div><div><div class="mitit">Workshop thực chiến</div><div class="midesc">Codebase nội bộ làm case study, refactor live, nhóm 4–5 người cross-review</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="s2"><div class="mhdr" onclick="tog('s2')"><div class="mn bl">M2</div><div class="mtb"><div class="mtit">Software Architecture Patterns</div><div class="mmet"><span class="pill p-gy">4 sessions · 12h</span><span class="pill p-bl">Mid→Senior · Backend/Frontend/Mobile</span><span class="pill p-bl">Workshop</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S2.1</div><div><div class="stit">Layered, Clean, Hexagonal Architecture</div><ul class="stop"><li>Khi nào dùng Monolith thay vì vội chuyển Microservices</li><li>Architecture Decision Record (ADR): format, process, lưu Confluence</li></ul></div><div class="sout">ADR đầu tiên</div></div>
+      <div class="ses"><div class="sn">S2.2</div><div><div class="stit">Microservices & Service Decomposition</div><ul class="stop"><li>DDD cơ bản: Bounded Context, Aggregate</li><li>REST vs gRPC vs Message Queue — khi nào dùng gì</li><li>Case study: Decompose Spring monolith nội bộ</li></ul></div><div class="sout">Decomposition diagram</div></div>
+      <div class="ses"><div class="sn">S2.3</div><div><div class="stit">Event-Driven Architecture & Async Patterns</div><ul class="stop"><li>Event sourcing, CQRS — khi nào thực sự cần, khi nào overkill</li><li>Saga pattern, Kafka/RabbitMQ trong Spring ecosystem</li></ul></div><div class="sout">Event flow diagram</div></div>
+      <div class="ses"><div class="sn">S2.4</div><div><div class="stit">Frontend Architecture — Micro-frontend & Flutter</div><ul class="stop"><li>Module Federation, Single-SPA cho AngularJS migration path</li><li>BLoC vs Riverpod vs Provider cho Flutter</li></ul></div><div class="sout">Migration roadmap 1-pager</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🏛</div><div><div class="mitit">Whiteboard Architecture Sessions</div><div class="midesc">Nhóm 5–6 người thiết kế lại 1 module thực của hệ thống nội bộ → cross-review</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="s3"><div class="mhdr" onclick="tog('s3')"><div class="mn bl">M3</div><div class="mtb"><div class="mtit">System Design — Scalability & High Availability</div><div class="mmet"><span class="pill p-gy">5 sessions · 15h</span><span class="pill p-am">Senior→Lead/Expert · Backend ưu tiên</span><span class="pill p-bl">Workshop</span><span class="pill p-pu">Mentoring</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S3.1</div><div><div class="stit">Scalability: Load balancing, Caching, CAP Theorem</div><ul class="stop"><li>Consistent Hashing, Redis caching layers, CDN strategies</li><li>CAP Theorem trong thực tế production</li></ul></div><div class="sout">Scalability checklist</div></div>
+      <div class="ses"><div class="sn">S3.2</div><div><div class="stit">High Availability & Fault Tolerance</div><ul class="stop"><li>Circuit Breaker, Retry, Bulkhead, Timeout patterns</li><li>SLA/SLO/SLI — thiết kế để đạt target reliability</li></ul></div><div class="sout">Reliability design doc</div></div>
+      <div class="ses"><div class="sn">S3.3</div><div><div class="stit">API Design & Security by Design</div><ul class="stop"><li>OpenAPI spec, contract-first development, versioning</li><li>OWASP Top 10 trong Java Spring, JWT/OAuth2/RBAC</li><li>Secure coding checklist tích hợp MR template GitLab</li></ul></div><div class="sout">API standards + MR security checklist</div></div>
+      <div class="ses"><div class="sn">S3.4–3.5</div><div><div class="stit">System Design Practice — Capstone</div><ul class="stop"><li>Time-boxed: 45' design → 15' present → 15' Q&A · Rubric công khai</li><li>Đề thực: Notification service, File storage, Search engine</li><li>AI component: Thiết kế không dùng AI → compare với AI suggestion</li></ul></div><div class="sout">System design portfolio</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🧑‍🏫</div><div><div class="mitit">Intensive Workshop</div><div class="midesc">30' lý thuyết → 60' whiteboard design → 30' peer review mỗi session</div></div></div><div class="mi"><div class="mic">👥</div><div><div class="mitit">Mentoring 1-1</div><div class="midesc">3 tuần sau: Lead/Expert review design thực từ sprint hiện tại với senior mentor</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="s4"><div class="mhdr" onclick="tog('s4')"><div class="mn bl">M4</div><div class="mtb"><div class="mtit">Architecture Leadership & Design Review</div><div class="mmet"><span class="pill p-gy">3 sessions · 9h</span><span class="pill p-am">Lead/Expert only</span><span class="pill p-cy">Project-based</span><span class="pill p-pu">Peer Mentoring Circle</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S4.1</div><div><div class="stit">Dẫn dắt Architecture Review & ADR process</div><ul class="stop"><li>Architecture Review Board (ARB): tổ chức, process, frequency</li><li>Feedback constructive cho design của Senior/Mid</li></ul></div><div class="sout">ADR template + review checklist</div></div>
+      <div class="ses"><div class="sn">S4.2</div><div><div class="stit">Technical Debt & Legacy Modernisation</div><ul class="stop"><li>Phân loại tech debt, xây dựng backlog ưu tiên hoá</li><li>Strangler Fig pattern cho AngularJS → modern framework</li></ul></div><div class="sout">Tech debt register</div></div>
+      <div class="ses"><div class="sn">S4.3</div><div><div class="stit">C4 Model & Present Architecture cho Stakeholders</div><ul class="stop"><li>Context → Container → Component → Code diagrams</li><li>Mỗi Lead/Expert trình bày architecture dự án đang làm trước Engineering Lead</li></ul></div><div class="sout">C4 diagram bộ tài liệu</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🎯</div><div><div class="mitit">Project-based</div><div class="midesc">Apply ngay vào sprint: viết ADR cho 1 quyết định kiến trúc quan trọng</div></div></div><div class="mi"><div class="mic">🔄</div><div><div class="mitit">Peer Mentoring Circle</div><div class="midesc">Nhóm 4–5 Lead/Expert họp 2 tuần/lần, rotate người dẫn dắt</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="s5"><div class="mhdr" onclick="tog('s5')"><div class="mn bl">M5</div><div class="mtb"><div class="mtit">AI-Ready Architecture & Context Engineering</div><div class="mmet"><span class="pill p-gy">3 sessions · 9h</span><span class="pill p-bl">Senior→Lead/Expert · All tracks</span><span class="pill p-cy">Hands-on Claude Code</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S5.1</div><div><div class="stit">Thiết kế hệ thống tối ưu cho AI agent</div><ul class="stop"><li>Loosely coupled: tại sao AI hoạt động tốt hơn trên code thiết kế tốt</li><li>Clear interface contracts, explicit dependencies, modular codebase</li><li>AI-readiness checklist cho Java Spring, Flutter, AngularJS</li></ul></div><div class="sout">AI-readiness checklist 3 stacks</div></div>
+      <div class="ses"><div class="sn">S5.2</div><div><div class="stit">CLAUDE.md & Context Engineering</div><ul class="stop"><li>Viết CLAUDE.md chuẩn cho từng stack nội bộ</li><li>MCP server config cho GitLab, Jira, Confluence</li><li>CI/CD quality gates tích hợp AI code review</li></ul></div><div class="sout">CLAUDE.md template bộ 3 stack</div></div>
+      <div class="ses"><div class="sn">S5.3</div><div><div class="stit">Agent-based SDLC — BMAD Method POC</div><ul class="stop"><li>Workflow SM Agent + QA Agent + Analyst Agent</li><li>Human-in-the-loop checkpoints: đâu AI không được autonomous</li><li>Run 1 sprint thực với AI-augmented workflow, đo kết quả, present</li></ul></div><div class="sout">Agent workflow + POC report</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🤖</div><div><div class="mitit">Hands-on Claude Code</div><div class="midesc">45' thực hành trực tiếp mỗi session trên codebase nội bộ</div></div></div><div class="mi"><div class="mic">📊</div><div><div class="mitit">POC Showcase</div><div class="midesc">Cuối M5: mỗi squad present kết quả AI-augmented sprint trước Engineering Lead + BOD rep</div></div></div></div>
+    </div></div>
+  </div>
+
+  <div class="sec">Data Design & Data Modeling — 5 modules</div>
+  <div class="ml-list">
+
+    <div class="mcard" id="d1"><div class="mhdr" onclick="tog('d1')"><div class="mn gr">D1</div><div class="mtb"><div class="mtit">Relational Data Modeling Fundamentals</div><div class="mmet"><span class="pill p-gy">4 sessions · 12h</span><span class="pill p-gr">Junior→Senior · Backend, Mobile</span><span class="pill p-am">Online Course + Workshop</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S1.1</div><div><div class="stit">Entity-Relationship Modeling — từ nghiệp vụ đến schema</div><ul class="stop"><li>Entity, Attribute, Relationship, Cardinality từ yêu cầu nghiệp vụ</li><li>ER Diagram với dbdiagram.io — bài tập: mô hình hoá hệ thống dự án thực</li></ul></div><div class="sout">ER Diagram hoàn chỉnh</div></div>
+      <div class="ses"><div class="sn">S1.2</div><div><div class="stit">Normalization — hiểu thật sự, không học vẹt</div><ul class="stop"><li>1NF, 2NF, 3NF, BCNF — khi nào vi phạm là hợp lý (denormalization vì performance)</li><li>Review schema nội bộ (anonymized): tìm và sửa vi phạm thực</li></ul></div><div class="sout">Schema review report</div></div>
+      <div class="ses"><div class="sn">S1.3</div><div><div class="stit">Indexing Strategy & Query Optimization</div><ul class="stop"><li>B-Tree vs Hash index, composite index — column order matters</li><li>EXPLAIN ANALYZE — đọc và interpret query plan thực</li><li>Pitfalls: N+1 query, missing index, over-indexing</li></ul></div><div class="sout">Query optimization report</div></div>
+      <div class="ses"><div class="sn">S1.4</div><div><div class="stit">Transaction Management & Data Integrity</div><ul class="stop"><li>ACID — ý nghĩa thực tế trong production</li><li>Isolation levels và trade-offs, deadlock prevention strategies</li></ul></div><div class="sout">Transaction design checklist</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🖥</div><div><div class="mitit">Online Course trước</div><div class="midesc">Coursera "Database Design & SQL" — hoàn thành 60% trước workshop</div></div></div><div class="mi"><div class="mic">⚡</div><div><div class="mitit">DB nội bộ thực</div><div class="midesc">Workshop dùng dump DB (anonymized) — tự chạy EXPLAIN, tìm slow query</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="d2"><div class="mhdr" onclick="tog('d2')"><div class="mn gr">D2</div><div class="mtb"><div class="mtit">NoSQL & Polyglot Persistence</div><div class="mmet"><span class="pill p-gy">3 sessions · 9h</span><span class="pill p-bl">Mid→Senior · Backend, Mobile</span><span class="pill p-gr">Docker Lab</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S2.1</div><div><div class="stit">NoSQL landscape & chọn đúng database</div><ul class="stop"><li>MongoDB (document), Redis (key-value), Elasticsearch (full-text)</li><li>Decision tree: không phải "mọi thứ đều dùng SQL"</li></ul></div><div class="sout">Database selection tree</div></div>
+      <div class="ses"><div class="sn">S2.2</div><div><div class="stit">Query-first Data Modeling cho NoSQL</div><ul class="stop"><li>Thiết kế schema theo access pattern, không theo entity</li><li>Embedding vs referencing trade-offs trong MongoDB</li></ul></div><div class="sout">NoSQL schema design doc</div></div>
+      <div class="ses"><div class="sn">S2.3</div><div><div class="stit">Polyglot Persistence — SQL + NoSQL + Cache</div><ul class="stop"><li>Eventual consistency, sync strategies</li><li>Case study: data layer cho notification + search + analytics</li></ul></div><div class="sout">Polyglot architecture diagram</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">🐳</div><div><div class="mitit">Docker Compose Lab</div><div class="midesc">MongoDB + Redis + PostgreSQL — tự dựng và so sánh performance thực nghiệm</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="d3"><div class="mhdr" onclick="tog('d3')"><div class="mn gr">D3</div><div class="mtb"><div class="mtit">Data Architecture cho Distributed Systems</div><div class="mmet"><span class="pill p-gy">4 sessions · 12h</span><span class="pill p-am">Senior→Lead/Expert · Backend</span><span class="pill p-bl">Workshop</span><span class="pill p-pu">Mentoring</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S3.1</div><div><div class="stit">Distributed Data Patterns</div><ul class="stop"><li>Sharding: Range, Hash, Directory-based</li><li>Replication, conflict resolution strategies</li></ul></div><div class="sout">Sharding design proposal</div></div>
+      <div class="ses"><div class="sn">S3.2</div><div><div class="stit">Event Sourcing & CQRS Data Design</div><ul class="stop"><li>Event store schema, partitioning, snapshot strategy</li><li>Khi nào KHÔNG nên dùng Event Sourcing</li></ul></div><div class="sout">Event store + projection design</div></div>
+      <div class="ses"><div class="sn">S3.3</div><div><div class="stit">Zero-downtime Migration & Schema Evolution</div><ul class="stop"><li>Expand-Contract pattern, backward/forward compatible changes</li><li>Flyway/Liquibase trong Spring Boot best practices</li></ul></div><div class="sout">Migration runbook template</div></div>
+      <div class="ses"><div class="sn">S3.4</div><div><div class="stit">Data Observability & Data Contracts</div><ul class="stop"><li>Data quality: Completeness, Accuracy, Timeliness, Consistency</li><li>Data contracts giữa producer và consumer service</li></ul></div><div class="sout">Data quality checklist</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">📖</div><div><div class="mitit">Case study hệ thống nội bộ</div><div class="midesc">Phân tích data architecture thực — identify bottleneck, đề xuất cải thiện, present</div></div></div></div>
+    </div></div>
+
+    <div class="mcard" id="d4"><div class="mhdr" onclick="tog('d4')"><div class="mn gr">D4</div><div class="mtb"><div class="mtit">Analytics Data Modeling & Reporting Design</div><div class="mmet"><span class="pill p-gy">3 sessions · 9h</span><span class="pill p-bl">Senior→Lead · Backend + Low-code</span><span class="pill p-am">Online Course + Workshop</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S4.1</div><div><div class="stit">Data Warehouse & Dimensional Modeling</div><ul class="stop"><li>Star Schema vs Snowflake Schema, Fact vs Dimension tables</li><li>Slowly Changing Dimensions (SCD Type 1, 2, 3)</li></ul></div><div class="sout">DWH schema design</div></div>
+      <div class="ses"><div class="sn">S4.2</div><div><div class="stit">Modern Data Stack — Medallion Architecture</div><ul class="stop"><li>Bronze → Silver → Gold layers, dbt fundamentals</li><li>Data Lake vs Warehouse vs Lakehouse — chọn đúng ngữ cảnh</li></ul></div><div class="sout">Data pipeline design doc</div></div>
+      <div class="ses"><div class="sn">S4.3</div><div><div class="stit">Reporting Schema cho Low-code Platform</div><ul class="stop"><li>Aggregation-friendly schema, Materialized views</li><li>Case study: reporting layer cho hệ thống nội bộ Low-code</li></ul></div><div class="sout">Reporting schema + materialized view plan</div></div>
+    </div></div></div>
+
+    <div class="mcard" id="d5"><div class="mhdr" onclick="tog('d5')"><div class="mn gr">D5</div><div class="mtb"><div class="mtit">AI & ML Data Design — Vector DB, RAG, Governance</div><div class="mmet"><span class="pill p-gy">3 sessions · 9h</span><span class="pill p-am">Lead/Expert · All tracks</span><span class="pill p-cy">Project-based</span></div></div><span class="mtog">▼</span></div>
+    <div class="mbod"><div class="sess">
+      <div class="ses"><div class="sn">S5.1</div><div><div class="stit">Vector Database & RAG Architecture</div><ul class="stop"><li>Vector embeddings: lưu trữ và index (pgvector, Pinecone, Weaviate)</li><li>Chunking strategy, hybrid search (vector + keyword)</li><li>Applied: RAG pipeline trên Confluence nội bộ</li></ul></div><div class="sout">RAG data pipeline diagram</div></div>
+      <div class="ses"><div class="sn">S5.2</div><div><div class="stit">Feature Store & ML Data Pipeline</div><ul class="stop"><li>Feature engineering, Feature Store: online vs offline</li><li>Training data versioning, lineage, data leakage prevention</li></ul></div><div class="sout">Feature store design proposal</div></div>
+      <div class="ses"><div class="sn">S5.3</div><div><div class="stit">Data Governance & AI Compliance — Vietnam AI Law 2026</div><ul class="stop"><li>Vietnam AI Law (hiệu lực 1/3/2026): yêu cầu data trong hệ thống AI</li><li>Data classification, PII masking/tokenization trong AI pipeline</li><li>Audit trail design cho AI decision logging</li></ul></div><div class="sout">Data governance framework nội bộ</div></div>
+    </div>
+    <div class="mrow"><div class="mi"><div class="mic">⚖</div><div><div class="mitit">Legal/Compliance review</div><div class="midesc">S5.3 mời Legal team — đảm bảo align với Vietnam AI Law 2026</div></div></div></div>
+    </div></div>
+  </div>
+
+  <div class="sec">Learning path theo cấp bậc</div>
+  <div class="ar">
+    <div class="auc j"><div class="aul j">Junior / Mid</div><div class="aub"><span><span class="auh">M1</span> Design Fundamentals (bắt buộc)</span><span><span class="auh">D1</span> Relational Modeling (bắt buộc)</span><span><span class="auh">M2.1–2.2</span> Architecture intro</span><span><span class="auh">D2.1</span> NoSQL intro</span><span>Timeline: Phase 1–2 (T1–T6)</span></div></div>
+    <div class="auc s"><div class="aul s">Senior</div><div class="aub"><span><span class="auh">M1</span> Fast-track (self-assess)</span><span><span class="auh">M2 + M3</span> Architecture (bắt buộc)</span><span><span class="auh">M5.1–5.2</span> AI-Ready basics</span><span><span class="auh">D1 → D3</span> Full data track</span><span><span class="auh">D4</span> Analytics modeling</span></div></div>
+    <div class="auc l"><div class="aul l">Lead / Expert</div><div class="aub"><span><span class="auh">M2–M4</span> Architecture intensive</span><span><span class="auh">M5</span> AI Architecture (full)</span><span><span class="auh">D3–D5</span> Advanced data</span><span>→ Chứng nhận Internal Trainer</span><span>→ Dẫn dắt M1–M2, D1–D2</span></div></div>
+  </div>
+
+  <div class="sec">KPI chương trình đào tạo</div>
+  <table class="kt">
+    <thead><tr><th>Chỉ số</th><th>Baseline T0</th><th>Target T6</th><th>Target T12</th></tr></thead>
+    <tbody>
+      <tr><td>Avg score toàn tổ chức</td><td class="kt0">74.5%</td><td class="kt6">78%</td><td class="kt12">82%</td></tr>
+      <tr><td>Backend Software Design avg</td><td class="kt0">63.8%</td><td class="kt6">72%</td><td class="kt12">78%</td></tr>
+      <tr><td>Backend Data Design avg</td><td class="kt0">54.0%</td><td class="kt6">65%</td><td class="kt12">72%</td></tr>
+      <tr><td>Frontend Senior SD (độ lệch chuẩn)</td><td class="kt0">17.7</td><td class="kt6">≤ 13</td><td class="kt12">≤ 10</td></tr>
+      <tr><td>% Lead/Expert đạt Design ≥ 75%</td><td class="kt0">~20%</td><td class="kt6">50%</td><td class="kt12">75%</td></tr>
+      <tr><td>Internal trainers chứng nhận</td><td class="kt0">0</td><td class="kt6">8–10</td><td class="kt12">15–20</td></tr>
+      <tr><td>AI Output Validation score (mới)</td><td class="kt0">Chưa đo</td><td class="kt6">Baseline</td><td class="kt12">≥ 75%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ CH4 ═══ -->
+<div class="chapter" id="ch4">
+  <div class="ch-header">
+    <div class="ch-num c4">CH.04</div>
+    <div>
+      <div class="ch-title">Kế hoạch đánh giá năng lực AI</div>
+      <div class="ch-sub">4 nhóm năng lực · Phương thức đo lường · Thời điểm triển khai · Phân tầng theo cấp bậc</div>
+    </div>
+  </div>
+
+  <div class="co warn"><div class="co-ic">⚠</div><div class="co-tx"><strong>Phân biệt quan trọng:</strong> "Biết dùng AI tool" ≠ "AI proficiency thực sự." Nghiên cứu 2025 cho thấy dùng AI tools khiến experienced developers chậm hơn 19% trên codebase quen thuộc. Đánh giá AI proficiency phải đo khả năng phán đoán — không phải tần suất dùng tool.</div></div>
+
+  <div class="sec">Framework 4 nhóm năng lực AI</div>
+  <div class="atg">
+
+    <div class="atc">
+      <div class="atch"><div class="atidx" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-glow)">A1</div><div class="attit">AI Tool Proficiency</div><div style="flex:1"></div><div class="aturg" style="background:var(--green-dim);color:#34d399;border:1px solid rgba(16,185,129,.25)">Đánh giá ngay — baseline</div></div>
+      <div class="atbod">
+        <div class="atcol"><div class="atcl">Nội dung đánh giá</div><div class="atcb"><ul><li>Có dùng AI tool thường xuyên trong workflow không?</li><li>Prompt có rõ ràng, có context, có constraint không?</li><li>Biết khi nào nên dùng AI, khi nào không nên?</li><li>Có biết iterate prompt khi output chưa đúng không?</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Cách đo lường</div><div class="atcb"><ul><li>Self-assessment survey (10 câu, 1–5 scale)</li><li>Usage analytics từ GitLab (Claude Code commit patterns)</li><li>Short scenario: cho 3 task → viết prompt → compare chất lượng output</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Thời điểm & đối tượng</div><div class="atcb"><ul><li>T1: Baseline survey toàn bộ 160 engineers</li><li>T4, T7, T10: Repeat để track progress</li><li>Tất cả cấp bậc — không exception</li></ul></div></div>
+      </div>
+    </div>
+
+    <div class="atc">
+      <div class="atch"><div class="atidx" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.25)">A2</div><div class="attit">AI Output Validation — quan trọng nhất, cần làm trước</div><div style="flex:1"></div><div class="aturg" style="background:var(--red-dim);color:#f87171;border:1px solid rgba(239,68,68,.25)">Ưu tiên cao nhất</div></div>
+      <div class="atbod">
+        <div class="atcol"><div class="atcl">Nội dung đánh giá</div><div class="atcb"><ul><li>Detect lỗi logic tinh vi trong AI-generated code</li><li>Nhận ra security vulnerability (privilege escalation, injection)</li><li>Phát hiện edge case chưa được xử lý</li><li>Biết viết test để verify AI output — không chỉ trust</li><li>Nhận ra khi AI "confident nhưng sai" về domain knowledge</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Cách đo lường</div><div class="atcb"><ul><li><strong style="color:var(--text)">Seeded Bug Review:</strong> AI-generated code có 3–5 lỗi cài sẵn (logic, security, edge case) → tìm càng nhiều càng cao điểm</li><li>Thiết kế được trên iMocha dạng code review exercise</li><li>Time-boxed 30 phút — đo tốc độ nhận diện lỗi</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Thời điểm & đối tượng</div><div class="atcb"><ul><li>T3: Baseline lần đầu cho Senior+</li><li>T6: Mở rộng xuống Junior/Mid</li><li>T6, T12: Re-test để đo improvement</li><li>Senior→Lead/Expert ưu tiên trước</li></ul></div></div>
+      </div>
+    </div>
+
+    <div class="atc">
+      <div class="atch"><div class="atidx" style="background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(6,182,212,.25)">A3</div><div class="attit">Context Engineering & AI Orchestration</div><div style="flex:1"></div><div class="aturg" style="background:var(--blue-dim);color:#60a5fa;border:1px solid rgba(59,130,246,.25)">Senior+ — T4 trở đi</div></div>
+      <div class="atbod">
+        <div class="atcol"><div class="atcl">Nội dung đánh giá</div><div class="atcb"><ul><li>Viết CLAUDE.md đủ để AI hiểu đúng codebase</li><li>Thiết kế system prompt rõ ràng cho từng agent role</li><li>Biết đưa thông tin nào vào context, bỏ gì để tránh noise</li><li>Định nghĩa guardrails và human-in-the-loop đúng chỗ</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Cách đo lường</div><div class="atcb"><ul><li><strong style="color:var(--text)">Thực chiến only:</strong> Setup Claude Code cho 1 dự án mới từ scratch</li><li>Peer review CLAUDE.md theo rubric chuẩn</li><li>Đo chất lượng AI output khi dùng CLAUDE.md họ viết vs default</li><li>Không có iMocha test — chỉ đo qua project deliverable</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Thời điểm & đối tượng</div><div class="atcb"><ul><li>T4–T5: Senior qua M5 workshop project</li><li>T7–T8: Lead/Expert qua POC sprint</li><li>Cadence: Mỗi sprint review CLAUDE.md — không phải test riêng</li></ul></div></div>
+      </div>
+    </div>
+
+    <div class="atc">
+      <div class="atch"><div class="atidx" style="background:var(--purple-dim);color:var(--purple);border:1px solid rgba(139,92,246,.25)">A4</div><div class="attit">AI-Augmented System Thinking</div><div style="flex:1"></div><div class="aturg" style="background:var(--purple-dim);color:#a78bfa;border:1px solid rgba(139,92,246,.25)">Lead/Expert only — T7+</div></div>
+      <div class="atbod">
+        <div class="atcol"><div class="atcl">Nội dung đánh giá</div><div class="atcb"><ul><li>Thiết kế architecture mà AI agent làm việc hiệu quả trên đó</li><li>Đặt guardrails đúng chỗ: AI autonomous ở đâu, human-in-loop ở đâu</li><li>Đánh giá ROI thực của AI integration — không chỉ cảm tính</li><li>Nhận ra khi AI adoption tạo technical debt mới</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Cách đo lường</div><div class="atcb"><ul><li><strong style="color:var(--text)">Architecture Review Session:</strong> Present AI-augmented system design, Q&A về trade-off</li><li>Post-sprint retrospective: velocity, bug rate, review time trước/sau AI</li><li>360 feedback từ team về chất lượng dẫn dắt AI adoption</li></ul></div></div>
+        <div class="atcol"><div class="atcl">Thời điểm & đối tượng</div><div class="atcb"><ul><li>T7: Sau POC sprint — first assessment</li><li>T10, T12: Tiếp tục đo qua sprint retrospective</li><li>Chỉ Lead/Expert — không áp xuống cấp thấp hơn</li></ul></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">iMocha dùng được cho gì trong AI assessment</div>
+  <table class="tt">
+    <thead><tr><th>Năng lực AI</th><th>iMocha đo được?</th><th>Thiết kế bổ sung</th><th>Thay thế bằng gì</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--text);font-weight:500">A1 — AI Tool Proficiency</td><td><span class="tg tg-a">Không trực tiếp</span></td><td style="font-size:11px;color:var(--text2)">Short scenario prompt test có thể thêm vào iMocha</td><td style="font-size:11px;color:var(--text2)">Self-assessment + GitLab usage analytics</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">A2 — AI Output Validation</td><td><span class="tg tg-g">Có thể thiết kế</span></td><td style="font-size:11px;color:var(--text2)">Tạo đề mới: code review exercise với AI-generated code có seeded bugs — format phù hợp iMocha</td><td style="font-size:11px;color:var(--text2)">—</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">A3 — Context Engineering</td><td><span class="tg tg-r">Không phù hợp</span></td><td style="font-size:11px;color:var(--text2)">Không có dạng test lý thuyết nào đo được</td><td style="font-size:11px;color:var(--text2)">Thực chiến project + peer review rubric</td></tr>
+      <tr><td style="color:var(--text);font-weight:500">A4 — AI System Thinking</td><td><span class="tg tg-a">Một phần</span></td><td style="font-size:11px;color:var(--text2)">System design scenario có AI component — iMocha host được nhưng cần rubric đặc biệt</td><td style="font-size:11px;color:var(--text2)">Architecture review session + sprint retrospective metrics</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec">Cadence đánh giá toàn bộ chương trình</div>
+  <div class="tl">
+    <div class="tli"><div class="tld bl"></div><div class="tlph">T1 — Kickoff</div><div class="tltit">Baseline toàn diện</div><div class="tlbod">iMocha foundation (kết quả hiện có) + A1 self-assessment survey toàn bộ 160 engineers. Gap heatmap → learning path cá nhân hoá.</div></div>
+    <div class="tli"><div class="tld gr"></div><div class="tlph">T3 — Phase 1 Close</div><div class="tltit">Foundation re-test + AI Validation baseline</div><div class="tlbod">iMocha re-test (đề khác, cùng domain). <strong style="color:var(--text)">A2 lần đầu cho Senior+</strong> — seeded bug review exercise. Điều chỉnh learning path nếu cần.</div></div>
+    <div class="tli"><div class="tld gr"></div><div class="tlph">T6 — Phase 2 Close</div><div class="tltit">Core skills re-test + mở rộng AI assessment</div><div class="tlbod">iMocha re-test — target Software Design tăng ≥10%. A1 repeat toàn bộ. A2 mở rộng xuống Junior/Mid. A3 assessment đầu tiên cho Senior qua M5 project.</div></div>
+    <div class="tli"><div class="tld am"></div><div class="tlph">T9 — Phase 3 Close</div><div class="tltit">AI integration assessment</div><div class="tlbod">iMocha re-test. A1/A2 repeat. <strong style="color:var(--text)">A4 lần đầu cho Lead/Expert</strong> — sau POC sprint. Retrospective metrics từ AI-augmented sprint.</div></div>
+    <div class="tli"><div class="tld pu"></div><div class="tlph">T12 — Final</div><div class="tltit">Full assessment — so sánh T0 vs T12</div><div class="tlbod">iMocha final (toàn bộ KPI). A1 + A2 + A3 + A4 đầy đủ. Report tổng hợp cho BOD. Cohort planning 2027.</div></div>
+  </div>
+
+  <div class="co ok"><div class="co-ic">✓</div><div class="co-tx"><strong>Nguyên tắc vàng:</strong> Ưu tiên đánh giá <strong style="color:var(--text)">A2 (AI Output Validation) ngay từ T3</strong> — đây là rủi ro thực xảy ra hôm nay khi 160 engineers đang onboard AI tools mà không có framework để verify output. Một engineer merge AI-generated code sai với tốc độ cao nguy hiểm hơn engineer không dùng AI.</div></div>
+</div>
+
+</main>
+<script>
+function show(n,el){document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));document.getElementById('ch'+n).classList.add('active');el.classList.add('active')}
+function tog(id){document.getElementById(id).classList.toggle('open')}
+</script>
+</body>
+</html>
