@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneID Platform — DID & Cloud PDS | One Mount</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0D1B2E;
+  --card:    #112236;
+  --card2:   #182F4A;
+  --orange:  #F5A623;
+  --teal:    #00C9A7;
+  --blue:    #4A9EFF;
+  --purple:  #A78BFA;
+  --green:   #34D399;
+  --red:     #F87171;
+  --white:   #FFFFFF;
+  --gray:    #7A9ABF;
+  --divider: #1C3450;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-width: 1500px;
+  overflow-x: auto;
+}
+
+/* ── HEADER ── */
+.header {
+  background: #07101C;
+  border-bottom: 3px solid var(--orange);
+  padding: 0 30px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.logo-dot {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), #e07b00);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; color: #07101C;
+  flex-shrink: 0;
+}
+.header-title { font-size: 22px; font-weight: 700; }
+.header-title em { color: var(--orange); font-style: normal; }
+.header-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.header-meta { font-size: 12px; color: var(--gray); font-style: italic; }
+
+/* ── MAIN GRID ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 390px 1fr 440px;
+  gap: 2px;
+  background: var(--divider);
+  padding-top: 2px;
+}
+
+.col { background: var(--card); display: flex; flex-direction: column; }
+
+.col-header {
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.col-why   .col-header { background: rgba(248,113,113,0.12); border-bottom: 2px solid var(--red);    color: var(--red);    }
+.col-what  .col-header { background: rgba(0,201,167,0.12);   border-bottom: 2px solid var(--teal);   color: var(--teal);   }
+.col-how   .col-header { background: rgba(74,158,255,0.12);  border-bottom: 2px solid var(--blue);   color: var(--blue);   }
+
+.col-body { padding: 16px 18px; flex: 1; }
+
+/* ── WHY column ── */
+.goal-box {
+  background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(245,166,35,0.04));
+  border: 1.5px solid rgba(245,166,35,0.45);
+  border-radius: 10px;
+  padding: 13px 15px;
+  margin-bottom: 12px;
+}
+.goal-eyebrow {
+  font-size: 11px; font-weight: 700; color: var(--orange);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;
+}
+.goal-pillars {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.goal-pillar {
+  background: rgba(255,255,255,0.04);
+  border-left: 3px solid var(--orange);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 11px;
+}
+.goal-pillar-title { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+.goal-pillar-body  { font-size: 10.5px; color: var(--gray); line-height: 1.4; margin-bottom: 4px; }
+.goal-pillar-outcomes {
+  display: flex; flex-wrap: wrap; gap: 3px;
+}
+.outcome-chip {
+  font-size: 9.5px; font-weight: 600; padding: 2px 7px; border-radius: 8px;
+  background: rgba(245,166,35,0.15); color: var(--orange);
+  border: 1px solid rgba(245,166,35,0.3);
+}
+
+.obstacle-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--gray); font-style: italic;
+  margin-bottom: 9px;
+}
+.obstacle-row::before, .obstacle-row::after {
+  content: ''; flex: 1; height: 1px; background: rgba(248,113,113,0.25);
+}
+
+.pain-cards { display: flex; flex-direction: column; gap: 8px; }
+.pain-card {
+  background: var(--card2);
+  border-left: 3px solid var(--red);
+  border-radius: 0 7px 7px 0;
+  padding: 9px 13px;
+  display: flex; align-items: flex-start; gap: 10px;
+  transition: transform 0.15s;
+}
+.pain-card:hover { transform: translateX(3px); }
+.pain-icon { font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+.pain-title { font-size: 12.5px; font-weight: 700; color: var(--red); margin-bottom: 3px; }
+.pain-body  { font-size: 10.5px; color: var(--gray); line-height: 1.45; }
+
+/* ── WHAT column ── */
+.col-what .col-body {
+  display: flex; flex-direction: column; align-items: center;
+}
+.diagram-note {
+  font-size: 11px; color: var(--gray); font-style: italic;
+  text-align: center; margin-bottom: 9px; line-height: 1.4;
+}
+.triangle-wrap { width: 100%; max-width: 540px; }
+
+.vc-note {
+  font-size: 10.5px; color: var(--gray); text-align: center; margin: 5px 0 7px;
+}
+.vc-chips { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+.vc-chip {
+  font-size: 10px; font-weight: 600; padding: 3px 11px;
+  border-radius: 12px; border: 1px solid;
+}
+
+/* Animated dashed arrow */
+@keyframes dashFlow {
+  to { stroke-dashoffset: -24; }
+}
+.flow-dash { animation: dashFlow 1.4s linear infinite; }
+
+/* ── HOW column ── */
+.arch-stack { display: flex; flex-direction: column; gap: 9px; }
+.arch-layer {
+  border-radius: 7px;
+  padding: 9px 13px;
+  border: 1px solid;
+}
+.layer-title {
+  font-size: 12px; font-weight: 700;
+  margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.layer-items { display: flex; gap: 5px; flex-wrap: wrap; }
+.layer-chip {
+  font-size: 10px; font-weight: 600; padding: 2px 9px;
+  border-radius: 4px; border: 1px solid;
+}
+.sdk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sdk-item {
+  border-radius: 6px; padding: 7px 10px; border: 1px solid;
+}
+.sdk-name { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+.sdk-desc { font-size: 9.5px; color: var(--gray); line-height: 1.35; }
+
+.arch-arrow {
+  text-align: center; font-size: 11px; color: #2A4A68; margin: -2px 0;
+  letter-spacing: 1px;
+}
+
+.vp-compose {
+  margin-top: 11px;
+  background: rgba(74,158,255,0.04);
+  border: 1px solid rgba(74,158,255,0.25);
+  border-radius: 7px;
+  padding: 11px 13px;
+}
+.vp-compose-title {
+  font-size: 11px; font-weight: 700; color: var(--blue);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px;
+}
+.vp-vc-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.vp-vc {
+  border: 1px solid; border-radius: 5px; padding: 4px 9px; font-size: 9.5px;
+}
+.vp-vc-label { font-weight: 700; }
+.vp-vc-fields { color: var(--gray); font-size: 8.5px; }
+.vp-down { text-align: center; color: var(--gray); font-size: 13px; margin: 3px 0; }
+.vp-result {
+  background: rgba(52,211,153,0.08);
+  border: 1px solid rgba(52,211,153,0.4);
+  border-radius: 5px; padding: 6px 10px;
+  font-size: 10px; color: var(--green); font-weight: 600; line-height: 1.5;
+}
+.vp-result span { color: var(--gray); font-weight: 400; }
+.vp-remark { font-size: 9px; color: var(--gray); font-style: italic; margin-top: 6px; }
+
+/* ── USE CASES STRIP ── */
+.uc-strip {
+  background: #09141F;
+  border-top: 2px solid var(--divider);
+  padding: 14px 24px 16px;
+}
+.uc-strip-title {
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 11px;
+}
+.uc-strip-title::after { content: ''; flex: 1; height: 1px; background: var(--divider); }
+
+.uc-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; }
+.uc-card {
+  border-radius: 8px; padding: 12px 10px;
+  border: 1px solid;
+  text-align: center;
+  cursor: default;
+  transition: transform 0.18s, box-shadow 0.18s;
+  position: relative;
+}
+.uc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.uc-emoji { font-size: 27px; margin-bottom: 5px; }
+.uc-name  { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+.uc-desc  { font-size: 9.5px; color: var(--gray); line-height: 1.35; }
+.uc-badge {
+  position: absolute; top: 7px; right: 7px;
+  font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; padding: 5px;
+  font-size: 9px; color: #1E3555;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-dot">OM</div>
+    <div>
+      <div class="header-title">OneID Platform — <em>DID &amp; Cloud PDS</em></div>
+      <div class="header-sub">One Mount Group · 2026</div>
+    </div>
+  </div>
+  <div class="header-meta">Nền tảng Định danh Phi tập trung — Backbone công nghệ cho Hệ sinh thái</div>
+</div>
+
+<!-- ════ MAIN 3-COLUMN ════ -->
+<div class="main-grid">
+
+  <!-- ══ COL 1: WHY ══ -->
+  <div class="col col-why">
+    <div class="col-header">❶ WHY — Mục tiêu & Bài toán</div>
+    <div class="col-body">
+
+      <div class="goal-box">
+        <div class="goal-eyebrow">🎯 Chiến lược Hệ sinh thái — 3 trụ cột</div>
+        <div class="goal-pillars">
+
+          <div class="goal-pillar">
+            <div class="goal-pillar-title">💰 Tạo giá trị vượt trội cho khách hàng</div>
+            <div class="goal-pillar-body">Tổ hợp Financial &amp; Non-Financial CVPs trong các lĩnh vực: FMCG · BĐS · Healthcare</div>
+            <div class="goal-pillar-outcomes">
+              <span class="outcome-chip">Tăng trưởng TOI / PBT</span>
+              <span class="outcome-chip">Customer retention</span>
+              <span class="outcome-chip">X-sell &amp; NPS</span>
+            </div>
+          </div>
+
+          <div class="goal-pillar">
+            <div class="goal-pillar-title">⚡ Tối ưu nguồn lực chung toàn HST</div>
+            <div class="goal-pillar-body">Tận dụng chung: dữ liệu · platform · talent để tạo scale và hiệu quả kinh tế</div>
+            <div class="goal-pillar-outcomes">
+              <span class="outcome-chip">Leverage data &amp; platform</span>
+              <span class="outcome-chip">Viable economics</span>
+            </div>
+          </div>
+
+          <div class="goal-pillar">
+            <div class="goal-pillar-title">🏆 Xây dựng Brand Equity dài hạn</div>
+            <div class="goal-pillar-body">Thương hiệu tập thể bền vững, phòng thủ rủi ro danh tiếng cho toàn bộ HST</div>
+            <div class="goal-pillar-outcomes">
+              <span class="outcome-chip">Collective brand value</span>
+              <span class="outcome-chip">Bảo vệ brand mọi thành viên</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="obstacle-row">Gặp cản trở bởi</div>
+
+      <div class="pain-cards">
+        <div class="pain-card">
+          <div class="pain-icon">🔄</div>
+          <div>
+            <div class="pain-title">eKYC lặp lại — mất khách</div>
+            <div class="pain-body">Mỗi app yêu cầu onboard từ đầu → KH bỏ dở giữa chừng, mất doanh thu tiềm năng</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">🍝</div>
+          <div>
+            <div class="pain-title">Spaghetti API — chậm mở rộng</div>
+            <div class="pain-body">N đối tác = N×(N-1)/2 kết nối riêng. Thêm 1 partner = hàng tháng phát triển</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">🏝️</div>
+          <div>
+            <div class="pain-title">Data silo — khó synergy</div>
+            <div class="pain-body">Loyalty, cross-sell khó triển khai vì dữ liệu phân tán, không liên thông giữa các app</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">🔓</div>
+          <div>
+            <div class="pain-title">Rủi ro bảo mật &amp; tuân thủ</div>
+            <div class="pain-body">Sao chép data nhiều nơi → bề mặt tấn công lớn, phức tạp compliance &amp; GDPR</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ COL 2: WHAT ══ -->
+  <div class="col col-what">
+    <div class="col-header">❷ WHAT — Giải pháp: DID &amp; Cloud PDS</div>
+    <div class="col-body">
+
+      <div class="diagram-note">
+        Khách hàng <strong style="color:var(--white)">tự sở hữu &amp; kiểm soát</strong> dữ liệu của mình · Không bên nào "nắm" data của người khác · Không còn point-to-point integration, chỉ cần trusted network
+      </div>
+
+      <!-- ── TRIANGLE DIAGRAM ── -->
+      <div class="triangle-wrap">
+        <svg viewBox="0 0 560 502" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <defs>
+            <marker id="m-teal"   markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00C9A7"/></marker>
+            <marker id="m-orange" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#F5A623"/></marker>
+            <marker id="m-gray"   markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#7A9ABF"/></marker>
+            <marker id="m-blue"   markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4A9EFF"/></marker>
+            <filter id="glow-o"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="glow-t"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+
+          <!-- ══ DID Infrastructure bar (bottom) — prominent foundation layer ══ -->
+          <rect x="56" y="438" width="448" height="54" rx="10" fill="#071828" stroke="#4A9EFF" stroke-width="2.5" filter="url(#glow-t)"/>
+          <!-- inner accent top line -->
+          <rect x="56" y="438" width="448" height="4" rx="2" fill="#4A9EFF" opacity="0.35"/>
+          <text x="280" y="462" text-anchor="middle" font-size="13.5" fill="#4A9EFF" font-weight="800" letter-spacing="0.3">⚙ DID Infrastructure · Registry &amp; Resolver</text>
+          <text x="280" y="481" text-anchor="middle" font-size="10" fill="#7AABCF" font-weight="500">Đăng ký VC · Resolve DID · Verify chữ ký · Open Standards (W3C)</text>
+
+          <!-- ══ Cloud PDS (center of triangle) ══ -->
+          <rect x="188" y="190" width="184" height="58" rx="9" fill="#071E30" stroke="#00C9A7" stroke-width="2"/>
+          <text x="280" y="210" text-anchor="middle" font-size="12" fill="#00C9A7" font-weight="700">☁  Cloud PDS</text>
+          <text x="280" y="226" text-anchor="middle" font-size="9" fill="#7A9ABF">VC lưu trữ mã hoá E2E</text>
+          <text x="280" y="240" text-anchor="middle" font-size="9" fill="#7A9ABF">Chỉ KH mới giải mã được</text>
+
+          <!-- ══ HOLDER — top center (cx=280, cy=60, r=44) ══ -->
+          <circle cx="280" cy="60" r="44" fill="#0D2040" stroke="#F5A623" stroke-width="2.5" filter="url(#glow-o)"/>
+          <text x="280" y="51" text-anchor="middle" font-size="25">👤</text>
+          <text x="280" y="74" text-anchor="middle" font-size="10.5" fill="#F5A623" font-weight="700">Bên Sở hữu</text>
+          <text x="280" y="88" text-anchor="middle" font-size="9" fill="#F5A623" opacity="0.8">(Holder)</text>
+          <!-- DID Wallet badge — below Holder -->
+          <rect x="218" y="106" width="124" height="24" rx="12" fill="rgba(245,166,35,0.15)" stroke="rgba(245,166,35,0.5)" stroke-width="1.2"/>
+          <text x="280" y="122" text-anchor="middle" font-size="10" fill="#F5A623" font-weight="600">🔐 DID Wallet</text>
+
+          <!-- ══ ISSUER — bottom left (cx=92, cy=318, r=44) ══ -->
+          <circle cx="92" cy="318" r="44" fill="#0D2040" stroke="#00C9A7" stroke-width="2.5" filter="url(#glow-t)"/>
+          <text x="92" y="309" text-anchor="middle" font-size="25">🏢</text>
+          <text x="92" y="330" text-anchor="middle" font-size="10.5" fill="#00C9A7" font-weight="700">Bên Khởi tạo</text>
+          <text x="92" y="343" text-anchor="middle" font-size="9" fill="#00C9A7" opacity="0.8">(Issuer)</text>
+          <!-- ISSUER sub-label: BELOW circle (circle bottom = 318+44=362) -->
+          <text x="92" y="375" text-anchor="middle" font-size="9.5" fill="#4A9ABF" font-weight="600">TCB · OneHousing · ...</text>
+          <!-- Arrow Issuer → DID bar -->
+          <path d="M 92,378 L 100,439" stroke="#4A9EFF" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#m-blue)"/>
+
+          <!-- ══ VERIFIER — bottom right (cx=468, cy=318, r=44) ══ -->
+          <circle cx="468" cy="318" r="44" fill="#0D2040" stroke="#A78BFA" stroke-width="2.5"/>
+          <text x="468" y="309" text-anchor="middle" font-size="25">🏛</text>
+          <text x="468" y="330" text-anchor="middle" font-size="10.5" fill="#A78BFA" font-weight="700">Bên Xác minh</text>
+          <text x="468" y="343" text-anchor="middle" font-size="9" fill="#A78BFA" opacity="0.8">(Verifier)</text>
+          <!-- VERIFIER sub-label: BELOW circle (circle bottom = 362) -->
+          <text x="468" y="375" text-anchor="middle" font-size="9.5" fill="#8070CC" font-weight="600">OneU · Masterise · TCInvest · ...</text>
+          <!-- Arrow Verifier → DID bar -->
+          <path d="M 468,378 L 460,439" stroke="#4A9EFF" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#m-blue)"/>
+
+          <!-- ══ ARROWS ══ -->
+
+          <!-- Issuer(92,318) → Holder(280,60) — Phát hành VC (curved left, solid) -->
+          <!-- Start: top of Issuer circle = (92, 274). Control point slightly left. End: bottom-left of Holder ~(254,96) -->
+          <path d="M 92,274 Q 60,180 254,96" stroke="#00C9A7" stroke-width="2.2" fill="none" marker-end="url(#m-teal)"/>
+          <!-- Badge on left side of arc — shifted further left away from arrow -->
+          <g transform="translate(82,186) rotate(-62)">
+            <rect x="-43" y="-10" width="86" height="19" rx="9"
+                  fill="rgba(0,201,167,0.18)" stroke="rgba(0,201,167,0.5)" stroke-width="1"/>
+            <text text-anchor="middle" font-size="9.5" fill="#00C9A7" font-weight="700" y="4">Phát hành VC</text>
+          </g>
+
+          <!-- Holder(280,60) → Verifier(468,318) — Cung cấp VP (curved right, solid) -->
+          <!-- Start: bottom-right of Holder ~(306,96). End: top of Verifier circle = (468, 274) -->
+          <path d="M 306,96 Q 500,180 468,274" stroke="#F5A623" stroke-width="2.2" fill="none" marker-end="url(#m-orange)"/>
+          <!-- Badge on right side of arc — shifted further right away from arrow -->
+          <g transform="translate(478,186) rotate(62)">
+            <rect x="-43" y="-10" width="86" height="19" rx="9"
+                  fill="rgba(245,166,35,0.18)" stroke="rgba(245,166,35,0.5)" stroke-width="1"/>
+            <text text-anchor="middle" font-size="9.5" fill="#F5A623" font-weight="700" y="4">Cung cấp VP</text>
+          </g>
+
+          <!-- Trust dashed: Verifier → Issuer (at center y=318, between circle edges) -->
+          <!-- Issuer right edge: 92+44=136, Verifier left edge: 468-44=424 -->
+          <path d="M 424,318 L 136,318" stroke="#7A9ABF" stroke-width="1.6" fill="none"
+                stroke-dasharray="8,5" stroke-dashoffset="0" marker-end="url(#m-gray)" class="flow-dash"/>
+          <!-- Trust text with opaque dark background rect — ABOVE the line -->
+          <rect x="210" y="297" width="140" height="30" rx="5" fill="#112236" opacity="0.95"/>
+          <text x="280" y="310" text-anchor="middle" font-size="9.5" fill="#7A9ABF" font-weight="600">✓ Tin tưởng</text>
+          <text x="280" y="323" text-anchor="middle" font-size="8.5" fill="#5A7A9A">Không cần tích hợp</text>
+
+          <!-- Holder ↔ Cloud PDS (DID Wallet at y=130 → Cloud PDS top at y=190) -->
+          <path d="M 266,130 L 253,189" stroke="rgba(245,166,35,0.4)" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#m-orange)"/>
+          <path d="M 294,130 L 307,189" stroke="rgba(245,166,35,0.4)" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#m-orange)"/>
+          <!-- Store/Retrieve label to the RIGHT of Cloud PDS -->
+          <text x="382" y="208" font-size="8.5" fill="#3A5A7A">Store /</text>
+          <text x="382" y="220" font-size="8.5" fill="#3A5A7A">Retrieve VC</text>
+        </svg>
+      </div>
+
+      <div class="vc-note" style="margin-top: 14px;">Loại VC có thể là bất kỳ chứng thực nào · Cùng cơ chế · Chỉ khác template</div>
+      <div class="vc-chips">
+        <span class="vc-chip" style="color:var(--teal);   border-color:rgba(0,201,167,0.4);   background:rgba(0,201,167,0.08);">VC eKYC</span>
+        <span class="vc-chip" style="color:var(--orange); border-color:rgba(245,166,35,0.4);  background:rgba(245,166,35,0.08);">VC Loyalty / Hạng</span>
+        <span class="vc-chip" style="color:var(--purple); border-color:rgba(167,139,250,0.4); background:rgba(167,139,250,0.08);">VC BĐS</span>
+        <span class="vc-chip" style="color:var(--blue);   border-color:rgba(74,158,255,0.4);  background:rgba(74,158,255,0.08);">VC Medical</span>
+        <span class="vc-chip" style="color:var(--green);  border-color:rgba(52,211,153,0.4);  background:rgba(52,211,153,0.08);">VC Income</span>
+        <span class="vc-chip" style="color:var(--gray);   border-color:rgba(122,154,191,0.3); background:rgba(122,154,191,0.06);">+ Nhiều loại khác...</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ COL 3: HOW ══ -->
+  <div class="col col-how">
+    <div class="col-header">❸ HOW — Kiến trúc kỹ thuật OneID</div>
+    <div class="col-body">
+
+      <div class="arch-stack">
+
+        <!-- Layer: Mobile Apps -->
+        <div class="arch-layer" style="border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.07);">
+          <div class="layer-title" style="color:var(--purple);">📱 Mobile Apps — trong &amp; ngoài HST</div>
+          <div class="layer-items">
+            <span class="layer-chip" style="color:var(--purple); border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.12);">TCB Mobile</span>
+            <span class="layer-chip" style="color:var(--purple); border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.12);">OneU</span>
+            <span class="layer-chip" style="color:var(--purple); border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.12);">Masterise</span>
+            <span class="layer-chip" style="color:var(--purple); border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.12);">OneShop</span>
+            <span class="layer-chip" style="color:var(--gray); border-color:rgba(122,154,191,0.25); background:rgba(122,154,191,0.07);">Đối tác...</span>
+          </div>
+        </div>
+
+        <div class="arch-arrow">⬇ nhúng SDK</div>
+
+        <!-- Layer: SDK -->
+        <div class="arch-layer" style="border-color:rgba(245,166,35,0.35); background:rgba(245,166,35,0.05);">
+          <div class="layer-title" style="color:var(--orange);">🧩 SDK Layer — Plug &amp; Play tích hợp</div>
+          <div class="sdk-grid">
+            <div class="sdk-item" style="border-color:rgba(0,201,167,0.35); background:rgba(0,201,167,0.07); grid-column:1/-1;">
+              <div class="sdk-name" style="color:var(--teal);">DID Wallet SDK — embed vào mọi app</div>
+              <div class="sdk-desc">Quản lý DID · Lưu/load VC từ Cloud PDS · Tạo VP · UI đồng nhất trên toàn HST</div>
+            </div>
+            <div class="sdk-item" style="border-color:rgba(74,158,255,0.35); background:rgba(74,158,255,0.07);">
+              <div class="sdk-name" style="color:var(--blue);">Issuer SDK</div>
+              <div class="sdk-desc">Tạo &amp; ký VC · Quản lý template · VC Portal admin</div>
+            </div>
+            <div class="sdk-item" style="border-color:rgba(52,211,153,0.35); background:rgba(52,211,153,0.07);">
+              <div class="sdk-name" style="color:var(--green);">Verifier SDK</div>
+              <div class="sdk-desc">Tạo yêu cầu VP · Xác minh chữ ký · Không cần API riêng</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow">⬇ lưu trữ mã hoá</div>
+
+        <!-- Layer: Cloud PDS -->
+        <div class="arch-layer" style="border-color:rgba(0,201,167,0.35); background:rgba(0,201,167,0.05);">
+          <div class="layer-title" style="color:var(--teal);">☁ Cloud PDS — VC Cloud Storage</div>
+          <div class="layer-items">
+            <span class="layer-chip" style="color:var(--teal); border-color:rgba(0,201,167,0.3); background:rgba(0,201,167,0.1);">E2E Encrypted</span>
+            <span class="layer-chip" style="color:var(--teal); border-color:rgba(0,201,167,0.3); background:rgba(0,201,167,0.1);">Multi-device</span>
+            <span class="layer-chip" style="color:var(--teal); border-color:rgba(0,201,167,0.3); background:rgba(0,201,167,0.1);">Recovery</span>
+          </div>
+        </div>
+
+        <div class="arch-arrow">⬇ resolve DID · verify signature</div>
+
+        <!-- Layer: DID Infrastructure -->
+        <div class="arch-layer" style="border-color:rgba(74,158,255,0.35); background:rgba(74,158,255,0.05);">
+          <div class="layer-title" style="color:var(--blue);">⚙ DID Infrastructure</div>
+          <div class="layer-items">
+            <span class="layer-chip" style="color:var(--blue); border-color:rgba(74,158,255,0.3); background:rgba(74,158,255,0.1);">DID Registry</span>
+            <span class="layer-chip" style="color:var(--blue); border-color:rgba(74,158,255,0.3); background:rgba(74,158,255,0.1);">Universal Resolver</span>
+            <span class="layer-chip" style="color:var(--blue); border-color:rgba(74,158,255,0.3); background:rgba(74,158,255,0.1);">W3C DID Specs</span>
+            <span class="layer-chip" style="color:var(--gray); border-color:rgba(122,154,191,0.25); background:rgba(122,154,191,0.07);">Distributed Ledger (tuỳ chọn)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VP Compose box -->
+      <div class="vp-compose">
+        <div class="vp-compose-title">🔀 VP compose từ nhiều VC — linh hoạt theo từng use case</div>
+        <div class="vp-vc-row">
+          <div class="vp-vc" style="color:var(--teal); border-color:rgba(0,201,167,0.4);">
+            <div class="vp-vc-label">VC eKYC</div>
+            <div class="vp-vc-fields">☑ Tên &nbsp;☑ Ảnh &nbsp;☑ SĐT</div>
+          </div>
+          <div class="vp-vc" style="color:var(--orange); border-color:rgba(245,166,35,0.4);">
+            <div class="vp-vc-label">VC Loyalty</div>
+            <div class="vp-vc-fields">☑ Hạng Vàng</div>
+          </div>
+          <div class="vp-vc" style="color:var(--purple); border-color:rgba(167,139,250,0.4);">
+            <div class="vp-vc-label">VC BĐS</div>
+            <div class="vp-vc-fields">☑ Căn hộ A</div>
+          </div>
+        </div>
+        <div class="vp-down">↓ <span style="font-size:9.5px; color:var(--gray);">chọn lọc đúng fields cần thiết cho từng use case</span></div>
+        <div class="vp-result">
+          VP → Pharmacity: <span>{ Tên + Hạng Vàng }</span> → giảm giá 10%<br>
+          VP → TCB Loan: <span>{ Tên + Căn hộ A }</span> → vay thế chấp tức thì
+        </div>
+        <div class="vp-remark">Mọi use case dùng chung cơ chế · Chỉ khác VC &amp; VP template · Không cần build lại platform</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end main-grid -->
+
+<!-- ════ USE CASES STRIP ════ -->
+<div class="uc-strip">
+  <div class="uc-strip-title">🚀 Use cases mở ra — Nền tảng OneID dùng chung · Thêm use case = chỉ thêm VC + VP template mới</div>
+  <div class="uc-grid">
+
+    <div class="uc-card" style="border-color:rgba(0,201,167,0.35); background:rgba(0,201,167,0.07);">
+      <div class="uc-emoji">✅</div>
+      <div class="uc-name" style="color:var(--teal);">eKYC 1 lần</div>
+      <div class="uc-desc">TCB eKYC → dùng trên toàn HST · Không cần làm lại</div>
+    </div>
+
+    <div class="uc-card" style="border-color:rgba(245,166,35,0.35); background:rgba(245,166,35,0.07);">
+      <div class="uc-emoji">🎁</div>
+      <div class="uc-name" style="color:var(--orange);">Loyalty xuyên HST</div>
+      <div class="uc-desc">Hạng VIP TCB → ưu đãi tự động tại Pharmacity, OneShop</div>
+    </div>
+
+    <div class="uc-card" style="border-color:rgba(52,211,153,0.35); background:rgba(52,211,153,0.07);">
+      <div class="uc-emoji">🏠</div>
+      <div class="uc-name" style="color:var(--green);">Chứng minh tài sản</div>
+      <div class="uc-desc">VC BĐS từ OneHousing → vay thế chấp tại TCB tức thì</div>
+    </div>
+
+    <div class="uc-card" style="border-color:rgba(74,158,255,0.35); background:rgba(74,158,255,0.07);">
+      <div class="uc-emoji">💰</div>
+      <div class="uc-name" style="color:var(--blue);">Chứng minh thu nhập</div>
+      <div class="uc-desc">VC Income → vay tín chấp nhanh, không giấy tờ thủ công</div>
+    </div>
+
+    <div class="uc-card" style="border-color:rgba(167,139,250,0.35); background:rgba(167,139,250,0.07);">
+      <div class="uc-emoji">🏥</div>
+      <div class="uc-name" style="color:var(--purple);">Hồ sơ sức khoẻ</div>
+      <div class="uc-desc">VC Medical → chia sẻ với bác sĩ, bệnh viện đối tác HST</div>
+    </div>
+
+    <div class="uc-card" style="border-color:rgba(122,154,191,0.35); background:rgba(122,154,191,0.06); position:relative;">
+      <div class="uc-badge" style="background:rgba(245,166,35,0.2); color:var(--orange); border:1px solid rgba(245,166,35,0.4);">MỞ RỘNG</div>
+      <div class="uc-emoji">🌐</div>
+      <div class="uc-name" style="color:var(--gray);">Ngoài HST &amp; nhiều hơn...</div>
+      <div class="uc-desc">Bất kỳ đối tác bên ngoài tích hợp SDK đều tham gia được · Hệ sinh thái mở không giới hạn</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">One Mount Group · OneID — DID &amp; Cloud PDS · 2026 · Confidential</div>
+
+</body>
+</html>
